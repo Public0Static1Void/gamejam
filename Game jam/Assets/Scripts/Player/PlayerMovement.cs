@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     public bool canMove = true;
     
-    private Rigidbody rb;
+    public Rigidbody rb;
 
     private Vector2 dir;
 
