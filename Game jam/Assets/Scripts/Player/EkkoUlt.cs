@@ -25,6 +25,7 @@ public class EkkoUlt : MonoBehaviour
     public LayerMask enemy_layer;
     public AudioClip return_clip;
     public AudioClip explosion_clip, funny_explosion_clip;
+    public GameObject explosion_particle;
 
     private UnityEngine.UI.Image orb_cooldown;
 
@@ -96,7 +97,10 @@ public class EkkoUlt : MonoBehaviour
             }
             else
             {
-                // Aquí es cuando el jugador vuelve totalmente a la posición inicial ---------------------------
+                // --- Aquí es cuando el jugador vuelve totalmente a la posición inicial ------------------------------------------------------------------
+
+                Destroy(Instantiate(explosion_particle), 5); ///Instancia las partículas
+
                 if (SoundManager.instance.funnySounds)
                 {
                     SoundManager.instance.PlaySound(funny_explosion_clip);
