@@ -22,6 +22,7 @@ public class Rounds : MonoBehaviour
     {
         if (instance == null) instance = this;
         else Destroy(this);
+        GameManager.gm.ShowText("Press space to return :D", 0);
     }
 
     void Update()
