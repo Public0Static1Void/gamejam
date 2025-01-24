@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager instance {  get; private set; }
@@ -9,6 +9,10 @@ public class SoundManager : MonoBehaviour
 
     public bool funnySounds;
 
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     private void Awake()
     {
         if (instance == null)
@@ -19,6 +23,7 @@ public class SoundManager : MonoBehaviour
     public void PlaySound(AudioClip clip)
     {
         audioSource.clip = clip;
+        audioSource.loop = false;
         audioSource.Play();
     }
 

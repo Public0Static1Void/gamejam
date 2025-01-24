@@ -28,7 +28,8 @@ public class menus : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene("SampleScene");
+        SoundManager.instance.PlaySound(audiosToPlay[0]);
+        StartCoroutine(WaitToContinue());
     }
 
     public void ButtonSelected()
@@ -41,7 +42,7 @@ public class menus : MonoBehaviour
     public void SelectedChickenAnimation()
     {
         anim.Play("Menu_scream_animation");
-        audioSource.clip = audiosToPlay[2];// Chillido del gallo
+        audioSource.clip = audiosToPlay[2];
         audioSource.loop = false;
         audioSource.Play();
     }
@@ -49,7 +50,7 @@ public class menus : MonoBehaviour
     IEnumerator WaitToContinue()
     {
         yield return new WaitForSeconds(1);
-        SceneManager.LoadScene("Level 2");
+        SceneManager.LoadScene("SampleScene");
     }
 
     public void ExitGame()

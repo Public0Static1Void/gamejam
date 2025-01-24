@@ -18,6 +18,10 @@ public class Rounds : MonoBehaviour
 
     float enemy_hp = 10;
 
+    private float timer = 0;
+
+    private bool onRound = false;
+
     void Start()
     {
         if (instance == null) instance = this;
@@ -30,8 +34,18 @@ public class Rounds : MonoBehaviour
         if (enemies.Count == 0 && !spawning)
         {
             StartCoroutine(SpawnLine());
-            
+            onRound = true;
             enemyRound *= 1.2f;
+        }
+
+        if (onRound && !spawning)
+        {
+            timer += Time.deltaTime;
+            if (timer > 30)
+            {
+                StartCoroutine(SpawnLine());
+                timer = 0;
+            }
         }
     }
 
@@ -55,6 +69,8 @@ public class Rounds : MonoBehaviour
         }
 
         round++;
+
+        GameManager.gm.ShowText("Starting round " + round + "!", 4);
 
         spawning = false;
     }

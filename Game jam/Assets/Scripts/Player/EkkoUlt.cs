@@ -35,6 +35,8 @@ public class EkkoUlt : MonoBehaviour
 
     private int current_checkpoint = 0;
 
+    private float last_distance = 0;
+
     private void Awake()
     {
         if (instance == null)
@@ -76,6 +78,7 @@ public class EkkoUlt : MonoBehaviour
             {
                 playerPositions.Clear();
                 playerPositions.Add(transform.position);
+                current_checkpoint = 0;
             }
             if (playerPositions.Count > 0 && transform.position != playerPositions[playerPositions.Count - 1])
                 playerPositions.Add(transform.position);
@@ -85,27 +88,27 @@ public class EkkoUlt : MonoBehaviour
         // Follower logic
         if (playerPositions.Count > 1 && current_checkpoint < playerPositions.Count)
         {
-            if (Vector3.Distance(follower_model.transform.position, playerPositions[current_checkpoint]) <= 1)
+            if (Vector3.Distance(follower_model.transform.position, playerPositions[current_checkpoint]) <= 2)
             {
                 ChangeFollowerObjective();
             }
             else
             {
                 //follower_model.transform.position = Vector3.Lerp(follower_model.transform.position, playerPositions[current_checkpoint], (PlayerMovement.instance.speed * 0.0025f) * Time.deltaTime);
-                follower_model.transform.Translate(follower_model.transform.forward * (PlayerMovement.instance.speed * 0.01f) * Time.deltaTime, Space.World);
+                follower_model.transform.Translate(follower_model.transform.forward * ((Vector3.Distance(follower_model.transform.position, playerPositions[current_checkpoint]) + PlayerMovement.instance.speed) * 0.013f) * Time.deltaTime, Space.World);
             }
         }
-
-        if (Vector3.Distance(follower_model.transform.position, transform.position) > 50)
+        Debug.Log(Vector3.Distance(transform.position, follower_model.transform.position));
+        if (Vector3.Distance(transform.position, follower_model.transform.position) > 25 || current_checkpoint >= playerPositions.Count)
         {
             playerPositions.Clear();
             playerPositions.Add(transform.position);
+            current_checkpoint = 0;
             follower_model.transform.position = transform.position;
         }
-
         if (return_to_pos)
         {
-            if (Vector3.Distance(transform.position, return_position) > 0.5f)
+            if (Vector3.Distance(transform.position, return_position) > 1)
             {
                 transform.position = Vector3.Lerp(transform.position, return_position, Time.deltaTime * 10);
             }
@@ -138,6 +141,7 @@ public class EkkoUlt : MonoBehaviour
                 transform.position = return_position;
                 GetComponent<Rigidbody>().useGravity = true;
                 GetComponent<SphereCollider>().isTrigger = false;
+                GetComponent<Rigidbody>().isKinematic = false;
                 PlayerMovement.instance.canMove = true;
                 return_to_pos = false;
             }
@@ -149,7 +153,7 @@ public class EkkoUlt : MonoBehaviour
         if (current_checkpoint < playerPositions.Count - 2)
             current_checkpoint++;
 
-
+        last_distance = Vector3.Distance(playerPositions[current_checkpoint], follower_model.transform.position);
         Vector3 dir = playerPositions[current_checkpoint] - follower_model.transform.position;
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
         follower_model.transform.rotation = rot;
@@ -184,6 +188,7 @@ public class EkkoUlt : MonoBehaviour
 
         GetComponent<SphereCollider>().isTrigger = true; /// Evita que cambie el rumbo por colisiones
         GetComponent<Rigidbody>().useGravity = false;
+        GetComponent<Rigidbody>().isKinematic = true;
 
         return_to_pos = true;
 

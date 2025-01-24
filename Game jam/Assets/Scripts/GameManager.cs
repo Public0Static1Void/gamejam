@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text message_text;
 
-
+    public GameObject pause_menu;
 
     void Awake()
     {
@@ -31,6 +31,10 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
+        }
         // Fade del texto
         if (show_announce)
         {
@@ -51,6 +55,17 @@ public class GameManager : MonoBehaviour
             Color col = message_text.color;
             message_text.color = new Color(col.r, col.g, col.b, alpha);
         }
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+        pause_menu.SetActive(false);
+    }
+    public void PauseGame()
+    {
+        pause_menu.SetActive(true);
+        Time.timeScale = 0;
     }
 
     public void ShowText(string text, int show_speed = 3)

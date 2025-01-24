@@ -39,9 +39,9 @@ public class PlayerLife : MonoBehaviour
     {
         hp -= value;
 
-        curr_color.r += value * 0.01f;
-        curr_color.g -= value * 0.01f;
-        curr_color.b -= value * 0.01f;
+        curr_color.r += value * 0.025f;
+        curr_color.g -= value * 0.025f;
+        curr_color.b -= value * 0.025f;
 
         m.color = curr_color;
         if (hp <= 0)
