@@ -28,7 +28,7 @@ public class menus : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene("Sample Scene");
+        SceneManager.LoadScene("SampleScene");
     }
 
     public void ButtonSelected()
