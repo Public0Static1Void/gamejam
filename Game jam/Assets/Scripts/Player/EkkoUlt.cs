@@ -23,6 +23,9 @@ public class EkkoUlt : MonoBehaviour
     public Transform returnMark;
     public UnityEngine.UI.Image countdown_player;
     public LayerMask enemy_layer;
+    public AudioClip return_clip;
+    public AudioClip explosion_clip, funny_explosion_clip;
+    public GameObject explosion_particle;
 
     private UnityEngine.UI.Image orb_cooldown;
 
@@ -94,7 +97,18 @@ public class EkkoUlt : MonoBehaviour
             }
             else
             {
-                // Aquí es cuando el jugador vuelve totalmente a la posición inicial ---------------------------
+                // --- Aquí es cuando el jugador vuelve totalmente a la posición inicial ------------------------------------------------------------------
+
+                Destroy(Instantiate(explosion_particle), 5); ///Instancia las partículas
+
+                if (SoundManager.instance.funnySounds)
+                {
+                    SoundManager.instance.PlaySound(funny_explosion_clip);
+                }
+                else
+                {
+                    SoundManager.instance.PlaySound(explosion_clip);
+                }
                 Collider[] colls = Physics.OverlapSphere(transform.position, explosion_radius, enemy_layer);
                 if (colls.Length > 0)
                 {
@@ -139,6 +153,8 @@ public class EkkoUlt : MonoBehaviour
         orb_cooldown.transform.position = return_position;
 
         yield return new WaitForSeconds(period_time);
+
+        SoundManager.instance.PlaySound(return_clip); // haz que suene el sonido para volver
 
         // Evita que el jugador se mueva
         PlayerMovement.instance.canMove = false;
