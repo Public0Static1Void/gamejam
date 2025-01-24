@@ -16,13 +16,15 @@ public class EnemyFollow : MonoBehaviour
     {
         target = EkkoUlt.instance.transform;
         rb = GetComponent<Rigidbody>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     private void FixedUpdate()
     {
         if (target != null)
         {
-            Vector3 dir = target.position - transform.position;
+            agent.SetDestination(target.transform.position);
+            /*Vector3 dir = target.position - transform.position;
             Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
             transform.rotation = rot;
 
@@ -30,7 +32,7 @@ public class EnemyFollow : MonoBehaviour
             {
                 rb.velocity = new Vector3(transform.forward.x * speed * Time.deltaTime, rb.velocity.y, transform.forward.z * speed * Time.deltaTime);
                 //transform.Translate(transform.forward * 10 * Time.deltaTime);
-            }
+            }*/
         }
     }
 }

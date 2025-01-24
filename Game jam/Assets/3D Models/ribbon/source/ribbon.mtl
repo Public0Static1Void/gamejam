@@ -1,0 +1,24 @@
+# Blender MTL File: 'day2.blend'
+# Material Count: 2
+
+newmtl Material.008_NONE
+Ns 150.980392
+Ka 1.000000 1.000000 1.000000
+Kd 0.743702 0.800000 0.734062
+Ks 0.019152 0.017162 0.017987
+Ke 0.167333 0.180000 0.165164
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd day3_ribbon.png
+
+newmtl Material.018
+Ns 150.980392
+Ka 1.000000 1.000000 1.000000
+Kd 0.743702 0.800000 0.734062
+Ks 0.019152 0.017162 0.017987
+Ke 0.167333 0.180000 0.165164
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd day3_ribbon.png

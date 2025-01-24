@@ -14,8 +14,8 @@ public class EkkoUlt : MonoBehaviour
     public List<Vector3> playerPositions;
     private Vector3 return_position;
 
-
-    private bool mark_placed, return_to_pos;
+    [HideInInspector]
+    public bool mark_placed, return_to_pos;
 
     private float timer = 0;
 

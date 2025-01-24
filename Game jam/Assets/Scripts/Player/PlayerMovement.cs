@@ -14,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 dir;
 
+    private float y_fix = 0;
+
     private void Awake()
     {
         if (instance == null)
@@ -37,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (transform.position.y < 0)
             transform.position = new Vector3(transform.position.x, 2, transform.position.z);
+        else if (transform.position.y > 2)
+            transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
     }
 
     public void Move(InputAction.CallbackContext con)
