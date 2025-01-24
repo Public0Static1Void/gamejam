@@ -15,6 +15,7 @@ public class EnemyLife : MonoBehaviour
         hp -= amount;
         if (amount <= 0)
         {
+            Rounds.instance.enemies.Remove(this.gameObject);
             Destroy(gameObject);
         }
     }

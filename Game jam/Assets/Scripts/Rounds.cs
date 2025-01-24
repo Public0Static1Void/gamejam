@@ -21,7 +21,6 @@ public class Rounds : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (enemies.Count == 0)
         {
             for (int i = 0;i < enemyRound; i++)

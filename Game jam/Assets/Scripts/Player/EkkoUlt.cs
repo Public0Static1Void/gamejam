@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EkkoUlt : MonoBehaviour
 {
+    public static EkkoUlt instance { get; private set; }
     [Header("Stats")]
     public float period_time;
     public int damage;
@@ -30,6 +31,14 @@ public class EkkoUlt : MonoBehaviour
     private UnityEngine.UI.Image orb_cooldown;
 
     private int current_checkpoint = 0;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this.gameObject);
+    }
     void Start()
     {
         playerPositions.Add(transform.position);
@@ -169,5 +178,19 @@ public class EkkoUlt : MonoBehaviour
         returnMark.transform.gameObject.SetActive(false);
 
         mark_placed = false;
+    }
+
+    public void DecreasePeriod()
+    {
+        period_time -= 1;
+        if (period_time <= 2) period_time = 2;
+    }
+    public void IncreaseDamage()
+    {
+        damage += 1;
+    }
+    public void IncreaseExplosionRange()
+    {
+        explosion_radius += 2;
     }
 }

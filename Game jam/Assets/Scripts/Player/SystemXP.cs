@@ -39,6 +39,9 @@ public class SystemXP : MonoBehaviour
 
     private Ability[] selectedAbilities;
 
+    [Header("References")]
+    public Sprite periodIcon, damageIcon, radiusIcon;
+
     void Start()
     {
         abilityPanel.SetActive(false);
@@ -77,8 +80,8 @@ public class SystemXP : MonoBehaviour
         {
             name = "Time Period",
             description = "Reduces teleportation cooldown time.",
-            icon = speedIcon,
-            effect = player.ImproveSpeed
+            icon = periodIcon,
+            effect = EkkoUlt.instance.DecreasePeriod
         };
 
         allAbilities[1] = new Ability
@@ -86,15 +89,15 @@ public class SystemXP : MonoBehaviour
             name = "Damage",
             description = "Increases your attack damage.",
             icon = damageIcon,
-            effect = player.IncreaseDamage
+            effect = EkkoUlt.instance.IncreaseDamage
         };
 
         allAbilities[2] = new Ability
         {
             name = "Explosion Radius",
             description = "Increases your explosion range.",
-            icon = damageIcon,
-            effect = player.IncreaseDamage
+            icon = radiusIcon,
+            effect = EkkoUlt.instance.IncreaseExplosionRange
         };
     }
 }
