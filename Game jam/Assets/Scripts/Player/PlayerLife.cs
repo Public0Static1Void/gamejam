@@ -46,7 +46,7 @@ public class PlayerLife : MonoBehaviour
         m.color = curr_color;
         if (hp <= 0)
         {
-            // Perder
+            GameManager.gm.LoadScene("Menu");
         }
     }
 
