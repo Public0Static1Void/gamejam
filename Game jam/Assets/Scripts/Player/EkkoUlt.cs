@@ -52,7 +52,7 @@ public class EkkoUlt : MonoBehaviour
             orb_cooldown.fillAmount += Time.deltaTime / period_time;
         }
 
-        if (timer < 0.5f)
+        if (timer < period_time * 0.05f)
         {
             timer += Time.deltaTime;
         }
