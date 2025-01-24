@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyLife : MonoBehaviour
 {
-    private int hp;
+    public int hp;
     public int max_hp;
     private void Start()
     {
@@ -13,7 +13,7 @@ public class EnemyLife : MonoBehaviour
     public void Damage(int amount)
     {
         hp -= amount;
-        if (amount <= 0)
+        if (hp <= 0)
         {
             Rounds.instance.enemies.Remove(this.gameObject);
             Destroy(gameObject);

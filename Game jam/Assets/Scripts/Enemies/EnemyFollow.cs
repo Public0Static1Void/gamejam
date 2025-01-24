@@ -26,7 +26,7 @@ public class EnemyFollow : MonoBehaviour
             Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
             transform.rotation = rot;
 
-            if (Vector3.Distance(transform.position, target.position) > 0.5f)
+            if (Vector3.Distance(transform.position, target.position) > EkkoUlt.instance.transform.localScale.x / 2)
             {
                 rb.velocity = new Vector3(transform.forward.x * speed * Time.deltaTime, rb.velocity.y, transform.forward.z * speed * Time.deltaTime);
                 //transform.Translate(transform.forward * 10 * Time.deltaTime);

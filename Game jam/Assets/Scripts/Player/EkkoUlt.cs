@@ -24,9 +24,12 @@ public class EkkoUlt : MonoBehaviour
     public Transform returnMark;
     public UnityEngine.UI.Image countdown_player;
     public LayerMask enemy_layer;
+    [Header("Sonidos")]
     public AudioClip return_clip;
-    public AudioClip explosion_clip, funny_explosion_clip;
+    public AudioClip explosion_clip, funny_explosion_clip, tictac_clip;
     public GameObject explosion_particle;
+
+    private PlayerLife playerLife;
 
     private UnityEngine.UI.Image orb_cooldown;
 
@@ -46,6 +49,8 @@ public class EkkoUlt : MonoBehaviour
 
         orb_cooldown = Instantiate(countdown_player.gameObject, countdown_player.transform.parent).GetComponent<UnityEngine.UI.Image>();
         orb_cooldown.enabled = false;
+
+        playerLife = GetComponent<PlayerLife>();
     }
 
     private void Update()
@@ -100,7 +105,7 @@ public class EkkoUlt : MonoBehaviour
 
         if (return_to_pos)
         {
-            if (Vector3.Distance(transform.position, return_position) > 0.25f)
+            if (Vector3.Distance(transform.position, return_position) > 0.5f)
             {
                 transform.position = Vector3.Lerp(transform.position, return_position, Time.deltaTime * 10);
             }
@@ -108,15 +113,17 @@ public class EkkoUlt : MonoBehaviour
             {
                 // --- Aquí es cuando el jugador vuelve totalmente a la posición inicial ------------------------------------------------------------------
 
-                Destroy(Instantiate(explosion_particle), 5); ///Instancia las partículas
+                GameObject part = Instantiate(explosion_particle);
+                part.transform.position = return_position;
+                Destroy(part, 5); ///Instancia las partículas
 
                 if (SoundManager.instance.funnySounds)
                 {
-                    SoundManager.instance.PlaySound(funny_explosion_clip);
+                    SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position, funny_explosion_clip.length);
                 }
                 else
                 {
-                    SoundManager.instance.PlaySound(explosion_clip);
+                    SoundManager.instance.InstantiateSound(explosion_clip, transform.position, explosion_clip.length);
                 }
                 Collider[] colls = Physics.OverlapSphere(transform.position, explosion_radius, enemy_layer);
                 if (colls.Length > 0)
@@ -125,9 +132,12 @@ public class EkkoUlt : MonoBehaviour
                     {
                         coll.GetComponent<Rigidbody>().AddExplosionForce(damage, transform.position, explosion_radius);
                         coll.GetComponent<EnemyLife>().Damage(damage);
+                        playerLife.Damage(-1);
                     }
                 }
                 transform.position = return_position;
+                GetComponent<Rigidbody>().useGravity = true;
+                GetComponent<SphereCollider>().isTrigger = false;
                 PlayerMovement.instance.canMove = true;
                 return_to_pos = false;
             }
@@ -161,13 +171,19 @@ public class EkkoUlt : MonoBehaviour
 
         orb_cooldown.transform.position = return_position;
 
-        yield return new WaitForSeconds(period_time);
+        /// Sonido de tic tac
+        SoundManager.instance.InstantiateSound(tictac_clip, return_position, period_time);
+
+        yield return new WaitForSeconds(period_time); /// Espera del código
 
         SoundManager.instance.PlaySound(return_clip); // haz que suene el sonido para volver
 
         // Evita que el jugador se mueva
         PlayerMovement.instance.canMove = false;
         PlayerMovement.instance.rb.velocity = Vector3.zero;
+
+        GetComponent<SphereCollider>().isTrigger = true; /// Evita que cambie el rumbo por colisiones
+        GetComponent<Rigidbody>().useGravity = false;
 
         return_to_pos = true;
 
@@ -180,6 +196,25 @@ public class EkkoUlt : MonoBehaviour
         mark_placed = false;
     }
 
+    public void RandomUpgrade()
+    {
+        int rand = Random.Range(0, 2);
+        switch (rand)
+        {
+            case 0:
+                GameManager.gm.ShowText("Period decreased!");
+                DecreasePeriod();
+                break;
+            case 1:
+                GameManager.gm.ShowText("Damage increased!");
+                IncreaseDamage();
+                break;
+            case 2:
+                GameManager.gm.ShowText("Explosion range increased!");
+                IncreaseExplosionRange();
+                break;
+        }
+    }
     public void DecreasePeriod()
     {
         period_time -= 1;
@@ -191,6 +226,11 @@ public class EkkoUlt : MonoBehaviour
     }
     public void IncreaseExplosionRange()
     {
-        explosion_radius += 2;
+        explosion_radius += 0.5f;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, explosion_radius);
     }
 }

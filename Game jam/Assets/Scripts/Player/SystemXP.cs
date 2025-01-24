@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
 
 public class SystemXP : MonoBehaviour
 {
+    public static SystemXP instance { get; private set; }
+
     public Ability[] allAbilities;
     public GameObject abilityPanel;
     public Button[] abilityButtons;
@@ -42,9 +44,18 @@ public class SystemXP : MonoBehaviour
     [Header("References")]
     public Sprite periodIcon, damageIcon, radiusIcon;
 
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+    }
+
     void Start()
     {
         abilityPanel.SetActive(false);
+        ConfigureAbilities();
     }
 
     public void ShowAbilities()
@@ -52,10 +63,10 @@ public class SystemXP : MonoBehaviour
         selectedAbilities = new Ability[3];
         for (int i = 0; i < 3; i++)
         {
-            selectedAbilities[i] = allAbilities[Random.Range(0, allAbilities.Length)];
+            selectedAbilities[i] = allAbilities[Random.Range(0, allAbilities.Length - 1)];
         }
 
-        for (int i = 0; i < abilityButtons.Length; i++)
+        for (int i = 0; i < abilityButtons.Length - 1; i++)
         {
             abilityIcons[i].sprite = selectedAbilities[i].icon;
             abilityDescriptions[i].text = selectedAbilities[i].description;
@@ -76,6 +87,8 @@ public class SystemXP : MonoBehaviour
 
     void ConfigureAbilities()
     {
+        allAbilities = new Ability[3];
+
         allAbilities[0] = new Ability
         {
             name = "Time Period",
