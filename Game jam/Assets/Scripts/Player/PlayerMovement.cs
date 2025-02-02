@@ -32,7 +32,10 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (!canMove) return;
-        rb.velocity = new Vector3(dir.x * speed * Time.deltaTime, rb.velocity.y, dir.y * speed * Time.deltaTime);
+
+        Vector3 d = ((transform.forward * dir.y) + (transform.right * dir.x)) * speed * Time.fixedDeltaTime;
+
+        rb.velocity = d;
     }
 
     private void Update()
