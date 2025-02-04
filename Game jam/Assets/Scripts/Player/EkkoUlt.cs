@@ -106,6 +106,8 @@ public class EkkoUlt : MonoBehaviour
             current_checkpoint = 0;
             follower_model.transform.position = transform.position;
         }
+
+        // El jugador vuelve a la posición anterior
         if (return_to_pos)
         {
             if (Vector3.Distance(transform.position, return_position) > 1)

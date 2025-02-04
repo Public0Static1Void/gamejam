@@ -18,6 +18,8 @@ public class CameraRotation : MonoBehaviour
 
     void Update()
     {
+        if (!PlayerMovement.instance.canMove) return;
+
         if (inp.x > 1 || inp.x < -1)
         {
             x += Input.GetAxis("Mouse X") * cameraSpeed * Time.deltaTime;

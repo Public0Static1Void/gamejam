@@ -2278,7 +2278,7 @@ MonoBehaviour:
   - {fileID: 1864685821}
   enemy: {fileID: 5338783919543476209, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
   enemies: []
-  enemyRound: 20
+  enemyRound: 0
 --- !u!4 &843739052
 Transform:
   m_ObjectHideFlags: 0
@@ -2624,8 +2624,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443615e30ace4f540892bba422e66ea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  cameraSpeed: 0
+  player: {fileID: 1836626140}
+  cameraSpeed: 100
 --- !u!1 &1125450161
 GameObject:
   m_ObjectHideFlags: 0
@@ -4791,6 +4791,7 @@ GameObject:
   - component: {fileID: 1836626142}
   - component: {fileID: 1836626141}
   - component: {fileID: 1836626145}
+  - component: {fileID: 1836626147}
   - component: {fileID: 1836626146}
   m_Layer: 0
   m_Name: Player
@@ -4957,7 +4958,19 @@ MonoBehaviour:
     m_ActionId: 668e5402-98e3-4598-a563-9d5f60c0c0c0
     m_ActionName: Player/Move[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 963194229}
+        m_TargetAssemblyTypeName: CameraRotation, Assembly-CSharp
+        m_MethodName: ChangeRotation
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: c402ce0a-19c6-4f15-b5bf-03ec116850e6
     m_ActionName: Player/Look[/XInputControllerWindows/rightStick,/Mouse/delta,/Pen/delta]
   - m_PersistentCalls:
@@ -5004,6 +5017,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 4598bdd8-fd40-48a6-b2b8-85243b0aa5dd
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1836626147}
+        m_TargetAssemblyTypeName: ReturnScript, Assembly-CSharp
+        m_MethodName: ReturnToLastPosition
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0cb54838-dc63-43d0-a6eb-3211b5535f51
+    m_ActionName: Player/Return[/Keyboard/space,/XInputControllerWindows/buttonWest]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -5031,7 +5060,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1836626136}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b7078bd1ea52fc488bb71d4a2fcaf10, type: 3}
   m_Name: 
@@ -5164,6 +5193,22 @@ MonoBehaviour:
   max_hp: 20
   invunerable_time: 0.1
   hp: 0
+--- !u!114 &1836626147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836626136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 465e968f6fc6ee240bdc1f4d924265c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  return_speed: 10
+  max_time: 3
+  explosion_rage: 10
+  past_positions: []
 --- !u!1 &1862293734
 GameObject:
   m_ObjectHideFlags: 0
