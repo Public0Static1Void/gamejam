@@ -8,7 +8,7 @@ public class CameraRotation : MonoBehaviour
     [SerializeField] private Transform player;
     [Header("Speed")]
     public float cameraSpeed;
-    float x, y;
+    public float x, y;
 
     Vector2 inp;
     void Start()
