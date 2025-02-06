@@ -16,8 +16,9 @@ public class PlayerLife : MonoBehaviour
 
     // Shake effect
     [Header("Shake effect")]
-    private CameraRotation cameraRotation;
     public float shakeAmount;
+
+    private CameraRotation cameraRotation;
 
     [SerializeField] private List<AudioClip> damage_clips;
     void Start()

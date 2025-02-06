@@ -70,7 +70,7 @@ public class ReturnScript : MonoBehaviour
                 cameraRotation.y = past_rotations[current_point].y;
 
                 transform.rotation = Quaternion.Lerp(transform.rotation, q_rotations[current_point], Time.deltaTime * return_speed);
-                Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0), Time.deltaTime * return_speed * 0.75f);
+                Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0), Time.deltaTime * return_speed * 0.5f);
             }
             else
             {
@@ -83,6 +83,7 @@ public class ReturnScript : MonoBehaviour
                     // El jugador ha llegado al último punto
                     PlayerMovement.instance.canMove = true;
                     GetComponent<Rigidbody>().isKinematic = false;
+                    GetComponent<Collider>().isTrigger = false;
                     returning = false;
 
                     #region DamageToEnemies
@@ -99,7 +100,10 @@ public class ReturnScript : MonoBehaviour
                     {
                         foreach (Collider coll in colls)
                         {
-                            coll.GetComponent<Rigidbody>().AddExplosionForce(damage, transform.position, explosion_range);
+                            Vector3 dir = (coll.transform.position - transform.position).normalized;
+                            Rigidbody enemy_rb = coll.GetComponent<Rigidbody>();
+                            enemy_rb.isKinematic = false;
+                            enemy_rb.AddForce(dir * (damage * 5), ForceMode.VelocityChange);
                             coll.GetComponent<EnemyLife>().Damage(damage);
                             playerLife.Damage(-1);
                         }
@@ -139,6 +143,7 @@ public class ReturnScript : MonoBehaviour
         {
             returning = true;
             GetComponent<Rigidbody>().isKinematic = true;
+            GetComponent<Collider>().isTrigger = true;
             PlayerMovement.instance.canMove = false;
             current_point = past_positions.Count - 1;
         }

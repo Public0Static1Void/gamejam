@@ -41,7 +41,7 @@ public class CameraRotation : MonoBehaviour
                 shake = false;
             }
 
-            switch (Random.Range(0, 5))
+            switch (Random.Range(0, 7))
             {
                 case 0:
                     x += amount * Time.deltaTime;
@@ -60,6 +60,12 @@ public class CameraRotation : MonoBehaviour
                 case 4:
                     x -= amount * Time.deltaTime;
                     y += amount * Time.deltaTime;
+                    break;
+                case 5:
+                    y -= amount * Time.deltaTime;
+                    break;
+                case 6:
+                    x -= amount * Time.deltaTime;
                     break;
             }
         }
