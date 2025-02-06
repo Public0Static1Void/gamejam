@@ -5194,9 +5194,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max_hp: 20
-  invunerable_time: 0.1
+  invunerable_time: 0.25
   hp: 0
-  shakeAmount: 100
+  shakeAmount: 10
   damage_clips:
   - {fileID: 8300000, guid: 99bb3605d43eefc4994ca25b19b1604e, type: 3}
   - {fileID: 8300000, guid: 07fefb6980e10a54fb7c2437596ddfc3, type: 3}
