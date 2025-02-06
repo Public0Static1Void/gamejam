@@ -26,7 +26,7 @@ public class Rounds : MonoBehaviour
     {
         if (instance == null) instance = this;
         else Destroy(this);
-        GameManager.gm.ShowText("Press space to return :D", 0);
+        GameManager.gm.ShowText("Press space to return :D", 1);
     }
 
     void Update()
@@ -35,7 +35,7 @@ public class Rounds : MonoBehaviour
         {
             StartCoroutine(SpawnLine());
             onRound = true;
-            enemyRound *= 1.2f;
+            enemyRound *= 1.5f;
         }
 
         if (onRound && !spawning)
@@ -53,16 +53,16 @@ public class Rounds : MonoBehaviour
     {
         spawning = true;
         if (round > 0)
-            EkkoUlt.instance.RandomUpgrade();
+            ReturnScript.instance.RandomUpgrade();
 
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(10 - round * 0.1f);
 
         for (int i = 0; i < enemyRound; i++)
         {
             int randSpawn = Random.Range(0, SpawnPoint.Length);
             GameObject enemy_inst = Instantiate(enemy, SpawnPoint[randSpawn].position, transform.rotation);
             if (round > 0)
-                enemy_hp *= 1.2f;
+                enemy_hp *= 1.5f;
             enemy_inst.GetComponent<EnemyLife>().hp = (int)enemy_hp;
             enemies.Add(enemy_inst);
             yield return new WaitForSeconds(0.5f);

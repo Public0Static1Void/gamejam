@@ -13,8 +13,11 @@ public class PlayerLife : MonoBehaviour
 
     private Material m;
     private Color curr_color;
+
+    [SerializeField] private List<AudioClip> damage_clips;
     void Start()
     {
+        if (damage_clips.Count <= 0) Debug.LogWarning("Remember to add the damage sounds to the player!!");
         m = GetComponent<MeshRenderer>().material;
         curr_color = m.color;
         hp = max_hp;
@@ -38,12 +41,20 @@ public class PlayerLife : MonoBehaviour
     public void Damage(int value)
     {
         hp -= value;
+        if (hp > max_hp) hp = max_hp;
+        else
+        {
+            curr_color.r += value * 0.025f;
+            curr_color.g -= value * 0.025f;
+            curr_color.b -= value * 0.025f;
+            m.color = curr_color;
+        }
 
-        curr_color.r += value * 0.025f;
-        curr_color.g -= value * 0.025f;
-        curr_color.b -= value * 0.025f;
+        if (!SoundManager.instance.audioSource.isPlaying)
+        {
+            SoundManager.instance.PlaySound(damage_clips[Random.Range(0, damage_clips.Count)]);
+        }
 
-        m.color = curr_color;
         if (hp <= 0)
         {
             GameManager.gm.LoadScene("Menu");

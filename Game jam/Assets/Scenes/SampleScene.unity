@@ -2278,7 +2278,7 @@ MonoBehaviour:
   - {fileID: 1864685821}
   enemy: {fileID: 5338783919543476209, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
   enemies: []
-  enemyRound: 0
+  enemyRound: 20
 --- !u!4 &843739052
 Transform:
   m_ObjectHideFlags: 0
@@ -5195,6 +5195,10 @@ MonoBehaviour:
   max_hp: 20
   invunerable_time: 0.1
   hp: 0
+  damage_clips:
+  - {fileID: 8300000, guid: 99bb3605d43eefc4994ca25b19b1604e, type: 3}
+  - {fileID: 8300000, guid: 07fefb6980e10a54fb7c2437596ddfc3, type: 3}
+  - {fileID: 8300000, guid: 1717a3023d6951643a0db67f8242c374, type: 3}
 --- !u!114 &1836626147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5209,7 +5213,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   return_speed: 8
   max_time: 5
-  explosion_rage: 10
+  explosion_range: 5
+  damage: 10
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 64
+  return_clip: {fileID: 8300000, guid: 118137395082184419559d7dace005a4, type: 3}
+  explosion_clip: {fileID: 8300000, guid: 0edd2431d56b5c5478751db762fb5952, type: 3}
+  funny_explosion_clip: {fileID: 8300000, guid: 01fb40017319b9c42ab26d5eb663302f, type: 3}
+  tictac_clip: {fileID: 8300000, guid: 7ec8dc921391ad7498723735d30aee2d, type: 3}
+  explosion_particle: {fileID: 1007127540951276732, guid: 3ace37360f306cb4aac03640550fa9ef, type: 3}
   past_positions: []
   past_rotations: []
   q_rotations: []

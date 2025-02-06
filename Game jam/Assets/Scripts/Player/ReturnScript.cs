@@ -5,10 +5,20 @@ using UnityEngine.InputSystem;
 
 public class ReturnScript : MonoBehaviour
 {
+    public static ReturnScript instance;
     [Header("Stats")]
     public float return_speed;
     public float max_time = 3;
-    public float explosion_rage;
+    public float explosion_range;
+    public int damage;
+
+    [Header("References")]
+    public LayerMask enemyMask;
+
+    [Header("Sonidos")]
+    public AudioClip return_clip;
+    public AudioClip explosion_clip, funny_explosion_clip, tictac_clip;
+    public GameObject explosion_particle;
 
     [Header("Positions record")]
     public List<Vector3> past_positions;
@@ -21,9 +31,17 @@ public class ReturnScript : MonoBehaviour
 
     private CameraRotation cameraRotation;
 
+    private PlayerLife playerLife;
+
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+        else Destroy(this);
+    }
     void Start()
     {
         cameraRotation = Camera.main.GetComponent<CameraRotation>();
+        playerLife = GetComponent<PlayerLife>();
 
         past_positions = new List<Vector3>
         {
@@ -51,13 +69,8 @@ public class ReturnScript : MonoBehaviour
                 cameraRotation.x = past_rotations[current_point].x; /// Cambia la rotación del script de la cámara, para que no haga cosas raras al acabar la transición
                 cameraRotation.y = past_rotations[current_point].y;
 
-                //transform.rotation = Quaternion.Euler(0, cameraRotation.x, 0);
-                //Camera.main.transform.rotation = Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0);
-
                 transform.rotation = Quaternion.Lerp(transform.rotation, q_rotations[current_point], Time.deltaTime * return_speed);
                 Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0), Time.deltaTime * return_speed * 0.75f);
-
-                //transform.rotation = Quaternion.Lerp(transform.rotation, q_rotations[current_point], Time.deltaTime * return_speed * 0.1f);
             }
             else
             {
@@ -71,6 +84,27 @@ public class ReturnScript : MonoBehaviour
                     PlayerMovement.instance.canMove = true;
                     GetComponent<Rigidbody>().isKinematic = false;
                     returning = false;
+
+                    #region DamageToEnemies
+                    if (SoundManager.instance.funnySounds)
+                    {
+                        SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position, funny_explosion_clip.length);
+                    }
+                    else
+                    {
+                        SoundManager.instance.InstantiateSound(explosion_clip, transform.position, explosion_clip.length);
+                    }
+                    Collider[] colls = Physics.OverlapSphere(transform.position, explosion_range, enemyMask);
+                    if (colls.Length > 0)
+                    {
+                        foreach (Collider coll in colls)
+                        {
+                            coll.GetComponent<Rigidbody>().AddExplosionForce(damage, transform.position, explosion_range);
+                            coll.GetComponent<EnemyLife>().Damage(damage);
+                            playerLife.Damage(-1);
+                        }
+                    }
+                    #endregion
                 }
             }
         }
@@ -108,6 +142,39 @@ public class ReturnScript : MonoBehaviour
             PlayerMovement.instance.canMove = false;
             current_point = past_positions.Count - 1;
         }
+    }
+
+    public void RandomUpgrade()
+    {
+        int rand = Random.Range(0, 2);
+        switch (rand)
+        {
+            case 0:
+                GameManager.gm.ShowText("Period decreased!");
+                DecreasePeriod();
+                break;
+            case 1:
+                GameManager.gm.ShowText("Damage increased!");
+                IncreaseDamage();
+                break;
+            case 2:
+                GameManager.gm.ShowText("Explosion range increased!");
+                IncreaseExplosionRange();
+                break;
+        }
+    }
+    public void DecreasePeriod()
+    {
+        max_time -= 1;
+        if (max_time <= 2) max_time = 2;
+    }
+    public void IncreaseDamage()
+    {
+        damage += 1;
+    }
+    public void IncreaseExplosionRange()
+    {
+        explosion_range += 0.5f;
     }
 
     private void OnDrawGizmos()
