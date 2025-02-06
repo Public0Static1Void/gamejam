@@ -2628,6 +2628,7 @@ MonoBehaviour:
   cameraSpeed: 100
   x: 0
   y: 0
+  shake: 0
 --- !u!1 &1125450161
 GameObject:
   m_ObjectHideFlags: 0
@@ -5195,6 +5196,7 @@ MonoBehaviour:
   max_hp: 20
   invunerable_time: 0.1
   hp: 0
+  shakeAmount: 100
   damage_clips:
   - {fileID: 8300000, guid: 99bb3605d43eefc4994ca25b19b1604e, type: 3}
   - {fileID: 8300000, guid: 07fefb6980e10a54fb7c2437596ddfc3, type: 3}

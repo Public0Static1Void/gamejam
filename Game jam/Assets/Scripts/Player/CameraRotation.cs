@@ -11,6 +11,9 @@ public class CameraRotation : MonoBehaviour
     public float x, y;
 
     Vector2 inp;
+
+    public bool shake = false;
+    private float amount, timer = 0, real_timer = 0;
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -19,6 +22,47 @@ public class CameraRotation : MonoBehaviour
     void Update()
     {
         if (!PlayerMovement.instance.canMove) return;
+
+        if (shake)
+        {
+            timer += Time.deltaTime;
+            real_timer += Time.deltaTime;
+            // Right
+            if (timer >= 0.05f)
+            {
+                amount *= -1;
+                timer = 0;
+            }
+            if (real_timer > 0.5f)
+            {
+                timer = 0;
+                real_timer = 0;
+                amount = 0;
+                shake = false;
+            }
+
+            switch (Random.Range(0, 5))
+            {
+                case 0:
+                    x += amount * Time.deltaTime;
+                    break;
+                case 1:
+                    y += amount * Time.deltaTime;
+                    break;
+                case 2:
+                    x += amount * Time.deltaTime;
+                    y += amount * Time.deltaTime;
+                    break;
+                case 3:
+                    x += amount * Time.deltaTime;
+                    y -= amount * Time.deltaTime;
+                    break;
+                case 4:
+                    x -= amount * Time.deltaTime;
+                    y += amount * Time.deltaTime;
+                    break;
+            }
+        }
 
         if (inp.x > 1 || inp.x < -1)
         {
@@ -47,5 +91,11 @@ public class CameraRotation : MonoBehaviour
     public void ChangeRotation(InputAction.CallbackContext con)
     {
         inp = con.ReadValue<Vector2>();
+    }
+
+    public void ShakeCamera(float value)
+    {
+        amount = value;
+        shake = true;
     }
 }

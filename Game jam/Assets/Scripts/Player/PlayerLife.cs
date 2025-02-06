@@ -14,10 +14,16 @@ public class PlayerLife : MonoBehaviour
     private Material m;
     private Color curr_color;
 
+    // Shake effect
+    [Header("Shake effect")]
+    private CameraRotation cameraRotation;
+    public float shakeAmount;
+
     [SerializeField] private List<AudioClip> damage_clips;
     void Start()
     {
         if (damage_clips.Count <= 0) Debug.LogWarning("Remember to add the damage sounds to the player!!");
+        cameraRotation = Camera.main.GetComponent<CameraRotation>();
         m = GetComponent<MeshRenderer>().material;
         curr_color = m.color;
         hp = max_hp;
@@ -52,6 +58,7 @@ public class PlayerLife : MonoBehaviour
 
         if (!SoundManager.instance.audioSource.isPlaying)
         {
+            cameraRotation.ShakeCamera(shakeAmount);
             SoundManager.instance.PlaySound(damage_clips[Random.Range(0, damage_clips.Count)]);
         }
 
