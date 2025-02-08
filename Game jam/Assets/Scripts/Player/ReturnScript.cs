@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class ReturnScript : MonoBehaviour
@@ -15,6 +16,7 @@ public class ReturnScript : MonoBehaviour
 
     [Header("References")]
     public LayerMask enemyMask;
+    public UnityEvent ability;
 
     [Header("Sonidos")]
     public AudioClip return_clip;
@@ -111,6 +113,7 @@ public class ReturnScript : MonoBehaviour
                     }
                     #endregion
 
+
                     playerLife.Invulnerable(); /// Hace que el jugador sea invulnerable cuando acaba de llegar
                     PlayerMovement.instance.canMove = true;
                     GetComponent<Rigidbody>().isKinematic = false;
@@ -154,9 +157,6 @@ public class ReturnScript : MonoBehaviour
                 timer += Time.deltaTime;
             }
         }
-
-        
-        
     }
 
     public void ReturnToLastPosition(InputAction.CallbackContext con)
@@ -168,6 +168,11 @@ public class ReturnScript : MonoBehaviour
             GetComponent<Collider>().isTrigger = true;
             PlayerMovement.instance.canMove = false; /// Evita que el jugador pueda moverse mientras vuelve
             current_point = past_positions.Count - 1;
+
+            if (ability != null) /// Ejecuta la habilidad del player
+            {
+                ability.Invoke();
+            }
         }
     }
 

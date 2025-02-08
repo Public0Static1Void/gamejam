@@ -9,7 +9,7 @@ public class Rounds : MonoBehaviour
     public GameObject enemy;
     public static Rounds instance { get; private set; }
 
-    public List<GameObject> enemies;
+    public List<GameObject> enemies, enemy_list;
 
     public float enemyRound;
 
@@ -65,6 +65,15 @@ public class Rounds : MonoBehaviour
             while (Vector3.Distance(PlayerMovement.instance.transform.position, SpawnPoint[randSpawn].position) < 10)
             {
                 randSpawn = Random.Range(0, SpawnPoint.Length);
+            }
+            int rand_enemy = Random.Range(0, round);
+            if (round > 10) /// Hasta la ronda 10 no podrá aparecer el boss
+            {
+                enemy = enemy_list[rand_enemy];
+            }
+            else
+            {
+                enemy = enemy_list[0];
             }
             GameObject enemy_inst = Instantiate(enemy, SpawnPoint[randSpawn].position, transform.rotation);
             if (round > 0)

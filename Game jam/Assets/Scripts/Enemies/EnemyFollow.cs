@@ -14,7 +14,7 @@ public class EnemyFollow : MonoBehaviour
     private Rigidbody rb;
     void Start()
     {
-        target = EkkoUlt.instance.transform;
+        target = PlayerMovement.instance.transform;
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
     }

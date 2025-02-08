@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     private float alpha = 0;
     private bool show_announce = false;
     private float txt_show_speed;
+    private bool pause = false;
 
     public TMP_Text message_text;
 
@@ -27,6 +28,8 @@ public class GameManager : MonoBehaviour
             gm = this;
         else
             Destroy(this.gameObject);
+
+        Application.targetFrameRate = 60;
     }
 
     void Update()
@@ -84,6 +87,18 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    public void InputPause(InputAction.CallbackContext con)
+    {
+        if (con.performed)
+        {
+            pause = !pause;
+            if (pause)
+                PauseGame();
+            else
+                ResumeGame();
+        }
     }
 
     public void ShowText(string text, int show_speed = 3)

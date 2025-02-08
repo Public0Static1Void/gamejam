@@ -55,7 +55,7 @@ public class SystemXP : MonoBehaviour
     void Start()
     {
         abilityPanel.SetActive(false);
-        ConfigureAbilities();
+        //ConfigureAbilities();
     }
 
     public void ShowAbilities()
