@@ -27,7 +27,7 @@ public class ReturnScript : MonoBehaviour
     public List<Quaternion> q_rotations;
 
     private bool returning = false, cooldown = false;
-    private float timer = 0;
+    private float timer = 0, cooldown_timer = 0;
     private int current_point = 0;
 
     private CameraRotation cameraRotation;
@@ -65,7 +65,7 @@ public class ReturnScript : MonoBehaviour
             if (Vector3.Distance(transform.position, past_positions[current_point]) > 0.1f)
             {
                 Vector3 dir = (past_positions[current_point] - transform.position).normalized;
-                transform.Translate(dir * return_speed * Time.deltaTime, Space.World); /// Mueve al jugador en la dirección a su anterior posición
+                transform.Translate(dir * (return_speed * 0.75f + Vector3.Distance(transform.position, past_positions[current_point])) * Time.deltaTime, Space.World); /// Mueve al jugador en la dirección a su anterior posición
                 
                 cameraRotation.x = past_rotations[current_point].x; /// Cambia la rotación del script de la cámara, para que no haga cosas raras al acabar la transición
                 cameraRotation.y = past_rotations[current_point].y;
@@ -82,12 +82,8 @@ public class ReturnScript : MonoBehaviour
                 else
                 {
                     // El jugador ha llegado al último punto
-                    PlayerMovement.instance.canMove = true;
-                    GetComponent<Rigidbody>().isKinematic = false;
-                    GetComponent<Collider>().isTrigger = false;
-                    returning = false;
-                    cooldown = true;
-                    timer = 0;
+                    ClearReturnLists();
+
 
                     #region DamageToEnemies
                     if (SoundManager.instance.funnySounds)
@@ -101,6 +97,8 @@ public class ReturnScript : MonoBehaviour
                     Collider[] colls = Physics.OverlapSphere(transform.position, explosion_range, enemyMask);
                     if (colls.Length > 0)
                     {
+                        GameManager.gm.ShakeController(1, 1, 3);
+
                         foreach (Collider coll in colls)
                         {
                             Vector3 dir = (coll.transform.position - transform.position).normalized;
@@ -112,17 +110,25 @@ public class ReturnScript : MonoBehaviour
                         }
                     }
                     #endregion
+
+                    playerLife.Invulnerable(); /// Hace que el jugador sea invulnerable cuando acaba de llegar
+                    PlayerMovement.instance.canMove = true;
+                    GetComponent<Rigidbody>().isKinematic = false;
+                    GetComponent<Collider>().isTrigger = false;
+
+                    returning = false;
+                    cooldown = true;
+                    timer = 0;
                 }
             }
         }
-        
-        if (cooldown) // Cuenta atrás del cooldown
+        else if (cooldown) // Cuenta atrás del cooldown
         {
-            timer += Time.deltaTime;
-            if (timer > cooldown_time)
+            cooldown_timer += Time.deltaTime;
+            if (cooldown_timer > cooldown_time)
             {
                 cooldown = false;
-                timer = 0;
+                cooldown_timer = 0;
             }
         }
         else
@@ -148,6 +154,9 @@ public class ReturnScript : MonoBehaviour
                 timer += Time.deltaTime;
             }
         }
+
+        
+        
     }
 
     public void ReturnToLastPosition(InputAction.CallbackContext con)
@@ -160,6 +169,17 @@ public class ReturnScript : MonoBehaviour
             PlayerMovement.instance.canMove = false; /// Evita que el jugador pueda moverse mientras vuelve
             current_point = past_positions.Count - 1;
         }
+    }
+
+    private void ClearReturnLists()
+    {
+        past_positions.Clear();
+        past_rotations.Clear();
+        q_rotations.Clear();
+
+        past_positions.Add(transform.position);
+        past_rotations.Add(new Vector2(cameraRotation.x, cameraRotation.y));
+        q_rotations.Add(transform.rotation);
     }
 
     public void RandomUpgrade()
@@ -195,8 +215,13 @@ public class ReturnScript : MonoBehaviour
         explosion_range += 0.5f;
     }
 
+
+
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(past_positions[0], 1);
+        for (int i = 0; i < past_positions.Count; i++)
+        {
+            Gizmos.DrawWireSphere(past_positions[i], 1);
+        }
     }
 }

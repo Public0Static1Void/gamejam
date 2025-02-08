@@ -56,6 +56,20 @@ public class GameManager : MonoBehaviour
             message_text.color = new Color(col.r, col.g, col.b, alpha);
         }
     }
+    public void ShakeController(float time, float low_frequency, float high_frequency)
+    {
+        StartCoroutine(ControllerShake(time, low_frequency, high_frequency));
+    }
+    private IEnumerator ControllerShake(float time, float low_frequency, float high_frequency)
+    {
+        Gamepad pad = Gamepad.current;
+        if (pad != null)
+        {
+            pad.SetMotorSpeeds(low_frequency, high_frequency);
+            yield return new WaitForSeconds(time);
+            pad.SetMotorSpeeds(0, 0);
+        }
+    }
 
     public void ResumeGame()
     {

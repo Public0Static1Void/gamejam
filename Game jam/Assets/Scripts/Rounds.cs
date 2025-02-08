@@ -55,11 +55,17 @@ public class Rounds : MonoBehaviour
         if (round > 0)
             ReturnScript.instance.RandomUpgrade();
 
-        yield return new WaitForSeconds(10 - round * 0.1f);
+        float wait_time = 10 - round * 0.1f; /// Función de espera entre rondas
+        if (wait_time < 1) wait_time = 1;
+        yield return new WaitForSeconds(wait_time);
 
         for (int i = 0; i < enemyRound; i++)
         {
-            int randSpawn = Random.Range(0, SpawnPoint.Length);
+            int randSpawn = Random.Range(0, SpawnPoint.Length); /// No aparecerán enemigos en la cara del player
+            while (Vector3.Distance(PlayerMovement.instance.transform.position, SpawnPoint[randSpawn].position) < 10)
+            {
+                randSpawn = Random.Range(0, SpawnPoint.Length);
+            }
             GameObject enemy_inst = Instantiate(enemy, SpawnPoint[randSpawn].position, transform.rotation);
             if (round > 0)
                 enemy_hp *= 1.5f;

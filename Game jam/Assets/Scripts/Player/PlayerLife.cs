@@ -47,6 +47,11 @@ public class PlayerLife : MonoBehaviour
         }
     }
 
+    public void Invulnerable()
+    {
+        damaged = true;
+    }
+
     public void Damage(int value)
     {
         hp -= value;
@@ -65,6 +70,7 @@ public class PlayerLife : MonoBehaviour
         {
             cameraRotation.ShakeCamera(shakeAmount);
             SoundManager.instance.PlaySound(damage_clips[Random.Range(0, damage_clips.Count)]);
+            GameManager.gm.ShakeController(0.5f, 0.1f, 0.5f);
         }
 
         if (hp <= 0)
