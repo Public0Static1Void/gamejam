@@ -5213,10 +5213,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 465e968f6fc6ee240bdc1f4d924265c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  return_speed: 8
+  return_speed: 12
   max_time: 5
   explosion_range: 5
-  damage: 10
+  damage: 5
   enemyMask:
     serializedVersion: 2
     m_Bits: 64

@@ -8,9 +8,10 @@ public class ReturnScript : MonoBehaviour
     public static ReturnScript instance;
     [Header("Stats")]
     public float return_speed;
-    public float max_time = 3;
+    public float max_time;
     public float explosion_range;
     public int damage;
+    public float cooldown_time;
 
     [Header("References")]
     public LayerMask enemyMask;
@@ -25,7 +26,7 @@ public class ReturnScript : MonoBehaviour
     public List<Vector2> past_rotations;
     public List<Quaternion> q_rotations;
 
-    private bool returning = false;
+    private bool returning = false, cooldown = false;
     private float timer = 0;
     private int current_point = 0;
 
@@ -59,7 +60,7 @@ public class ReturnScript : MonoBehaviour
 
     void Update()
     {
-        if (returning && past_positions.Count > 0)
+        if (returning && past_positions.Count > 0 && !cooldown)
         {
             if (Vector3.Distance(transform.position, past_positions[current_point]) > 0.1f)
             {
@@ -85,6 +86,8 @@ public class ReturnScript : MonoBehaviour
                     GetComponent<Rigidbody>().isKinematic = false;
                     GetComponent<Collider>().isTrigger = false;
                     returning = false;
+                    cooldown = true;
+                    timer = 0;
 
                     #region DamageToEnemies
                     if (SoundManager.instance.funnySounds)
@@ -134,7 +137,17 @@ public class ReturnScript : MonoBehaviour
             {
                 timer += Time.deltaTime;
             }
-        }   
+        }
+        
+        if (cooldown) // Cuenta atrás del cooldown
+        {
+            timer += Time.deltaTime;
+            if (timer > cooldown_time)
+            {
+                cooldown = false;
+                timer = 0;
+            }
+        }
     }
 
     public void ReturnToLastPosition(InputAction.CallbackContext con)
