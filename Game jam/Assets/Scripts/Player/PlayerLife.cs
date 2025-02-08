@@ -24,8 +24,10 @@ public class PlayerLife : MonoBehaviour
     void Start()
     {
         if (damage_clips.Count <= 0) Debug.LogWarning("Remember to add the damage sounds to the player!!");
+
         cameraRotation = Camera.main.GetComponent<CameraRotation>();
         m = GetComponent<MeshRenderer>().material;
+
         curr_color = m.color;
         hp = max_hp;
 
@@ -48,16 +50,18 @@ public class PlayerLife : MonoBehaviour
     public void Damage(int value)
     {
         hp -= value;
-        if (hp > max_hp) hp = max_hp;
-        else
+        if (hp > max_hp)
         {
-            curr_color.r += value * 0.025f;
-            curr_color.g -= value * 0.025f;
-            curr_color.b -= value * 0.025f;
-            m.color = curr_color;
+            hp = max_hp;
+            return; /// No hará más comprobaciones si no pierde vida
         }
 
-        if (!SoundManager.instance.audioSource.isPlaying)
+        curr_color.r += value * 0.025f;
+        curr_color.g -= value * 0.025f;
+        curr_color.b -= value * 0.025f;
+        m.color = curr_color;
+
+        if (!SoundManager.instance.audioSource.isPlaying) /// Le hace un efecto de shake a la cámara y pone el sonido de daño
         {
             cameraRotation.ShakeCamera(shakeAmount);
             SoundManager.instance.PlaySound(damage_clips[Random.Range(0, damage_clips.Count)]);

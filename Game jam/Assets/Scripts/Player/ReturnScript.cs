@@ -106,7 +106,7 @@ public class ReturnScript : MonoBehaviour
                             Vector3 dir = (coll.transform.position - transform.position).normalized;
                             Rigidbody enemy_rb = coll.GetComponent<Rigidbody>();
                             enemy_rb.isKinematic = false;
-                            enemy_rb.AddForce(dir * (damage * 5), ForceMode.VelocityChange);
+                            enemy_rb.AddForce(dir * (damage * 2.5f), ForceMode.VelocityChange);
                             coll.GetComponent<EnemyLife>().Damage(damage);
                             playerLife.Damage(-1);
                         }

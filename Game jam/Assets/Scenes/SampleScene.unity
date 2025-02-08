@@ -5196,7 +5196,7 @@ MonoBehaviour:
   max_hp: 20
   invunerable_time: 0.25
   hp: 0
-  shakeAmount: 10
+  shakeAmount: 15
   damage_clips:
   - {fileID: 8300000, guid: 99bb3605d43eefc4994ca25b19b1604e, type: 3}
   - {fileID: 8300000, guid: 07fefb6980e10a54fb7c2437596ddfc3, type: 3}
@@ -5217,6 +5217,7 @@ MonoBehaviour:
   max_time: 5
   explosion_range: 5
   damage: 5
+  cooldown_time: 5
   enemyMask:
     serializedVersion: 2
     m_Bits: 64
