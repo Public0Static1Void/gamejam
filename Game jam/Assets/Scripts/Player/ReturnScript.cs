@@ -115,6 +115,16 @@ public class ReturnScript : MonoBehaviour
                 }
             }
         }
+        
+        if (cooldown) // Cuenta atrás del cooldown
+        {
+            timer += Time.deltaTime;
+            if (timer > cooldown_time)
+            {
+                cooldown = false;
+                timer = 0;
+            }
+        }
         else
         {
             if (timer > max_time / 10)
@@ -138,26 +148,16 @@ public class ReturnScript : MonoBehaviour
                 timer += Time.deltaTime;
             }
         }
-        
-        if (cooldown) // Cuenta atrás del cooldown
-        {
-            timer += Time.deltaTime;
-            if (timer > cooldown_time)
-            {
-                cooldown = false;
-                timer = 0;
-            }
-        }
     }
 
     public void ReturnToLastPosition(InputAction.CallbackContext con)
     {
-        if (con.performed) // Se ha pulsado espacio
+        if (con.performed && !cooldown && !returning) // Se ha pulsado espacio y no está en cooldown
         {
             returning = true;
-            GetComponent<Rigidbody>().isKinematic = true;
+            GetComponent<Rigidbody>().isKinematic = true; /// Deshabilita el rigidbody y las colisiones para evitar problemas al volver
             GetComponent<Collider>().isTrigger = true;
-            PlayerMovement.instance.canMove = false;
+            PlayerMovement.instance.canMove = false; /// Evita que el jugador pueda moverse mientras vuelve
             current_point = past_positions.Count - 1;
         }
     }
