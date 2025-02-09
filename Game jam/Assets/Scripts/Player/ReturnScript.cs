@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class ReturnScript : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class ReturnScript : MonoBehaviour
     [Header("References")]
     public LayerMask enemyMask;
     public UnityEvent ability;
+    public Image cooldown_image;
 
     [Header("Sonidos")]
     public AudioClip return_clip;
@@ -64,6 +66,8 @@ public class ReturnScript : MonoBehaviour
     {
         if (returning && past_positions.Count > 0 && !cooldown)
         {
+            // Calcula la distancia hasta el último punto en un rango de 1 a 0
+            cooldown_image.fillAmount = 1 - (1 - (Vector3.Distance(transform.position, past_positions[0]) / Vector3.Distance(past_positions[0], past_positions[past_positions.Count - 1])));
             if (Vector3.Distance(transform.position, past_positions[current_point]) > 0.1f)
             {
                 Vector3 dir = (past_positions[current_point] - transform.position).normalized;
@@ -84,6 +88,7 @@ public class ReturnScript : MonoBehaviour
                 else
                 {
                     // El jugador ha llegado al último punto
+                    cooldown_image.fillAmount = 0;
                     #region DamageToEnemy
                     if (SoundManager.instance.funnySounds) /// Sonidos de explosión
                     {
@@ -111,6 +116,7 @@ public class ReturnScript : MonoBehaviour
         else if (cooldown) // Cuenta atrás del cooldown
         {
             cooldown_timer += Time.deltaTime;
+            cooldown_image.fillAmount += Time.deltaTime / cooldown_time;
             if (cooldown_timer > cooldown_time)
             {
                 ClearReturnLists();

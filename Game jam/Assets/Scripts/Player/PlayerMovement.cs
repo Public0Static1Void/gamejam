@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance { get; private set; }
+    [Header("Stats")]
     public float speed;
     public float current_speed;
     private float target_speed = 0;
+    public float max_stamina;
+    public float current_stamina;
     public float fov;
     public bool canMove = true;
     public bool sprinting = false;
+    [Header("References")]
+    public Image stamina_image;
     
     public Rigidbody rb;
 
@@ -36,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         start_position = transform.position;
+        current_stamina = max_stamina;
 
         current_speed = speed;
         fov = Camera.main.fieldOfView;
@@ -44,17 +51,42 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (!canMove) return;
-
+        #region Sprint
         if (sprinting)
         {
+            if (current_stamina <= 0) /// Cancela el sprint si no tienes stamina
+                sprinting = false;
+
+            if (stamina_image.color.a < 0.75f)
+            {
+                Color col = new Color(stamina_image.color.r, stamina_image.color.g, stamina_image.color.b, stamina_image.color.a + Time.deltaTime);
+                stamina_image.color = col;
+            }
+            stamina_image.fillAmount = 1 - (1 - (current_stamina / max_stamina));
+
+            current_stamina -= Time.deltaTime;
             current_speed = Mathf.Lerp(current_speed, target_speed * 1.5f, (speed * 0.05f) * Time.deltaTime);
             Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, fov + 20, Time.deltaTime * 8);
         }
-        else if (current_speed > target_speed || Camera.main.fieldOfView > fov)
+        else if (current_speed > target_speed + 0.05f || Camera.main.fieldOfView > fov + 0.05f)
         {
             current_speed = Mathf.Lerp(current_speed, target_speed, (speed * 0.05f) * Time.deltaTime);
             Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, fov, Time.deltaTime * 6);
         }
+        else if (current_stamina < max_stamina) /// Recupera la stamina
+        {
+            current_stamina += Time.deltaTime;
+            stamina_image.fillAmount = (current_stamina / max_stamina);
+        }
+        else /// Esconde el círculo de stamina cuando ya no hagan falta más cálculos
+        {
+            if (stamina_image.color.a > 0)
+            {
+                Color col = new Color(stamina_image.color.r, stamina_image.color.g, stamina_image.color.b, stamina_image.color.a - Time.deltaTime);
+                stamina_image.color = col;
+            }
+        }
+        #endregion
         Vector3 d = ((transform.forward * dir.y) + (transform.right * dir.x)) * current_speed * Time.fixedDeltaTime;
         Vector3 with_y_speed = new Vector3(d.x, rb.velocity.y, d.z);
         rb.velocity = with_y_speed;
@@ -70,11 +102,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (con.performed)
         {
-            sprinting = true;
-        }
-        else
-        {
-            sprinting = false;
+            sprinting = !sprinting;
         }
     }
 
