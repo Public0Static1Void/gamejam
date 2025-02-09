@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
 
         Application.targetFrameRate = 60;
-        Gamepad.current.SetMotorSpeeds(0, 0);
+        ShakeController(0, 0, 0);
     }
 
     void Update()
@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         pause_menu.SetActive(true);
-        Gamepad.current.SetMotorSpeeds(0, 0);
+        ShakeController(0, 0, 0);
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

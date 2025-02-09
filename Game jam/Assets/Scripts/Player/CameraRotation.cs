@@ -10,6 +10,9 @@ public class CameraRotation : MonoBehaviour
     public float cameraSpeed;
     public float x, y;
 
+    [Header("References")]
+    public List<RectTransform> UIElements_to_move;
+
     Vector2 inp;
 
     public bool shake = false;
@@ -89,9 +92,20 @@ public class CameraRotation : MonoBehaviour
 
         y = Mathf.Clamp(y, -40, 60);
 
-
+        /// Rotación del jugador y la cámara
         player.rotation = Quaternion.Euler(0, x, 0);
         transform.rotation = Quaternion.Euler(-y, x, 0);
+
+        /// Movimiento de los elementos de la UI con la cámara
+        for (int i = 0; i < UIElements_to_move.Count; i++)
+        {
+            Vector2 input = inp.normalized;
+            Debug.Log(input);
+            UIElements_to_move[i].anchoredPosition = new Vector3(
+                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.x, input.x * 0.1f, Time.deltaTime * (cameraSpeed * 0.01f)),
+                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.y, input.y * 0.1f, Time.deltaTime * (cameraSpeed * 0.01f))
+                );
+        }
     }
 
     public void ChangeRotation(InputAction.CallbackContext con)
