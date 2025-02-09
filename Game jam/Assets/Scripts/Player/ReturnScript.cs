@@ -20,7 +20,7 @@ public class ReturnScript : MonoBehaviour
 
     [Header("Sonidos")]
     public AudioClip return_clip;
-    public AudioClip explosion_clip, funny_explosion_clip, tictac_clip;
+    public AudioClip explosion_clip, funny_explosion_clip, tictac_clip, nautilus_explosion;
     public GameObject explosion_particle;
 
     [Header("Positions record")]
@@ -84,8 +84,6 @@ public class ReturnScript : MonoBehaviour
                 else
                 {
                     // El jugador ha llegado al último punto
-                    ClearReturnLists();
-
                     #region DamageToEnemy
                     if (SoundManager.instance.funnySounds) /// Sonidos de explosión
                     {
@@ -115,6 +113,7 @@ public class ReturnScript : MonoBehaviour
             cooldown_timer += Time.deltaTime;
             if (cooldown_timer > cooldown_time)
             {
+                ClearReturnLists();
                 cooldown = false;
                 cooldown_timer = 0;
             }
@@ -242,6 +241,8 @@ public class ReturnScript : MonoBehaviour
                 if (dist < 10) /// Si el jugador está cerca hará vibrár el mando
                 {
                     Debug.Log(dist);
+                    if (nautilus_explosion != null) /// Sonido de explosión
+                        SoundManager.instance.InstantiateSound(nautilus_explosion, positions[explosion_num], nautilus_explosion.length);
                     GameManager.gm.ShakeController(0.2f + dist * 0.1f, 0.01f, 10 - dist);
                 }
                 explosion_num--;
