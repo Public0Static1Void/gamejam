@@ -19,9 +19,22 @@ public class EnemyFollow : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
     }
 
+    public void AddForceToEnemy(Vector3 dir, ForceMode mode)
+    {
+        rb.isKinematic = false;
+        agent.enabled = false;
+        rb.velocity = dir;
+    }
+
     private void FixedUpdate()
     {
-        if (target != null)
+        if (rb.velocity.magnitude < 0.1f && rb.velocity.magnitude > -0.1f)
+        {
+            rb.isKinematic = true;
+            agent.enabled = true;
+        }
+
+        if (target != null && agent.isOnNavMesh)
         {
             agent.SetDestination(target.transform.position);
             /*Vector3 dir = target.position - transform.position;

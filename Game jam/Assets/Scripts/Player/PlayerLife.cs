@@ -70,7 +70,7 @@ public class PlayerLife : MonoBehaviour
         {
             cameraRotation.ShakeCamera(shakeAmount);
             SoundManager.instance.PlaySound(damage_clips[Random.Range(0, damage_clips.Count)]);
-            GameManager.gm.ShakeController(0.5f, 0.1f, 0.5f);
+            GameManager.gm.ShakeController(0.5f, 0.1f, 0.25f);
         }
 
         if (hp <= 0)

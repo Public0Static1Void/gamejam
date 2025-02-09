@@ -86,9 +86,8 @@ public class ReturnScript : MonoBehaviour
                     // El jugador ha llegado al último punto
                     ClearReturnLists();
 
-
-                    #region DamageToEnemies
-                    if (SoundManager.instance.funnySounds)
+                    #region DamageToEnemy
+                    if (SoundManager.instance.funnySounds) /// Sonidos de explosión
                     {
                         SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position, funny_explosion_clip.length);
                     }
@@ -96,23 +95,9 @@ public class ReturnScript : MonoBehaviour
                     {
                         SoundManager.instance.InstantiateSound(explosion_clip, transform.position, explosion_clip.length);
                     }
-                    Collider[] colls = Physics.OverlapSphere(transform.position, explosion_range, enemyMask);
-                    if (colls.Length > 0)
-                    {
-                        GameManager.gm.ShakeController(1, 1, 3);
-
-                        foreach (Collider coll in colls)
-                        {
-                            Vector3 dir = (coll.transform.position - transform.position).normalized;
-                            Rigidbody enemy_rb = coll.GetComponent<Rigidbody>();
-                            enemy_rb.isKinematic = false;
-                            enemy_rb.AddForce(dir * (damage * 2.5f), ForceMode.VelocityChange);
-                            coll.GetComponent<EnemyLife>().Damage(damage);
-                            playerLife.Damage(-1);
-                        }
-                    }
+                    GameManager.gm.ShakeController(1, 0.5f, 1.5f);
+                    DamageToEnemies(transform.position, damage, explosion_range, Vector3.zero);
                     #endregion
-
 
                     playerLife.Invulnerable(); /// Hace que el jugador sea invulnerable cuando acaba de llegar
                     PlayerMovement.instance.canMove = true;
@@ -155,6 +140,22 @@ public class ReturnScript : MonoBehaviour
             else
             {
                 timer += Time.deltaTime;
+            }
+        }
+    }
+
+    private void DamageToEnemies(Vector3 origin, int damage_amount, float range, Vector3 dir)
+    {
+        Collider[] colls = Physics.OverlapSphere(origin, range, enemyMask);
+        if (colls.Length > 0)
+        {
+            foreach (Collider coll in colls)
+            {
+                Vector3 d = (coll.transform.position - transform.position).normalized;
+                dir += d;
+                coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 2.5f), ForceMode.Impulse);
+                coll.GetComponent<EnemyLife>().Damage(damage_amount);
+                playerLife.Damage(-1);
             }
         }
     }
@@ -220,7 +221,37 @@ public class ReturnScript : MonoBehaviour
         explosion_range += 0.5f;
     }
 
+    #region NautilusR
+    public void ExplosionPathAbility(GameObject explosionParticle)
+    {
+        StartCoroutine(ExplosionPath(explosionParticle));
+    }
+    IEnumerator ExplosionPath(GameObject explosionParticle)
+    {
+        List<Vector3> positions = new List<Vector3>(past_positions);
+        int explosion_num = positions.Count - 1;
+        float explosion_timer = 0;
+        while (explosion_num > 0)
+        {
+            explosion_timer += Time.deltaTime;
+            if (explosion_timer > 0.5f)
+            {
+                Instantiate(explosionParticle, positions[explosion_num], Quaternion.identity);
+                DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), 5, Vector3.up * 2);
+                float dist = Vector3.Distance(positions[explosion_num], transform.position);
+                if (dist < 10) /// Si el jugador está cerca hará vibrár el mando
+                {
+                    Debug.Log(dist);
+                    GameManager.gm.ShakeController(0.2f + dist * 0.1f, 0.01f, 10 - dist);
+                }
+                explosion_num--;
+                explosion_timer = 0;
+            }
 
+            yield return null;
+        }
+    }
+    #endregion
 
     private void OnDrawGizmos()
     {
