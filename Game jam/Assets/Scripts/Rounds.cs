@@ -55,8 +55,8 @@ public class Rounds : MonoBehaviour
         if (round > 0)
             ReturnScript.instance.RandomUpgrade();
 
-        float wait_time = 10 - round * 0.1f; /// Función de espera entre rondas
-        if (wait_time < 1) wait_time = 1;
+        float wait_time = 12.5f - round * 0.1f; /// Función de espera entre rondas (cuánto más juego más rápido pasarán)
+        if (wait_time < 2) wait_time = 2;
         yield return new WaitForSeconds(wait_time);
 
         for (int i = 0; i < enemyRound; i++)

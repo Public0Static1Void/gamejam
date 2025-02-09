@@ -77,9 +77,12 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        PlayerMovement.instance.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
+
         Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
         pause_menu.SetActive(false);
     }
     public void PauseGame()
@@ -89,6 +92,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        PlayerMovement.instance.GetComponent<PlayerInput>().SwitchCurrentActionMap("UI");
     }
 
     public void InputPause(InputAction.CallbackContext con)
