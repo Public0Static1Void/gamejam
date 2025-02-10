@@ -12,11 +12,15 @@ public class EnemyFollow : MonoBehaviour
     public float speed;
 
     private Rigidbody rb;
+
+    private Vector3 original_position;
     void Start()
     {
         target = PlayerMovement.instance.transform;
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+
+        original_position = transform.position;
     }
 
     public void AddForceToEnemy(Vector3 dir, ForceMode mode)
@@ -28,10 +32,17 @@ public class EnemyFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rb.velocity.magnitude < 0.1f && rb.velocity.magnitude > -0.1f)
+        if (rb.velocity.magnitude == 0)
         {
-            rb.isKinematic = true;
-            agent.enabled = true;
+            if (Physics.Raycast(transform.position, Vector2.down, transform.localScale.y))
+            {
+                rb.isKinematic = true;
+                agent.enabled = true;
+            }
+            else
+            {
+                rb.isKinematic = false;
+            }
         }
 
         if (target != null && agent.isOnNavMesh)
