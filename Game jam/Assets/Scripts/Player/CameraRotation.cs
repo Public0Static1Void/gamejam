@@ -100,10 +100,9 @@ public class CameraRotation : MonoBehaviour
         for (int i = 0; i < UIElements_to_move.Count; i++)
         {
             Vector2 input = inp.normalized;
-            Debug.Log(input);
             UIElements_to_move[i].anchoredPosition = new Vector3(
-                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.x, -input.x * 0.1f, Time.deltaTime * (cameraSpeed * 0.01f)),
-                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.y, -input.y * 0.1f, Time.deltaTime * (cameraSpeed * 0.01f))
+                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.x, -input.x * UIElements_to_move[i].rect.width * UIElements_to_move[i].localScale.x, Time.deltaTime * (cameraSpeed * 0.02f)),
+                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.y, -input.y * UIElements_to_move[i].rect.height * UIElements_to_move[i].localScale.y, Time.deltaTime * (cameraSpeed * 0.02f))
                 );
         }
     }

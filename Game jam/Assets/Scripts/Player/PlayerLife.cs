@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerLife : MonoBehaviour
 {
     public int max_hp;
     public float invunerable_time;
     public int hp;
+    [Header("References")]
+    public Image life_amount;
 
     private bool damaged;
     private float timer = 0;
@@ -65,6 +68,8 @@ public class PlayerLife : MonoBehaviour
         curr_color.g -= value * 0.025f;
         curr_color.b -= value * 0.025f;
         m.color = curr_color;
+        /// Barra de vida
+        life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
 
         if (!SoundManager.instance.audioSource.isPlaying) /// Le hace un efecto de shake a la cámara y pone el sonido de daño
         {

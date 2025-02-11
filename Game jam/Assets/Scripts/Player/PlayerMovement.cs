@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
             if (current_stamina <= 0) /// Cancela el sprint si no tienes stamina
                 sprinting = false;
 
-            if (stamina_image.color.a < 0.75f)
+            if (stamina_image.color.a < 0.5f) /// Cantidad de transparencia de stamina
             {
                 Color col = new Color(stamina_image.color.r, stamina_image.color.g, stamina_image.color.b, stamina_image.color.a + Time.deltaTime);
                 stamina_image.color = col;
