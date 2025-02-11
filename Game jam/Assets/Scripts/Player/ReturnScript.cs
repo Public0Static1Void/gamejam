@@ -242,14 +242,14 @@ public class ReturnScript : MonoBehaviour
             if (explosion_timer > 0.5f)
             {
                 Instantiate(explosionParticle, positions[explosion_num], Quaternion.identity);
-                DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), 5, Vector3.up * 2);
+                DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), 3, Vector3.up * 2);
                 float dist = Vector3.Distance(positions[explosion_num], transform.position);
                 if (dist < 10) /// Si el jugador está cerca hará vibrár el mando
                 {
                     Debug.Log(dist);
                     if (nautilus_explosion != null) /// Sonido de explosión
                         SoundManager.instance.InstantiateSound(nautilus_explosion, positions[explosion_num], nautilus_explosion.length);
-                    GameManager.gm.ShakeController(0.2f + dist * 0.1f, 0.01f, 10 - dist);
+                    GameManager.gm.ShakeController(0.2f + dist * 0.1f, 0.01f, (1 - (1 - (dist / 10))) * 2);
                 }
                 explosion_num--;
                 explosion_timer = 0;
