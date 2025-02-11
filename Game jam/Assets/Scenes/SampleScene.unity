@@ -2632,6 +2632,9 @@ MonoBehaviour:
   cameraSpeed: 100
   x: 0
   y: 0
+  UIElements_to_move:
+  - {fileID: 1415155664}
+  - {fileID: 1341274105}
   shake: 0
 --- !u!1 &1125450161
 GameObject:
