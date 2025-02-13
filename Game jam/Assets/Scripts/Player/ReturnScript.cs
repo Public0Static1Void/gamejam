@@ -158,7 +158,7 @@ public class ReturnScript : MonoBehaviour
             {
                 Vector3 d = (coll.transform.position - transform.position).normalized;
                 dir += d;
-                coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 2.5f), ForceMode.Impulse);
+                coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f), ForceMode.Impulse);
                 coll.GetComponent<EnemyLife>().Damage(damage_amount);
                 playerLife.Damage(-1);
             }

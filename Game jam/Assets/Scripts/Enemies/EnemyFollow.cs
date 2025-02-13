@@ -32,9 +32,9 @@ public class EnemyFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (rb.velocity.magnitude == 0)
+        if (rb.velocity.magnitude > -0.05f && rb.velocity.magnitude < 0.05f)
         {
-            if (Physics.Raycast(transform.position, Vector2.down, transform.localScale.y))
+            if (Physics.Raycast(transform.position, Vector2.down, transform.localScale.y + 0.1f))
             {
                 rb.isKinematic = true;
                 agent.enabled = true;
@@ -58,5 +58,7 @@ public class EnemyFollow : MonoBehaviour
                 //transform.Translate(transform.forward * 10 * Time.deltaTime);
             }*/
         }
+        if (!agent.isOnNavMesh && rb.isKinematic)
+            Destroy(this.gameObject);
     }
 }

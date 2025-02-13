@@ -101,8 +101,8 @@ public class CameraRotation : MonoBehaviour
         {
             Vector2 input = inp.normalized;
             UIElements_to_move[i].anchoredPosition = new Vector3(
-                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.x, -input.x * UIElements_to_move[i].rect.width * UIElements_to_move[i].localScale.x, Time.deltaTime * (cameraSpeed * 0.005f)),
-                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.y, -input.y * UIElements_to_move[i].rect.height * UIElements_to_move[i].localScale.y, Time.deltaTime * (cameraSpeed * 0.005f))
+                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.x, -input.x * (UIElements_to_move[i].rect.width * UIElements_to_move[i].localScale.x) / 2, Time.deltaTime * (cameraSpeed * 0.005f)),
+                    Mathf.Lerp(UIElements_to_move[i].anchoredPosition.y, -input.y * (UIElements_to_move[i].rect.height * UIElements_to_move[i].localScale.y) / 2, Time.deltaTime * (cameraSpeed * 0.005f))
                 );
         }
     }
