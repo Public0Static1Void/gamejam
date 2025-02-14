@@ -113,33 +113,22 @@ public class ReturnScript : MonoBehaviour
                 }
             }
         }
-        else if (cooldown) // Cuenta atrás del cooldown
-        {
-            cooldown_timer += Time.deltaTime;
-            cooldown_image.fillAmount += Time.deltaTime / cooldown_time;
-            if (cooldown_timer > cooldown_time)
-            {
-                ClearReturnLists();
-                cooldown = false;
-                cooldown_timer = 0;
-            }
-        }
         else
         {
+            if (cooldown) // Cuenta atrás del cooldown
+            {
+                if (cooldown_timer == 0) ClearReturnLists();
+                cooldown_timer += Time.deltaTime;
+                cooldown_image.fillAmount += Time.deltaTime / cooldown_time;
+                if (cooldown_timer > cooldown_time)
+                {
+                    cooldown = false;
+                    cooldown_timer = 0;
+                }
+            }
             if (timer > max_time / 10)
             {
-                if (past_positions.Count > 0)
-                {
-                    if (past_positions.Count >= 10)
-                    {
-                        past_positions.RemoveAt(0);
-                        past_rotations.RemoveAt(0);
-                        q_rotations.RemoveAt(0);
-                    }
-                    past_positions.Add(transform.position);
-                    past_rotations.Add(new Vector2(cameraRotation.x, cameraRotation.y));
-                    q_rotations.Add(transform.rotation);
-                }
+                UpdateReturnList();
                 timer = 0;
             }
             else
@@ -182,6 +171,21 @@ public class ReturnScript : MonoBehaviour
         }
     }
 
+    private void UpdateReturnList()
+    {
+        if (past_positions.Count > 0)
+        {
+            if (past_positions.Count >= 10)
+            {
+                past_positions.RemoveAt(0);
+                past_rotations.RemoveAt(0);
+                q_rotations.RemoveAt(0);
+            }
+            past_positions.Add(transform.position);
+            past_rotations.Add(new Vector2(cameraRotation.x, cameraRotation.y));
+            q_rotations.Add(transform.rotation);
+        }
+    }
     private void ClearReturnLists()
     {
         past_positions.Clear();
