@@ -117,16 +117,16 @@ public class ReturnScript : MonoBehaviour
         {
             if (cooldown) // Cuenta atrás del cooldown
             {
-                if (cooldown_timer == 0) ClearReturnLists();
+                if (cooldown_timer == 0) ClearReturnLists(); /// Vacía la lista de posiciones
                 cooldown_timer += Time.deltaTime;
-                cooldown_image.fillAmount += Time.deltaTime / cooldown_time;
+                cooldown_image.fillAmount += Time.deltaTime / cooldown_time; /// Suma la cantidad de fill a la imágen del cooldown
                 if (cooldown_timer > cooldown_time)
                 {
                     cooldown = false;
                     cooldown_timer = 0;
                 }
             }
-            if (timer > max_time / 10)
+            if (timer > max_time / 10) /// Va actualizando las posiciones del jugador cada cierto tiempo
             {
                 UpdateReturnList();
                 timer = 0;
@@ -249,8 +249,7 @@ public class ReturnScript : MonoBehaviour
                 DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), 3, Vector3.up * 2);
                 float dist = Vector3.Distance(positions[explosion_num], transform.position);
                 if (dist < 10) /// Si el jugador está cerca hará vibrár el mando
-                {
-                    Debug.Log(dist);
+                {   
                     if (nautilus_explosion != null) /// Sonido de explosión
                         SoundManager.instance.InstantiateSound(nautilus_explosion, positions[explosion_num], nautilus_explosion.length);
                     GameManager.gm.ShakeController(0.2f + dist * 0.1f, 0.01f, (1 - (1 - (dist / 10))) * 2);
