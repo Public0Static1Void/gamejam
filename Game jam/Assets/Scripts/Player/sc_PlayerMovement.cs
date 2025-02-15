@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float max_stamina;
     public float current_stamina;
     public float fov;
+    private float fov_change;
     public bool canMove = true;
     public bool sprinting = false;
     [Header("References")]
@@ -66,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
 
             current_stamina -= Time.deltaTime;
             current_speed = Mathf.Lerp(current_speed, target_speed * 1.5f, (speed * 0.05f) * Time.deltaTime);
-            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, fov + 20, Time.deltaTime * 8);
+            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, fov + fov_change, Time.deltaTime * 8);
         }
         else if (current_speed > target_speed + 0.05f || Camera.main.fieldOfView > fov + 0.05f)
         {
@@ -115,11 +116,13 @@ public class PlayerMovement : MonoBehaviour
         {
             current_speed = speed;
             target_speed = speed;
+            fov_change = 20;
         }
         else 
         { 
             current_speed = speed * 0.75f;
             target_speed = current_speed;
+            fov_change = 20 * 0.7f;
         }
     }
 }
