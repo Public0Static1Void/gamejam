@@ -17,8 +17,14 @@ public class PlayerMovement : MonoBehaviour
     public float current_stamina;
     public float fov;
     private float fov_change;
+
     public bool canMove = true;
     public bool sprinting = false;
+    // Slide variables
+    public bool slide = false;
+    public Vector3 slide_camera_offset;
+    private Vector3 camera_original_position;
+
     [Header("References")]
     public Image stamina_image;
     
@@ -26,9 +32,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 dir;
 
-    private float y_fix = 0;
-
     private Vector3 start_position;
+
 
     private void Awake()
     {
@@ -47,16 +52,24 @@ public class PlayerMovement : MonoBehaviour
 
         current_speed = speed;
         fov = Camera.main.fieldOfView;
+
+        rb.freezeRotation = true;
+
+        camera_original_position = Camera.main.transform.localPosition;
     }
 
     private void FixedUpdate()
     {
         if (!canMove) return;
         #region Sprint
-        if (sprinting)
+        if (sprinting && !slide)
         {
             if (current_stamina <= 0) /// Cancela el sprint si no tienes stamina
+            {
+                target_speed = speed;
                 sprinting = false;
+            }
+
 
             if (stamina_image.color.a < 0.5f) /// Cantidad de transparencia de stamina
             {
@@ -66,7 +79,8 @@ public class PlayerMovement : MonoBehaviour
             stamina_image.fillAmount = 1 - (1 - (current_stamina / max_stamina));
 
             current_stamina -= Time.deltaTime;
-            current_speed = Mathf.Lerp(current_speed, target_speed * 1.5f, (speed * 0.05f) * Time.deltaTime);
+
+            current_speed = Mathf.Lerp(current_speed, target_speed, (speed * 0.05f) * Time.deltaTime); /// Suma de velocidad
             Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, fov + fov_change, Time.deltaTime * 8);
         }
         else if (current_speed > target_speed + 0.05f || Camera.main.fieldOfView > fov + 0.05f)
@@ -88,6 +102,23 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         #endregion
+
+        #region Slide
+        if (slide)
+        {
+            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10);
+            current_speed -= Time.deltaTime * (speed * 0.1f);
+            if (current_speed <= target_speed)
+            {
+                slide = false;
+            }
+        }
+        else if (Camera.main.transform.position != camera_original_position)
+        {
+            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, camera_original_position, Time.deltaTime * 10);
+        }
+        #endregion
+
         Vector3 d = ((transform.forward * dir.y) + (transform.right * dir.x)) * current_speed * Time.fixedDeltaTime;
         Vector3 with_y_speed = new Vector3(d.x, rb.velocity.y, d.z);
         rb.velocity = with_y_speed;
@@ -101,9 +132,26 @@ public class PlayerMovement : MonoBehaviour
 
     public void Sprint(InputAction.CallbackContext con)
     {
-        if (con.performed)
+        if (con.performed && dir.y > 0)
         {
             sprinting = !sprinting;
+            target_speed = speed * 1.5f;
+        }
+    }
+
+    public void Slide(InputAction.CallbackContext con)
+    {
+        if (con.performed)
+        {
+            slide = !slide;
+            if (slide)
+            {
+                current_speed += speed * 8;
+            }
+            else
+            {
+                current_speed = target_speed;
+            }
         }
     }
 

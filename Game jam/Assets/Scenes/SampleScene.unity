@@ -2980,7 +2980,7 @@ MonoBehaviour:
   enemy_list:
   - {fileID: 5338783919543476209, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
   - {fileID: 6845868788880733797, guid: c898474947a343e4eaf251cf5189d333, type: 3}
-  enemyRound: 20
+  enemyRound: 0
 --- !u!4 &843739052
 Transform:
   m_ObjectHideFlags: 0
@@ -6917,6 +6917,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f0aa1d32-e3a2-4fb8-af60-cdf4e912de56
     m_ActionName: Player/Sprint[/Keyboard/leftShift,/XInputControllerWindows/leftStickPress]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1836626143}
+        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
+        m_MethodName: Slide
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0c15317e-7d5b-4cac-9b7b-2ae6ac397abe
+    m_ActionName: Player/Slide[/Keyboard/leftCtrl,/XInputControllerWindows/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -6941,6 +6957,8 @@ MonoBehaviour:
   fov: 0
   canMove: 1
   sprinting: 0
+  slide: 0
+  slide_camera_offset: {x: 0, y: -0.1, z: 0}
   stamina_image: {fileID: 1988724743}
   rb: {fileID: 0}
 --- !u!82 &1836626145
@@ -7107,6 +7125,8 @@ MonoBehaviour:
   past_positions: []
   past_rotations: []
   q_rotations: []
+  returning: 0
+  cooldown: 0
   color_cooldown_ready: {r: 0.54369885, g: 0.7059713, b: 0.7735849, a: 0.39215687}
   color_on_cooldown: {r: 0.10980393, g: 0.18823531, b: 0.21960786, a: 0.39215687}
 --- !u!1 &1862293734
