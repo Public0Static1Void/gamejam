@@ -112,17 +112,22 @@ public class PlayerMovement : MonoBehaviour
         if (rb == null) return;
 
         dir = con.ReadValue<Vector2>();
+        int target_fov = 20;
         if (dir.y >= 0.7f)
         {
             current_speed = speed;
-            target_speed = speed;
-            fov_change = 20;
+            fov_change = target_fov;
+        }
+        else if (dir.y < 0)
+        {
+            current_speed = speed * 0.5f;
+            fov_change = target_fov * 0.45f;
         }
         else 
         { 
             current_speed = speed * 0.75f;
-            target_speed = current_speed;
-            fov_change = 20 * 0.7f;
+            fov_change = target_fov * 0.7f;
         }
+        target_speed = current_speed;
     }
 }

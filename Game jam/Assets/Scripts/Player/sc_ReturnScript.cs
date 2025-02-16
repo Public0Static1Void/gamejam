@@ -38,6 +38,10 @@ public class ReturnScript : MonoBehaviour
 
     private PlayerLife playerLife;
 
+    [Header("Colors")]
+    public Color color_cooldown_ready;
+    public Color color_on_cooldown;
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -120,11 +124,16 @@ public class ReturnScript : MonoBehaviour
                 if (cooldown_timer == 0) ClearReturnLists(); /// Vacía la lista de posiciones
                 cooldown_timer += Time.deltaTime;
                 cooldown_image.fillAmount += Time.deltaTime / cooldown_time; /// Suma la cantidad de fill a la imágen del cooldown
+                cooldown_image.color = Color.Lerp(cooldown_image.color, color_on_cooldown, Time.deltaTime * 1.5f); /// Cambia el color de la imágen al de cooldown
                 if (cooldown_timer > cooldown_time)
                 {
                     cooldown = false;
                     cooldown_timer = 0;
                 }
+            }
+            else if (cooldown_image.color != color_cooldown_ready)
+            {
+                cooldown_image.color = Color.Lerp(cooldown_image.color, color_cooldown_ready, Time.deltaTime * 1.5f); /// Cambia el color de la imágen al normal
             }
             if (timer > max_time / 10) /// Va actualizando las posiciones del jugador cada cierto tiempo
             {
