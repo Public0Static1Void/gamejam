@@ -20,6 +20,10 @@ public class ScoreManager : MonoBehaviour
     public List<TMP_Text> plus_scoretext_list;
     private int current_text;
 
+    [Header("Colors")]
+    public Color color_base_score;
+    public Color color_got_score;
+
     private bool spawning_number = false;
 
     void Awake()
@@ -54,7 +58,7 @@ public class ScoreManager : MonoBehaviour
         if (show_text) /// Si es true mostrará un texto de score en la posición del sonido
         {
             Vector3 dir_to_player = sound_position - PlayerMovement.instance.transform.position; /// Calcula la dirección entre el origen del sonido al player
-            StartCoroutine(ShowScoreTextOnPosition("+" + string_value, sound_position, dir_to_player.normalized));
+            StartCoroutine(ShowTextOnPosition("+" + string_value, sound_position, dir_to_player.normalized));
         }
 
 
@@ -77,7 +81,7 @@ public class ScoreManager : MonoBehaviour
             current_text = 0;
     }
 
-    private IEnumerator ShowScoreTextOnPosition(string phrase, Vector3 position, Vector3 face_direction)
+    private IEnumerator ShowTextOnPosition(string phrase, Vector3 position, Vector3 face_direction)
     {
         float timer = 0;
         Quaternion look_rotation = Quaternion.LookRotation(face_direction, Vector3.up);
@@ -117,11 +121,13 @@ public class ScoreManager : MonoBehaviour
         text.gameObject.SetActive(true);
 
         text.color = new Color(text.color.r, text.color.g, text.color.b, 1);
-        Color transparent = new Color(text.color.r, text.color.g, text.color.b, 0);
+        Color col = text.color;
 
-        float timer = 0;
+        float timer = 0, alpha = col.a;
 
-        while (text.color.a > 0) /// Moverá el texto en una dirección aleatoria entre arriba e izquierda mientras hace un fade out
+        StartCoroutine(ChangeScoreTextColor()); /// Cambia el color del texto de score
+
+        while (alpha > 0) /// Moverá el texto en una dirección aleatoria entre arriba e izquierda mientras hace un fade out
         {
             timer += Time.deltaTime;
             if (timer > 1)
@@ -129,11 +135,30 @@ public class ScoreManager : MonoBehaviour
                 spawning_number = false;
             }
             text.rectTransform.Translate(rand_dir * Time.deltaTime * 250);
-            text.color = Color.Lerp(text.color, transparent, Time.deltaTime * 1.5f);
+            alpha -= Time.deltaTime;
+            text.color = new Color(col.r, col.g, col.b, alpha);
 
             yield return null;
         }
 
         text.gameObject.SetActive(false);
+    }
+
+    private IEnumerator ChangeScoreTextColor()
+    {
+        float timer = 0;
+        while (timer < 0.1f)
+        {
+            ui_score_text.color = Color.Lerp(ui_score_text.color, color_got_score, Time.deltaTime * 10);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        timer = 0;
+        while (timer < 1)
+        {
+            ui_score_text.color = Color.Lerp(ui_score_text.color, color_base_score, Time.deltaTime);
+            timer += Time.deltaTime;
+            yield return null;
+        }
     }
 }

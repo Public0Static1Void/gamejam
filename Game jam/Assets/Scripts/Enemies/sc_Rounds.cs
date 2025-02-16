@@ -22,11 +22,12 @@ public class Rounds : MonoBehaviour
 
     private bool onRound = false;
 
+    private List<GameObject> enemy_pool;
+    private int current_enemy = 0;
     void Start()
     {
         if (instance == null) instance = this;
         else Destroy(this);
-        GameManager.gm.ShowText("Press space to return :D", 1);
     }
 
     void Update()
@@ -55,7 +56,7 @@ public class Rounds : MonoBehaviour
         if (round > 0)
             ReturnScript.instance.RandomUpgrade();
 
-        float wait_time = 12.5f - round * 0.1f; /// Función de espera entre rondas (cuánto más juego más rápido pasarán)
+        float wait_time = 12.5f - round * 0.1f; /// Función de espera entre rondas (cuánto más tiempo más rápido pasarán)
         if (wait_time < 2) wait_time = 2;
         yield return new WaitForSeconds(wait_time);
 

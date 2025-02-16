@@ -23,6 +23,7 @@ public class ReturnScript : MonoBehaviour
     [Header("Sonidos")]
     public AudioClip return_clip;
     public AudioClip explosion_clip, funny_explosion_clip, tictac_clip, nautilus_explosion;
+    public AudioClip cooldown_ready_clip;
     public GameObject explosion_particle;
 
     [Header("Positions record")]
@@ -124,9 +125,10 @@ public class ReturnScript : MonoBehaviour
                 if (cooldown_timer == 0) ClearReturnLists(); /// Vacía la lista de posiciones
                 cooldown_timer += Time.deltaTime;
                 cooldown_image.fillAmount += Time.deltaTime / cooldown_time; /// Suma la cantidad de fill a la imágen del cooldown
-                cooldown_image.color = Color.Lerp(cooldown_image.color, color_on_cooldown, Time.deltaTime * 1.5f); /// Cambia el color de la imágen al de cooldown
+                cooldown_image.color = Color.Lerp(cooldown_image.color, color_on_cooldown, Time.deltaTime * 1.75f); /// Cambia el color de la imágen al de cooldown
                 if (cooldown_timer > cooldown_time)
                 {
+                    SoundManager.instance.PlaySound(cooldown_ready_clip);
                     cooldown = false;
                     cooldown_timer = 0;
                 }
@@ -261,7 +263,7 @@ public class ReturnScript : MonoBehaviour
                 {   
                     if (nautilus_explosion != null) /// Sonido de explosión
                         SoundManager.instance.InstantiateSound(nautilus_explosion, positions[explosion_num], nautilus_explosion.length);
-                    GameManager.gm.ShakeController(0.2f + dist * 0.1f, 0.01f, (1 - (1 - (dist / 10))) * 2);
+                    GameManager.gm.ShakeController(0.2f + (1 - (dist / 10)), 0.01f, (1 + (1 - (dist / 10))) * 2);
                 }
                 explosion_num--;
                 explosion_timer = 0;
