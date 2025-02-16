@@ -57,6 +57,9 @@ public class PlayerLife : MonoBehaviour
 
     public void Damage(int value)
     {
+        if (ReturnScript.instance.returning)
+            return;
+
         hp -= value;
         if (hp > max_hp)
         {

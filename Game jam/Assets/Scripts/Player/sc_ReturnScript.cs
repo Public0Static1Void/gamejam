@@ -31,7 +31,8 @@ public class ReturnScript : MonoBehaviour
     public List<Vector2> past_rotations;
     public List<Quaternion> q_rotations;
 
-    private bool returning = false, cooldown = false;
+    [HideInInspector]
+    public bool returning = false, cooldown = false;
     private float timer = 0, cooldown_timer = 0;
     private int current_point = 0;
 

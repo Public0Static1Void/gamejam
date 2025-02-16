@@ -60,5 +60,7 @@ public class EnemyFollow : MonoBehaviour
         }
         if (!agent.isOnNavMesh && rb.isKinematic)
             Destroy(this.gameObject);
+        if (agent.isOnNavMesh)
+            rb.velocity *= 0.99f;
     }
 }
