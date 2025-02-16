@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
 
         pause_menu.SetActive(false);
+        SoundManager.instance.SetHighPassEffect(10);
     }
     public void PauseGame()
     {
@@ -93,6 +94,29 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         PlayerMovement.instance.GetComponent<PlayerInput>().SwitchCurrentActionMap("UI");
+        StartCoroutine(InterpolateHighPass(1000));
+    }
+
+    private IEnumerator InterpolateHighPass(float value)
+    {
+        float target_highpass_freq = value;
+        float current_freq = 10;
+        while (current_freq < target_highpass_freq)
+        {
+            if (!pause_menu.activeSelf) /// Si el menú de pausa se cierra se pone la frecuencia a 10 y se sale del bucle
+            {
+                SoundManager.instance.SetHighPassEffect(10);
+                break;
+            }
+            current_freq += Time.unscaledDeltaTime * 250;
+            SoundManager.instance.SetHighPassEffect(current_freq);
+            yield return null;
+        }
+    }
+
+    public void ShowOrHideGameobject(GameObject ob)
+    {
+        ob.SetActive(!ob.gameObject.activeSelf);
     }
 
     public void InputPause(InputAction.CallbackContext con)

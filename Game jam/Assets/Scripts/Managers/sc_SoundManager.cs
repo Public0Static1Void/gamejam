@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
@@ -11,11 +12,17 @@ public class SoundManager : MonoBehaviour
     public AudioSource audioSource;
     public AudioMixerGroup audioMixerGroup;
 
+    [Header("References")]
+    public Slider slider_volume;
+
     public bool funnySounds;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
+
+        audioMixerGroup.audioMixer.GetFloat("MasterVolume", out float v); /// Pone el slider según el volumen
+        slider_volume.value = v;
     }
     private void Awake()
     {
@@ -46,9 +53,14 @@ public class SoundManager : MonoBehaviour
         Destroy(ob, seconds_to_destroy);
     }
 
-    public void SetVolume(float volume)
+    public void SetVolume()
     {
-        audioMixerGroup.audioMixer.SetFloat("MasterVolume", volume);
+        audioMixerGroup.audioMixer.SetFloat("MasterVolume", slider_volume.value);
+    }
+
+    public void SetHighPassEffect(float cutoff_freq)
+    {
+        audioMixerGroup.audioMixer.SetFloat("Highpass_cutoff", cutoff_freq);
     }
 
     public void ChangeFunnySounds()

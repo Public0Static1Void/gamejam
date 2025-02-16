@@ -19,12 +19,12 @@ public class ReturnScript : MonoBehaviour
     public LayerMask enemyMask;
     public UnityEvent ability;
     public Image cooldown_image;
+    public GameObject explosion_particle;
 
     [Header("Sonidos")]
     public AudioClip return_clip;
     public AudioClip explosion_clip, funny_explosion_clip, tictac_clip, nautilus_explosion;
-    public AudioClip cooldown_ready_clip;
-    public GameObject explosion_particle;
+    public AudioClip cooldown_ready_clip, cooldown_not_ready_clip;
 
     [Header("Positions record")]
     public List<Vector3> past_positions;
@@ -167,18 +167,23 @@ public class ReturnScript : MonoBehaviour
 
     public void ReturnToLastPosition(InputAction.CallbackContext con)
     {
-        if (con.performed && !cooldown && !returning) // Se ha pulsado espacio y no está en cooldown
+        if (con.performed) // Se ha pulsado espacio y no está en cooldown
         {
-            returning = true;
-            GetComponent<Rigidbody>().isKinematic = true; /// Deshabilita el rigidbody y las colisiones para evitar problemas al volver
-            GetComponent<Collider>().isTrigger = true;
-            PlayerMovement.instance.canMove = false; /// Evita que el jugador pueda moverse mientras vuelve
-            current_point = past_positions.Count - 1;
-
-            if (ability != null) /// Ejecuta la habilidad del player
+            if (!cooldown && !returning)
             {
-                ability.Invoke();
+                returning = true;
+                GetComponent<Rigidbody>().isKinematic = true; /// Deshabilita el rigidbody y las colisiones para evitar problemas al volver
+                GetComponent<Collider>().isTrigger = true;
+                PlayerMovement.instance.canMove = false; /// Evita que el jugador pueda moverse mientras vuelve
+                current_point = past_positions.Count - 1;
+
+                if (ability != null) /// Ejecuta la habilidad del player
+                {
+                    ability.Invoke();
+                }
             }
+            if (cooldown)
+                SoundManager.instance.PlaySound(cooldown_not_ready_clip);
         }
     }
 

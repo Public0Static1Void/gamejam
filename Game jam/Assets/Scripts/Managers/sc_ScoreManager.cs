@@ -75,7 +75,7 @@ public class ScoreManager : MonoBehaviour
         // Muestra un texto de suma en la ui
         plus_scoretext_list[current_text].text = "+" + string_value;
         StartCoroutine(MovePlusScoreText(plus_scoretext_list[current_text]));
-        if (current_text < plus_scoretext_list.Count)
+        if (current_text < plus_scoretext_list.Count - 1)
             current_text++;
         else
             current_text = 0;
@@ -115,7 +115,7 @@ public class ScoreManager : MonoBehaviour
 
         Vector2 rand_dir = new Vector2(Random.Range(-1, 0), Random.Range(-0.5f, 0.76f)); /// Consigue una dirección random
         text.rectTransform.anchoredPosition = ui_score_text.rectTransform.anchoredPosition; /// Cambia la posición del text
-        text.rectTransform.position = new Vector2(ui_score_text.rectTransform.position.x - 10, ui_score_text.rectTransform.position.y + 90);
+        text.rectTransform.position = new Vector2(ui_score_text.rectTransform.position.x + 100, ui_score_text.rectTransform.position.y + 90);
         text.rectTransform.rotation = ui_score_text.rectTransform.rotation;
         
         text.gameObject.SetActive(true);
@@ -130,7 +130,7 @@ public class ScoreManager : MonoBehaviour
         while (alpha > 0) /// Moverá el texto en una dirección aleatoria entre arriba e izquierda mientras hace un fade out
         {
             timer += Time.deltaTime;
-            if (timer > 1)
+            if (timer > 0.25f)
             {
                 spawning_number = false;
             }
