@@ -183,7 +183,7 @@ public class ReturnScript : MonoBehaviour
                     ability.Invoke();
                 }
             }
-            else
+            else /// El jugador ha terminado la habilidad antes
             {
                 past_positions[0] = transform.position;
                 current_point = 0;
