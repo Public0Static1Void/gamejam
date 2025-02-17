@@ -21,8 +21,11 @@ public class SoundManager : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
 
-        audioMixerGroup.audioMixer.GetFloat("MasterVolume", out float v); /// Pone el slider según el volumen
-        slider_volume.value = v;
+        if (audioMixerGroup != null)
+        {
+            audioMixerGroup.audioMixer.GetFloat("MasterVolume", out float v); /// Pone el slider según el volumen
+            slider_volume.value = v;
+        }   
     }
     private void Awake()
     {

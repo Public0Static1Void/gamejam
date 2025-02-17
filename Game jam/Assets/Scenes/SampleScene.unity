@@ -4410,7 +4410,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1266812051}
-  - component: {fileID: 1266812050}
   - component: {fileID: 1266812052}
   m_Layer: 0
   m_Name: GameManager
@@ -4419,18 +4418,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1266812050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1266812049}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f987452bd67760043a740fc7f9eca954, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1266812051
 Transform:
   m_ObjectHideFlags: 0
@@ -6957,10 +6944,12 @@ MonoBehaviour:
   fov: 0
   canMove: 1
   sprinting: 0
+  moving: 0
   slide: 0
   slide_camera_offset: {x: 0, y: -0.1, z: 0}
   stamina_image: {fileID: 1988724743}
   rb: {fileID: 0}
+  dir: {x: 0, y: 0}
 --- !u!82 &1836626145
 AudioSource:
   m_ObjectHideFlags: 0
