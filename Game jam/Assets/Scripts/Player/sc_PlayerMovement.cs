@@ -20,10 +20,11 @@ public class PlayerMovement : MonoBehaviour
 
     public bool canMove = true;
     public bool sprinting = false;
-    private bool moving = false;
+    public bool moving = false;
 
     // Slide variables
     public bool slide = false;
+    private bool can_slide = false;
     public Vector3 slide_camera_offset;
     private Vector3 camera_original_position;
 
@@ -32,7 +33,7 @@ public class PlayerMovement : MonoBehaviour
     
     public Rigidbody rb;
 
-    private Vector2 dir;
+    public Vector2 dir;
 
     private Vector3 start_position;
 
@@ -117,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
             current_speed -= Time.deltaTime * (speed * 0.5f); /// Pérdida de velocidad
             if (current_speed <= 0)
             {
-                current_speed = 0;
+                current_speed = target_speed;
                 slide = false;
             }
         }
@@ -127,9 +128,12 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        Vector3 d = ((transform.forward * dir.y) + (transform.right * dir.x)) * current_speed * Time.fixedDeltaTime;
-        Vector3 with_y_speed = new Vector3(d.x, rb.velocity.y, d.z);
-        rb.velocity = with_y_speed;
+        if (moving || slide)
+        {
+            Vector3 d = ((transform.forward * dir.y) + (transform.right * dir.x)) * current_speed * Time.fixedDeltaTime;
+            Vector3 with_y_speed = new Vector3(d.x, rb.velocity.y, d.z);
+            rb.velocity = with_y_speed;
+        }
     }
 
     private void Update()
@@ -149,14 +153,19 @@ public class PlayerMovement : MonoBehaviour
 
     public void Slide(InputAction.CallbackContext con)
     {
-        if (con.performed)
+        if (con.performed && can_slide)
         {
+            can_slide = false;
             slide = true;
-            current_speed = target_speed * 8;
+            if (!sprinting)
+                current_speed = target_speed * 8;
+            else
+                current_speed = target_speed * 2;
         }
         if (con.canceled)
         {
             slide = false;
+            can_slide = true;
             if (!moving)
                 dir = Vector2.zero;
         }
@@ -193,7 +202,5 @@ public class PlayerMovement : MonoBehaviour
             fov_change = target_fov * 0.7f;
         }
         target_speed = current_speed;
-
-        
     }
 }
