@@ -115,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
             dir = new Vector2(dir.x, 1); /// Fija la dirección hacia adelante
 
             Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10);
-            current_speed -= Time.deltaTime * (speed * 0.5f); /// Pérdida de velocidad
+            current_speed -= Time.deltaTime * (target_speed); /// Pérdida de velocidad
             if (current_speed <= 0)
             {
                 current_speed = target_speed;
@@ -134,6 +134,10 @@ public class PlayerMovement : MonoBehaviour
             Vector3 with_y_speed = new Vector3(d.x, rb.velocity.y, d.z);
             rb.velocity = with_y_speed;
         }
+        else if (!moving || !slide)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        }
     }
 
     private void Update()
@@ -144,10 +148,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Sprint(InputAction.CallbackContext con)
     {
-        if (con.performed && dir.y > 0)
+        if ((con.performed && (dir.y > 0 || slide)) || sprinting)
         {
             sprinting = !sprinting;
-            target_speed = speed * 1.5f;
+            if (sprinting)
+                target_speed = speed * 1.5f;
         }
     }
 
@@ -158,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
             can_slide = false;
             slide = true;
             if (!sprinting)
-                current_speed = target_speed * 8;
+                current_speed = target_speed * 6;
             else
                 current_speed = target_speed * 2;
         }

@@ -183,6 +183,11 @@ public class ReturnScript : MonoBehaviour
                     ability.Invoke();
                 }
             }
+            else
+            {
+                past_positions[0] = transform.position;
+                current_point = 0;
+            }
             if (cooldown)
                 SoundManager.instance.PlaySound(cooldown_not_ready_clip);
         }
