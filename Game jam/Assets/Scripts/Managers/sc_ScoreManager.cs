@@ -44,7 +44,9 @@ public class ScoreManager : MonoBehaviour
             plus_scoretext_list[i].gameObject.SetActive(false);
         }
     }
-
+    /// <summary>
+    /// Suma la cantidad indicada a score y hace un sonido. Si se marca true, show_text mostrará en texto la cantidad sumada
+    /// </summary>
     public void ChangeScore(float value, Vector3 sound_position, bool show_text)
     {
         if (score < 9999999999)

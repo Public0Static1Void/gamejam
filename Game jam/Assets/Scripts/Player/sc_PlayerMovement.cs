@@ -148,11 +148,14 @@ public class PlayerMovement : MonoBehaviour
 
     public void Sprint(InputAction.CallbackContext con)
     {
-        if ((con.performed && (dir.y != 0 || slide)))
+        if (con.performed)
         {
-            sprinting = !sprinting;
-            if (sprinting)
-                target_speed = speed * 1.5f;
+            if (dir.y != 0 || slide || (sprinting && !moving))
+            {
+                sprinting = !sprinting;
+                if (sprinting)
+                    target_speed = speed * 1.5f;
+            }
         }
     }
 
