@@ -57,7 +57,7 @@ public class PlayerLife : MonoBehaviour
 
     public void Damage(int value)
     {
-        if (ReturnScript.instance.returning)
+        if (ReturnScript.instance.returning || PlayerMovement.instance.slide)
             return;
 
         hp -= value;

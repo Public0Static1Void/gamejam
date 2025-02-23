@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+[RequireComponent(typeof(AudioSource))]
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager instance { get; private set; }
@@ -16,6 +16,7 @@ public class ScoreManager : MonoBehaviour
     public TMP_Text ui_score_text;
     public TMP_Text ui_plus_scoretext;
     public Transform ui_canvas;
+    public AudioSource score_audioSource;
 
     public List<TMP_Text> plus_scoretext_list;
     private int current_text;
@@ -54,7 +55,10 @@ public class ScoreManager : MonoBehaviour
         else
             value = 0;
         if (score_clip != null) /// Instancia el sonido de score en la escena
-            SoundManager.instance.InstantiateSound(score_clip, sound_position, 1);
+        {
+            score_audioSource.clip = score_clip;
+            score_audioSource.Play();
+        }
 
         string string_value = value.ToString();
         if (show_text) /// Si es true mostrará un texto de score en la posición del sonido
@@ -132,7 +136,7 @@ public class ScoreManager : MonoBehaviour
         while (alpha > 0) /// Moverá el texto en una dirección aleatoria entre arriba e izquierda mientras hace un fade out
         {
             timer += Time.deltaTime;
-            if (timer > 0.25f)
+            if (timer > 0.5f)
             {
                 spawning_number = false;
             }

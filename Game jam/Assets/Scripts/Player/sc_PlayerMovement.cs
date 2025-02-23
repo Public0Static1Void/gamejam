@@ -24,9 +24,10 @@ public class PlayerMovement : MonoBehaviour
 
     // Slide variables
     public bool slide = false;
-    private bool can_slide = false;
+    private bool can_slide = true;
     public Vector3 slide_camera_offset;
     private Vector3 camera_original_position;
+    private CameraRotation cameraRotation;
 
     [Header("References")]
     public Image stamina_image;
@@ -59,6 +60,8 @@ public class PlayerMovement : MonoBehaviour
         rb.freezeRotation = true;
 
         camera_original_position = Camera.main.transform.localPosition;
+
+        cameraRotation = Camera.main.gameObject.GetComponent<CameraRotation>();
     }
 
     private void FixedUpdate()
@@ -114,8 +117,8 @@ public class PlayerMovement : MonoBehaviour
         {
             dir = new Vector2(dir.x, 1); /// Fija la dirección hacia adelante
 
-            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10);
-            current_speed -= Time.deltaTime * (target_speed); /// Pérdida de velocidad
+            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10); /// Movimiento de la cámara
+            current_speed -= Time.deltaTime * ((current_speed + target_speed)); /// Pérdida de velocidad
             if (current_speed <= 0)
             {
                 current_speed = target_speed;
@@ -166,12 +169,13 @@ public class PlayerMovement : MonoBehaviour
             can_slide = false;
             slide = true;
             if (!sprinting)
-                current_speed = target_speed * 6;
+                current_speed = target_speed * 8;
             else
                 current_speed = target_speed * 2;
         }
         if (con.canceled)
         {
+            current_speed = target_speed;
             slide = false;
             can_slide = true;
             if (!moving)
@@ -210,5 +214,16 @@ public class PlayerMovement : MonoBehaviour
             fov_change = target_fov * 0.7f;
         }
         target_speed = current_speed;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (slide && other.gameObject.CompareTag("Enemy")) // Mientras se desliza empujará a los enemigos
+        {
+            Vector3 dir = (other.transform.position - transform.position).normalized; /// Calcula la dirección entre tú y el enemigo
+            Vector3 force_dir = new Vector3(dir.x, 0.5f, dir.z);
+
+            other.gameObject.GetComponent<EnemyFollow>().AddForceToEnemy(force_dir * (current_speed * 0.02f), ForceMode.Force);
+        }
     }
 }

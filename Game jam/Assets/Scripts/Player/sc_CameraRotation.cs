@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class CameraRotation : MonoBehaviour
 {
@@ -13,6 +16,10 @@ public class CameraRotation : MonoBehaviour
 
     [Header("References")]
     public List<RectTransform> UIElements_to_move;
+    public Slider ui_sensivity_slider;
+    public TMP_Text ui_sensivity_value;
+    public Image ui_sensivity_value_image;
+    public RectTransform ui_sensivity_handle;
 
     Vector2 inp;
 
@@ -22,6 +29,17 @@ public class CameraRotation : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        ui_sensivity_slider.value = cameraSpeed;
+
+        EventTrigger trigger = ui_sensivity_slider.gameObject.GetComponent<EventTrigger>();
+        if (trigger == null)
+            trigger = ui_sensivity_slider.gameObject.AddComponent<EventTrigger>();
+
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerUp;
+        entry.callback.AddListener((data) => { UI_HideImage(); });
+        trigger.triggers.Add(entry);
     }
 
     void Update()
@@ -118,5 +136,37 @@ public class CameraRotation : MonoBehaviour
     {
         amount = value;
         shake = true;
+    }
+
+    public void SetRotation(float x_rotation, float y_rotation)
+    {
+        x = x_rotation;
+        y = y_rotation;
+    }
+
+    public void ChangeCameraSpeed()
+    {
+        // Cambia la posición del texto y la imagen
+        float offset = 100;
+        /// Imagen
+        Vector2 pos = new Vector2(ui_sensivity_handle.anchoredPosition.x, ui_sensivity_handle.anchoredPosition.y + offset);
+        Debug.Log(pos);
+        GameManager.gm.ChangeUIPosition(pos, ui_sensivity_value_image.rectTransform, ui_sensivity_value.rectTransform);
+
+        if (ui_sensivity_value_image.color.a < 1 || ui_sensivity_value.color.a < 1)
+        {
+            /// Le pone su color sin transparencia
+            ui_sensivity_value.color = new Color(ui_sensivity_value.color.r, ui_sensivity_value.color.g, ui_sensivity_value.color.b, 1);
+            ui_sensivity_value_image.color = new Color(ui_sensivity_value_image.color.r, ui_sensivity_value_image.color.g, ui_sensivity_value_image.color.b, 1);
+        }
+        /// Se cambia el valor de cameraSpeed por el del slider
+        cameraSpeed = ui_sensivity_slider.value;
+        ui_sensivity_value.text = cameraSpeed.ToString();
+    }
+
+    public void UI_HideImage()
+    {
+        /// Esconde la imagen con el texto que muestra el valor de cameraSpeed
+        StartCoroutine(GameManager.gm.HideImage(1, ui_sensivity_value_image, ui_sensivity_value));
     }
 }

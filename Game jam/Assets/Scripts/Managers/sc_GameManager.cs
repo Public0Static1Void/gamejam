@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Resources;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -146,5 +147,40 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public IEnumerator HideImage(float hide_speed, Image image_to_hide, TMP_Text text_to_hide = null)
+    {
+        Color col = image_to_hide.color;
+        while (image_to_hide.color.a > 0)
+        {
+            image_to_hide.color = new Color(col.r, col.g, col.b, image_to_hide.color.a - Time.fixedDeltaTime * hide_speed);
+            if (text_to_hide != null)
+            {
+                text_to_hide.color = new Color(text_to_hide.color.r, text_to_hide.color.g, text_to_hide.color.b, image_to_hide.color.a);
+            }
+            yield return null;
+        }
+        image_to_hide.rectTransform.anchoredPosition = Vector2.zero;
+        image_to_hide.rectTransform.position = Vector2.zero;
+        if (text_to_hide != null)
+        {
+            text_to_hide.rectTransform.anchoredPosition = Vector2.zero;
+            text_to_hide.rectTransform.position = Vector2.zero;
+        }
+    }
+
+    public void ChangeUIPosition(Vector2 position, RectTransform element1, RectTransform element2 = null)
+    {
+        element1.anchoredPosition = position;
+        element1.position = Vector2.zero;
+
+        Vector2 anch_pos = element1.anchoredPosition;
+        Vector2 pos = element1.position;
+        if (element2 != null)
+        {
+            element2.anchoredPosition = anch_pos;
+            element2.position = new Vector2(pos.x - element1.rect.width / 3, pos.y);
+        }
     }
 }
