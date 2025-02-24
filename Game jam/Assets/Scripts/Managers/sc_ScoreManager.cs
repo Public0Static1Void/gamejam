@@ -54,6 +54,9 @@ public class ScoreManager : MonoBehaviour
             score += value;
         else
             value = 0;
+
+        if (value < 0)
+            return;
         if (score_clip != null) /// Instancia el sonido de score en la escena
         {
             score_audioSource.clip = score_clip;
