@@ -87,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
 
                 current_stamina -= Time.deltaTime;
 
-                current_speed = Mathf.Lerp(current_speed, target_speed, (speed * 0.05f) * Time.deltaTime); /// Suma de velocidad
+                current_speed = Mathf.Lerp(current_speed, target_speed, (speed * 0.075f) * Time.deltaTime); /// Suma de velocidad
             }
 
             Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, fov + fov_change, Time.deltaTime * 8);
@@ -164,7 +164,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void Slide(InputAction.CallbackContext con)
     {
-        if (con.performed && can_slide)
+        // Compueba si puede hacer el slide y está encima de algo
+        if (con.performed && can_slide && Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f))
         {
             can_slide = false;
             slide = true;
