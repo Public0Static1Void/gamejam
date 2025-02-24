@@ -147,9 +147,9 @@ public class CameraRotation : MonoBehaviour
     public void ChangeCameraSpeed()
     {
         // Cambia la posición del texto y la imagen
-        float offset = 100;
+        float offset = 5;
         /// Imagen
-        Vector2 pos = new Vector2(ui_sensivity_handle.anchoredPosition.x, ui_sensivity_handle.anchoredPosition.y + offset);
+        Vector2 pos = new Vector2(ui_sensivity_handle.anchorMax.x * ui_sensivity_handle.rect.width, ui_sensivity_handle.anchorMax.y + offset);
         Debug.Log(pos);
         GameManager.gm.ChangeUIPosition(pos, ui_sensivity_value_image.rectTransform, ui_sensivity_value.rectTransform);
 
@@ -167,6 +167,6 @@ public class CameraRotation : MonoBehaviour
     public void UI_HideImage()
     {
         /// Esconde la imagen con el texto que muestra el valor de cameraSpeed
-        StartCoroutine(GameManager.gm.HideImage(1, ui_sensivity_value_image, ui_sensivity_value));
+        StartCoroutine(GameManager.gm.HideImage(2, ui_sensivity_value_image, ui_sensivity_value));
     }
 }

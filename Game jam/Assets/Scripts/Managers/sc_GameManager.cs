@@ -173,7 +173,6 @@ public class GameManager : MonoBehaviour
     public void ChangeUIPosition(Vector2 position, RectTransform element1, RectTransform element2 = null)
     {
         element1.anchoredPosition = position;
-        element1.position = Vector2.zero;
 
         Vector2 anch_pos = element1.anchoredPosition;
         Vector2 pos = element1.position;

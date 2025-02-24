@@ -14,6 +14,8 @@ public class EnemyFollow : MonoBehaviour
     private Rigidbody rb;
 
     private Vector3 original_position;
+
+    private float timer = 0;
     void Start()
     {
         target = PlayerMovement.instance.transform;
@@ -58,8 +60,17 @@ public class EnemyFollow : MonoBehaviour
                 //transform.Translate(transform.forward * 10 * Time.deltaTime);
             }*/
         }
-        if (!agent.isOnNavMesh && rb.isKinematic)
-            Destroy(this.gameObject);
+        if (!agent.isOnNavMesh)
+        {
+            if (rb.isKinematic)
+                Destroy(this.gameObject);
+
+            timer += Time.deltaTime;
+            if (timer > 10) /// Si pasa cierto tiempo sin estar en la navmesh se destruye
+            {
+                Destroy(this.gameObject);
+            }
+        }
         if (agent.isOnNavMesh)
             rb.velocity *= 0.99f;
     }

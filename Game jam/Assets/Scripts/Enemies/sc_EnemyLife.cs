@@ -18,7 +18,7 @@ public class EnemyLife : MonoBehaviour
         hp -= amount;
         if (hp <= 0)
         {
-            ScoreManager.instance.ChangeScore(amount, transform.position, true);
+            ScoreManager.instance.ChangeScore(-100, transform.position, true);
             Rounds.instance.enemies.Remove(this.gameObject);
             Destroy(gameObject);
         }

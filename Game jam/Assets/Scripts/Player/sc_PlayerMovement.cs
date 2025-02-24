@@ -118,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
             dir = new Vector2(dir.x, 1); /// Fija la dirección hacia adelante
 
             Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10); /// Movimiento de la cámara
-            current_speed -= Time.deltaTime * ((current_speed + target_speed)); /// Pérdida de velocidad
+            current_speed -= Time.deltaTime * ((0.5f * current_speed + target_speed)); /// Pérdida de velocidad
             if (current_speed <= 0)
             {
                 current_speed = target_speed;
