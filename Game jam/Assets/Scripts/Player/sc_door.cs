@@ -41,7 +41,7 @@ public class sc_door : MonoBehaviour
         {
             if (ScoreManager.instance.score > valueD)
             {
-
+                ScoreManager.instance.ChangeScore(-valueD, transform.position, false);
             }
         }
     }
