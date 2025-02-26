@@ -7,11 +7,11 @@ public class EnemyFollow : MonoBehaviour
 {
 
     public Transform target;
-    private NavMeshAgent agent;
+    public NavMeshAgent agent;
 
     public float speed;
 
-    private Rigidbody rb;
+    public Rigidbody rb;
 
     private Vector3 original_position;
 
@@ -25,8 +25,10 @@ public class EnemyFollow : MonoBehaviour
         original_position = transform.position;
     }
 
-    public void AddForceToEnemy(Vector3 dir, ForceMode mode)
+    public void AddForceToEnemy(Vector3 dir)
     {
+        if (rb == null) return;
+
         rb.isKinematic = false;
         agent.enabled = false;
         rb.velocity = dir;
@@ -71,7 +73,7 @@ public class EnemyFollow : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
-        if (agent.isOnNavMesh)
+        if (agent.isOnNavMesh && !rb.isKinematic)
             rb.velocity *= 0.99f;
     }
 }

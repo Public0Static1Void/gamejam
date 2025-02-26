@@ -224,7 +224,7 @@ public class PlayerMovement : MonoBehaviour
             Vector3 dir = (other.transform.position - transform.position).normalized; /// Calcula la dirección entre tú y el enemigo
             Vector3 force_dir = new Vector3(dir.x, 0.5f, dir.z);
 
-            other.gameObject.GetComponent<EnemyFollow>().AddForceToEnemy(force_dir * (current_speed * 0.02f), ForceMode.Force);
+            other.gameObject.GetComponent<EnemyFollow>().AddForceToEnemy(force_dir * (current_speed * 0.02f));
         }
     }
 }

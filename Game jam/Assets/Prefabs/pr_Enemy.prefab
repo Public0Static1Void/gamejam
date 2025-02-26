@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 8663429202947889818}
   - component: {fileID: 8853771250279282788}
   - component: {fileID: 6783335982719182573}
+  - component: {fileID: -494089466660687494}
   m_Layer: 6
   m_Name: pr_Enemy
   m_TagString: Enemy
@@ -252,7 +253,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  agent: {fileID: 0}
   speed: 100
+  rb: {fileID: 0}
 --- !u!54 &8853771250279282788
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -294,6 +297,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 0
   max_hp: 5
+--- !u!135 &-494089466660687494
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5338783919543476209}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9025330730720368098
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,37 +6,43 @@ public class sc_Abilities : MonoBehaviour
 {
     private bool active_levitate = false;
     private List<GameObject> enemy_targets = new List<GameObject>();
-    public void LevitateEnemies(float force)
-    {
-        StartCoroutine(LevitateRoutine(force));
-    }
-    IEnumerator LevitateRoutine(float force)
-    {
-        while (ReturnScript.instance.returning)
-        {
-            // Espera a que el jugador haya acabado de usar la habilidad
-            yield return null;
-        }
+    private List<EnemyFollow> enemies_mov = new List<EnemyFollow>();
 
-        active_levitate = true;
-        float timer = 0;
+    public void LevitateEnemies()
+    {
+        StartCoroutine(LevitateRoutine());
+    }
+    IEnumerator LevitateRoutine()
+    {
+        active_levitate = true; /// Ahora el jugador empezará a detectar si choca con los enemigos
+
         while (active_levitate)
         {
-            timer += Time.deltaTime;
-            if (timer > 2)
+            // Compueba si el jugador ha acabado de volver en el tiempo
+            if (!ReturnScript.instance.returning)
             {
-                active_levitate = false;
+                active_levitate = false; /// El jugador deja de detectar colisiones
+                yield return new WaitForSeconds(0.25f);
+                for (int i = 0; i < enemies_mov.Count; i++)
+                {
+                    enemies_mov[i].AddForceToEnemy(Vector3.up * (ReturnScript.instance.damage * 0.025f));
+                    yield return new WaitForSeconds(0.025f);
+                    if (enemies_mov[i] != null)
+                    {
+                        enemies_mov[i].rb.useGravity = true;
+                        float fall_speed = ReturnScript.instance.damage * 3;
+                        enemies_mov[i].AddForceToEnemy(new Vector3(0, -Mathf.Clamp(fall_speed, 0, 25), 0));
+                    }
+                    if (enemy_targets[i] != null)
+                        enemy_targets[i].GetComponent<EnemyLife>().Damage(0); /// Quita vida a los enemigos
+
+                }
             }
+
             yield return null;
         }
-
-        foreach (GameObject target in enemy_targets)
-        {
-            if (target != null)
-            {
-                target.GetComponent<EnemyLife>().Damage(ReturnScript.instance.damage / 2);
-            }
-        }
+        enemies_mov.Clear();
+        enemy_targets.Clear();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -45,8 +51,15 @@ public class sc_Abilities : MonoBehaviour
         {
             if (active_levitate)
             {
-                other.GetComponent<EnemyFollow>().AddForceToEnemy(Vector2.up * 10, ForceMode.Force);
+                Debug.Log("Collision");
                 enemy_targets.Add(other.gameObject);
+
+                EnemyFollow e_fl = other.GetComponent<EnemyFollow>();
+                e_fl.agent.enabled = false;
+                e_fl.rb.useGravity = false;
+                e_fl.AddForceToEnemy(new Vector3(0, ReturnScript.instance.damage * 0.05f, 0));
+
+                enemies_mov.Add(e_fl);
             }
         }
     }
