@@ -150,7 +150,7 @@ public class CameraRotation : MonoBehaviour
         float offset = 5;
         /// Imagen
         Vector2 pos = new Vector2(ui_sensivity_handle.anchorMax.x * ui_sensivity_handle.rect.width, ui_sensivity_handle.anchorMax.y + offset);
-        Debug.Log(pos);
+
         GameManager.gm.ChangeUIPosition(pos, ui_sensivity_value_image.rectTransform, ui_sensivity_value.rectTransform);
 
         if (ui_sensivity_value_image.color.a < 1 || ui_sensivity_value.color.a < 1)

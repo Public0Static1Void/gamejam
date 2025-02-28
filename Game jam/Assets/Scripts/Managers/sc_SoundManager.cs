@@ -56,6 +56,14 @@ public class SoundManager : MonoBehaviour
         Destroy(ob, seconds_to_destroy);
     }
 
+    public void PlaySoundOnAudioSource(AudioClip clip, AudioSource audioSource, bool loop = false)
+    {
+        audioSource.clip = clip;
+        audioSource.loop = loop;
+        audioSource.Play();
+        audioSource.clip = null;
+    }
+
     public void SetVolume()
     {
         audioMixerGroup.audioMixer.SetFloat("MasterVolume", slider_volume.value);

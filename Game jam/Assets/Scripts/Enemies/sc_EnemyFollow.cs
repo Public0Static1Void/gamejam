@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(AudioSource))]
 public class EnemyFollow : MonoBehaviour
 {
-
     public Transform target;
     public NavMeshAgent agent;
 
@@ -16,11 +18,17 @@ public class EnemyFollow : MonoBehaviour
     private Vector3 original_position;
 
     private float timer = 0;
+
+    [HideInInspector]
+    public AudioSource audioSource;
+
     void Start()
     {
         target = PlayerMovement.instance.transform;
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+
+        audioSource = GetComponent<AudioSource>();
 
         original_position = transform.position;
     }

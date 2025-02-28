@@ -57,7 +57,7 @@ public class ScoreManager : MonoBehaviour
 
         if (value < 0)
             return;
-        if (score_clip != null) /// Instancia el sonido de score en la escena
+        if (score_clip != null)
         {
             score_audioSource.clip = score_clip;
             score_audioSource.Play();

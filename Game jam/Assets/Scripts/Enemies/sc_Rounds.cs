@@ -60,6 +60,9 @@ public class Rounds : MonoBehaviour
         if (wait_time < 2) wait_time = 2;
         yield return new WaitForSeconds(wait_time);
 
+        // Muestra en texto por que ronda vas
+        GameManager.gm.ShowText(string.Format("Round {0}", round + 1));
+
         for (int i = 0; i < enemyRound; i++)
         {
             int randSpawn = Random.Range(0, SpawnPoint.Length); /// No aparecerán enemigos en la cara del player
@@ -85,8 +88,6 @@ public class Rounds : MonoBehaviour
         }
 
         round++;
-
-        GameManager.gm.ShowText("Starting round " + round + "!", 4);
 
         spawning = false;
     }

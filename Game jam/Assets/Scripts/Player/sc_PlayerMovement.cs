@@ -170,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
             can_slide = false;
             slide = true;
             if (!sprinting)
-                current_speed = target_speed * 8;
+                current_speed = target_speed * 7;
             else
                 current_speed = target_speed * 2;
         }
