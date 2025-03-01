@@ -26,7 +26,8 @@ public class PlayerMovement : MonoBehaviour
     public bool slide = false;
     private bool can_slide = true;
     public Vector3 slide_camera_offset;
-    private Vector3 camera_original_position;
+    [HideInInspector]
+    public Vector3 camera_original_position;
     private CameraRotation cameraRotation;
 
     [Header("References")]
@@ -37,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     public Vector2 dir;
 
     private Vector3 start_position;
+
+    private float slide_timer = 0;
 
 
     private void Awake()
@@ -147,6 +150,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if (transform.position.y < 0)
             transform.position = start_position;
+
+        if (slide || slide_timer > 0)
+        {
+            slide_timer += Time.deltaTime;
+            if (slide_timer > 0.75f)
+            {
+                can_slide = true;
+                slide_timer = 0;
+            }
+        }
     }
 
     public void Sprint(InputAction.CallbackContext con)
@@ -178,7 +191,6 @@ public class PlayerMovement : MonoBehaviour
         {
             current_speed = target_speed;
             slide = false;
-            can_slide = true;
             if (!moving)
                 dir = Vector2.zero;
         }

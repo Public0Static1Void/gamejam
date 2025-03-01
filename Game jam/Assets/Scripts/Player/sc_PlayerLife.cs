@@ -57,6 +57,9 @@ public class PlayerLife : MonoBehaviour
 
     public void Damage(int value)
     {
+        /// Barra de vida
+        life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
+
         if (ReturnScript.instance.returning || PlayerMovement.instance.slide)
             return;
 
@@ -71,8 +74,7 @@ public class PlayerLife : MonoBehaviour
         curr_color.g -= value * 0.025f;
         curr_color.b -= value * 0.025f;
         m.color = curr_color;
-        /// Barra de vida
-        life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
+        
 
         if (!SoundManager.instance.audioSource.isPlaying) /// Le hace un efecto de shake a la cámara y pone el sonido de daño
         {

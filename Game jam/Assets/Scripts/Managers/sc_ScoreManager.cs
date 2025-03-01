@@ -8,6 +8,7 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager instance { get; private set; }
     public float score;
+    public float score_multiplier = 1;
 
     public AudioClip score_clip;
 
@@ -15,6 +16,9 @@ public class ScoreManager : MonoBehaviour
     public GameObject text_to_show;
     public TMP_Text ui_score_text;
     public TMP_Text ui_plus_scoretext;
+    public Image ui_multiplier_timer;
+    public TMP_Text ui_multiplier_text;
+
     public Transform ui_canvas;
     public AudioSource score_audioSource;
 
@@ -26,6 +30,9 @@ public class ScoreManager : MonoBehaviour
     public Color color_got_score;
 
     private bool spawning_number = false;
+
+
+    private float multiplier_timer = 0, timer = 0;
 
     void Awake()
     {
@@ -45,15 +52,58 @@ public class ScoreManager : MonoBehaviour
             plus_scoretext_list[i].gameObject.SetActive(false);
         }
     }
+
+    void Update()
+    {
+        ui_multiplier_text.text = "x" + score_multiplier.ToString("F2");
+
+
+        if (score_multiplier > 1)
+        {
+            timer += Time.deltaTime;
+            multiplier_timer += Time.deltaTime * (timer * 0.25f);
+            ui_multiplier_timer.fillAmount = 1 - (multiplier_timer / 10);
+            if (multiplier_timer > 10)
+            {
+                score_multiplier /= 2;
+                multiplier_timer = 0;
+                ui_multiplier_timer.fillAmount = 1;
+
+
+                if (score_multiplier < 1)
+                {
+                    timer = 0;
+                    score_multiplier = 1;
+                }
+            }
+        }
+    }
+
+    public void AddMultiplier(float value)
+    {
+        score_multiplier += value;
+
+        if (score_multiplier > 20)
+            score_multiplier = 20;
+
+        timer = 0;
+        multiplier_timer = 0;
+        ui_multiplier_timer.fillAmount = 1;
+    }
     /// <summary>
     /// Suma la cantidad indicada a score y hace un sonido. Si se marca true, show_text mostrará en texto la cantidad sumada
     /// </summary>
     public void ChangeScore(float value, Vector3 sound_position, bool show_text)
     {
-        if (score < 9999999999)
+        value *= score_multiplier;
+        value = (int)value;
+        if (score + value <= 9999999999)
             score += value;
         else
+        {
             value = 0;
+            score = 9999999999;
+        }
 
         if (value < 0)
             return;

@@ -38,6 +38,7 @@ public class EnemyLife : MonoBehaviour
         enemyFollow.audioSource.Play();
         if (hp <= 0)
         {
+            ScoreManager.instance.AddMultiplier(0.1f);
             ScoreManager.instance.ChangeScore(amount, transform.position, true);
             Rounds.instance.enemies.Remove(this.gameObject);
             Destroy(gameObject);

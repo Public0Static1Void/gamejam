@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -72,18 +73,23 @@ public class ReturnScript : MonoBehaviour
     {
         if (returning && past_positions.Count > 0 && !cooldown)
         {
+            Camera.main.transform.parent = null;
+            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition,  new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z) - transform.forward, Time.deltaTime * 3);
+
             // Calcula la distancia hasta el último punto en un rango de 1 a 0
             cooldown_image.fillAmount = 1 - (1 - (Vector3.Distance(transform.position, past_positions[0]) / Vector3.Distance(past_positions[0], past_positions[past_positions.Count - 1])));
             if (Vector3.Distance(transform.position, past_positions[current_point]) > 0.1f)
             {
                 Vector3 dir = (past_positions[current_point] - transform.position).normalized;
                 transform.Translate(dir * (return_speed * 0.75f + Vector3.Distance(transform.position, past_positions[current_point])) * Time.deltaTime, Space.World); /// Mueve al jugador en la dirección a su anterior posición
-                
+
                 cameraRotation.x = past_rotations[current_point].x; /// Cambia la rotación del script de la cámara, para que no haga cosas raras al acabar la transición
                 cameraRotation.y = past_rotations[current_point].y;
 
                 transform.rotation = Quaternion.Lerp(transform.rotation, q_rotations[current_point], Time.deltaTime * return_speed);
                 Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0), Time.deltaTime * return_speed * 0.5f);
+
+                Camera.main.transform.LookAt(transform);
             }
             else
             {
@@ -93,6 +99,8 @@ public class ReturnScript : MonoBehaviour
                 }
                 else
                 {
+                    Camera.main.transform.SetParent(transform);
+
                     // El jugador ha llegado al último punto
                     cooldown_image.fillAmount = 0;
                     #region DamageToEnemy
@@ -104,7 +112,7 @@ public class ReturnScript : MonoBehaviour
                     {
                         SoundManager.instance.InstantiateSound(explosion_clip, transform.position, explosion_clip.length);
                     }
-                    GameManager.gm.ShakeController(1, 0.5f, 1.5f);
+                    GameManager.gm.ShakeController(1, 0.25f, 1);
                     DamageToEnemies(transform.position, damage, explosion_range, Vector3.zero);
                     #endregion
 
@@ -121,6 +129,10 @@ public class ReturnScript : MonoBehaviour
         }
         else
         {
+            if (Vector3.Distance(Camera.main.transform.position, PlayerMovement.instance.camera_original_position) > 0.05f)
+                Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, transform.position + PlayerMovement.instance.camera_original_position, Time.deltaTime * 3);
+            else
+                Camera.main.transform.position = PlayerMovement.instance.camera_original_position;
             if (cooldown) // Cuenta atrás del cooldown
             {
                 if (cooldown_timer == 0) ClearReturnLists(); /// Vacía la lista de posiciones
