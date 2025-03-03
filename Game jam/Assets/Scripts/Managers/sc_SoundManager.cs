@@ -19,9 +19,7 @@ public class SoundManager : MonoBehaviour
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-
-        if (audioMixerGroup != null)
+        if (audioMixerGroup != null && slider_volume != null)
         {
             audioMixerGroup.audioMixer.GetFloat("MasterVolume", out float v); /// Pone el slider según el volumen
             slider_volume.value = v;
@@ -34,11 +32,20 @@ public class SoundManager : MonoBehaviour
         else
             Destroy(this);
     }
-    public void PlaySound(AudioClip clip)
+    public void PlaySound(AudioClip clip, bool loop = false)
     {
-        audioSource.clip = clip;
-        audioSource.loop = false;
-        audioSource.Play();
+        audioSource.loop = loop;
+
+        if (clip != null)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+        }
+        else
+        {
+            audioSource.clip = null;
+            audioSource.Stop();
+        }
     }
     /// <summary>
     /// Instancia un sonido por el tiempo mandado en la posición indicada
@@ -63,6 +70,7 @@ public class SoundManager : MonoBehaviour
         audioSource.Play();
         audioSource.clip = null;
     }
+
 
     public void SetVolume()
     {

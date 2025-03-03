@@ -12,6 +12,8 @@ public class CameraRotation : MonoBehaviour
     [SerializeField] private Transform player;
     [Header("Speed")]
     public float cameraSpeed;
+    [HideInInspector]
+    public float cameraSpeed_slide;
     public float x, y;
 
     [Header("References")]
@@ -148,9 +150,7 @@ public class CameraRotation : MonoBehaviour
     {
         // Cambia la posición del texto y la imagen
         float offset = 5;
-        /// Imagen
         Vector2 pos = new Vector2(ui_sensivity_handle.anchorMax.x * ui_sensivity_handle.rect.width, ui_sensivity_handle.anchorMax.y + offset);
-
         GameManager.gm.ChangeUIPosition(pos, ui_sensivity_value_image.rectTransform, ui_sensivity_value.rectTransform);
 
         if (ui_sensivity_value_image.color.a < 1 || ui_sensivity_value.color.a < 1)
@@ -159,8 +159,12 @@ public class CameraRotation : MonoBehaviour
             ui_sensivity_value.color = new Color(ui_sensivity_value.color.r, ui_sensivity_value.color.g, ui_sensivity_value.color.b, 1);
             ui_sensivity_value_image.color = new Color(ui_sensivity_value_image.color.r, ui_sensivity_value_image.color.g, ui_sensivity_value_image.color.b, 1);
         }
-        /// Se cambia el valor de cameraSpeed por el del slider
+
+
+        // Se cambia el valor de cameraSpeed por el del slider
         cameraSpeed = ui_sensivity_slider.value;
+        cameraSpeed_slide = cameraSpeed / 5;
+
         ui_sensivity_value.text = cameraSpeed.ToString();
     }
 

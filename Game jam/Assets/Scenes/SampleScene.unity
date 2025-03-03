@@ -4022,6 +4022,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1836626140}
   cameraSpeed: 100
+  cameraSpeed_slide: 0
   x: 0
   y: 0
   UIElements_to_move:
@@ -4069,7 +4070,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -30, y: -73}
+  m_AnchoredPosition: {x: -30, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1001185082
@@ -7681,7 +7682,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1836626136}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.0495459, y: -0, z: -0, w: 0.9987719}
   m_LocalPosition: {x: -45, y: 2.16, z: 25.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7691,7 +7692,7 @@ Transform:
   - {fileID: 963194228}
   m_Father: {fileID: 0}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 5.68, y: 0, z: 0}
 --- !u!54 &1836626141
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7910,12 +7911,14 @@ MonoBehaviour:
   max_stamina: 10
   current_stamina: 0
   fov: 0
+  fov_change: 0
   canMove: 1
   sprinting: 0
   moving: 0
   slide: 0
   slide_camera_offset: {x: 0, y: -0.1, z: 0}
   camera_original_position: {x: 0, y: 0, z: 0}
+  slide_sound: {fileID: 8300000, guid: c59662d430b660c4587f8eae47813452, type: 3}
   stamina_image: {fileID: 1988724743}
   rb: {fileID: 0}
   dir: {x: 0, y: 0}
@@ -7930,7 +7933,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 640085060d3d82749ade4e7338efd18d, type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
@@ -8500,7 +8503,7 @@ Transform:
   m_GameObject: {fileID: 1880035059}
   m_LocalRotation: {x: 0.7047459, y: 0.057734985, z: 0.057734985, w: 0.7047459}
   m_LocalPosition: {x: 11.464001, y: 0, z: 21.892101}
-  m_LocalScale: {x: 11.56113, y: 1.3834813, z: 0.1812671}
+  m_LocalScale: {x: 88.91781, y: 1.3834813, z: 0.1812671}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 691531729}

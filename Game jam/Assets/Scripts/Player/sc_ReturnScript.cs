@@ -73,8 +73,9 @@ public class ReturnScript : MonoBehaviour
     {
         if (returning && past_positions.Count > 0 && !cooldown)
         {
+            // La posición de la cámara se pasa al punto donde volverás en el tiempo para dar una vista aérea
             Camera.main.transform.parent = null;
-            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition,  new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z) - transform.forward, Time.deltaTime * 3);
+            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition,  new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z) - transform.forward * 2, Time.deltaTime * 3);
 
             // Calcula la distancia hasta el último punto en un rango de 1 a 0
             cooldown_image.fillAmount = 1 - (1 - (Vector3.Distance(transform.position, past_positions[0]) / Vector3.Distance(past_positions[0], past_positions[past_positions.Count - 1])));
@@ -83,11 +84,11 @@ public class ReturnScript : MonoBehaviour
                 Vector3 dir = (past_positions[current_point] - transform.position).normalized;
                 transform.Translate(dir * (return_speed * 0.75f + Vector3.Distance(transform.position, past_positions[current_point])) * Time.deltaTime, Space.World); /// Mueve al jugador en la dirección a su anterior posición
 
-                cameraRotation.x = past_rotations[current_point].x; /// Cambia la rotación del script de la cámara, para que no haga cosas raras al acabar la transición
-                cameraRotation.y = past_rotations[current_point].y;
+                //cameraRotation.x = past_rotations[current_point].x; /// Cambia la rotación del script de la cámara, para que no haga cosas raras al acabar la transición
+                //cameraRotation.y = past_rotations[current_point].y;
 
                 transform.rotation = Quaternion.Lerp(transform.rotation, q_rotations[current_point], Time.deltaTime * return_speed);
-                Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0), Time.deltaTime * return_speed * 0.5f);
+                //Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0), Time.deltaTime * return_speed * 0.5f);
 
                 Camera.main.transform.LookAt(transform);
             }
@@ -127,12 +128,22 @@ public class ReturnScript : MonoBehaviour
                 }
             }
         }
-        else
+        else /// Resto de comprobaciones en el update
         {
-            if (Vector3.Distance(Camera.main.transform.position, PlayerMovement.instance.camera_original_position) > 0.05f)
-                Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, transform.position + PlayerMovement.instance.camera_original_position, Time.deltaTime * 3);
-            else
-                Camera.main.transform.position = PlayerMovement.instance.camera_original_position;
+            if (!PlayerMovement.instance.slide)
+            {
+                // La cámara vuelve a su posición original
+                if (Vector3.Distance(Camera.main.transform.position, PlayerMovement.instance.camera_original_position) > 0.05f)
+                {
+                    //Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, transform.position + PlayerMovement.instance.camera_original_position, Time.deltaTime * 3);
+                }
+                /// Si el jugador se está deslizando no se fijará la posición de la cámara
+                else if (Camera.main.transform.position != PlayerMovement.instance.camera_original_position)
+                {
+                    Camera.main.transform.position = PlayerMovement.instance.camera_original_position;
+                }
+            }
+
             if (cooldown) // Cuenta atrás del cooldown
             {
                 if (cooldown_timer == 0) ClearReturnLists(); /// Vacía la lista de posiciones
