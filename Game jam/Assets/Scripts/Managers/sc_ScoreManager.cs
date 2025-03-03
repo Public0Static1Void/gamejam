@@ -138,6 +138,8 @@ public class ScoreManager : MonoBehaviour
             current_text++;
         else
             current_text = 0;
+
+        
     }
 
     private IEnumerator ShowTextOnPosition(string phrase, Vector3 position, Vector3 face_direction)
