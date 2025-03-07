@@ -75,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (!canMove) return;
+
         #region Sprint
         if (sprinting)
         {

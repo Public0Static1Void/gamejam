@@ -898,8 +898,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -20.4, y: 4.5000014}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -20.344522, y: 4.5000014}
+  m_SizeDelta: {x: 174.93024, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &173720275
 MonoBehaviour:
@@ -3266,11 +3266,11 @@ RectTransform:
   - {fileID: 54365892}
   - {fileID: 1689241853}
   - {fileID: 565344}
+  - {fileID: 980595152}
   - {fileID: 456120472}
   - {fileID: 311540688}
   - {fileID: 1001185081}
   - {fileID: 1521420111}
-  - {fileID: 980595152}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4456,7 +4456,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &980595152
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4493,7 +4493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.26508543, g: 0.3241904, b: 0.3490566, a: 1}
+  m_Color: {r: 0.26508543, g: 0.3241904, b: 0.3490566, a: 0.77254903}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4631,8 +4631,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -20.7, y: -9.1}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -20.256157, y: -9.1}
+  m_SizeDelta: {x: 167.76016, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1002168626
 MonoBehaviour:
@@ -5777,6 +5777,7 @@ MonoBehaviour:
   speed_cost: 2000
   er_cost: 5000
   stamina_cost: 100
+  shop_object: {fileID: 980595151}
 --- !u!4 &1381051541
 Transform:
   m_ObjectHideFlags: 0
@@ -8689,6 +8690,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 7d11725d-04dc-4112-9da5-73a92dfe83d8
     m_ActionName: Player/Buy[/Keyboard/f,/XInputControllerWindows/dpad/up]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1381051540}
+        m_TargetAssemblyTypeName: sc_shop, Assembly-CSharp
+        m_MethodName: OpenCloseShop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 33857a78-e348-42ef-9957-2750de4d742a
+    m_ActionName: Player/Open/Close shop[/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -9003,8 +9020,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 13.5
-  m_fontSizeBase: 13.5
+  m_fontSize: 11
+  m_fontSizeBase: 11
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

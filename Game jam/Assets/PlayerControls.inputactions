@@ -1,5 +1,5 @@
 {
-    "name": "player",
+    "name": "PlayerControls",
     "maps": [
         {
             "name": "Player",
@@ -72,6 +72,15 @@
                     "name": "Buy",
                     "type": "Button",
                     "id": "7d11725d-04dc-4112-9da5-73a92dfe83d8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open/Close shop",
+                    "type": "Button",
+                    "id": "33857a78-e348-42ef-9957-2750de4d742a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -461,6 +470,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Buy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce76b3aa-3577-4979-a42a-aaebf5a1b3b3",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Open/Close shop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "90840248-cc69-4948-a215-97dcf61d29f7",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Open/Close shop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

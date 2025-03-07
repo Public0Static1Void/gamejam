@@ -95,29 +95,36 @@ public class ScoreManager : MonoBehaviour
     /// </summary>
     public void ChangeScore(float value, Vector3 sound_position, bool show_text)
     {
-        value *= score_multiplier;
-        value = (int)value;
-        if (score + value <= 9999999999)
-            score += value;
-        else
+        if (value > 0)
         {
-            value = 0;
+            value *= score_multiplier;
+            value = (int)value;
+        }
+            
+
+        score += value;
+        if (score > 9999999999)
+        {
             score = 9999999999;
+            value = 0;
+        }
+        else if (score < 0)
+        {
+            score = 0;
         }
 
-        if (value < 0)
-            return;
-        if (score_clip != null)
+        if (score_clip != null && value > 0)
         {
             score_audioSource.clip = score_clip;
             score_audioSource.Play();
         }
 
         string string_value = value.ToString();
+        char sum_or_not = string_value[0] == '-' ? ' ' : '+';
         if (show_text) /// Si es true mostrará un texto de score en la posición del sonido
         {
             Vector3 dir_to_player = sound_position - PlayerMovement.instance.transform.position; /// Calcula la dirección entre el origen del sonido al player
-            StartCoroutine(ShowTextOnPosition("+" + string_value, sound_position, dir_to_player.normalized));
+            StartCoroutine(ShowTextOnPosition(sum_or_not + string_value, sound_position, dir_to_player.normalized));
         }
 
 
@@ -132,7 +139,7 @@ public class ScoreManager : MonoBehaviour
         ui_score_text.text = number_to_show;
 
         // Muestra un texto de suma en la ui
-        plus_scoretext_list[current_text].text = "+" + string_value;
+        plus_scoretext_list[current_text].text = sum_or_not + string_value;
         StartCoroutine(MovePlusScoreText(plus_scoretext_list[current_text]));
         if (current_text < plus_scoretext_list.Count - 1)
             current_text++;

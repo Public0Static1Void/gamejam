@@ -130,8 +130,10 @@ public class ReturnScript : MonoBehaviour
         }
         else /// Resto de comprobaciones en el update
         {
-            if (!PlayerMovement.instance.slide)
+            if (!PlayerMovement.instance.slide && !PlayerMovement.instance.sprinting)
             {
+                Debug.Log("Entra");
+
                 // La cámara vuelve a su posición original
                 if (Vector3.Distance(Camera.main.transform.position, PlayerMovement.instance.camera_original_position) > 0.05f)
                 {
@@ -140,7 +142,7 @@ public class ReturnScript : MonoBehaviour
                 /// Si el jugador se está deslizando no se fijará la posición de la cámara
                 else if (Camera.main.transform.position != PlayerMovement.instance.camera_original_position)
                 {
-                    Camera.main.transform.position = PlayerMovement.instance.camera_original_position;
+                    //Camera.main.transform.position = PlayerMovement.instance.camera_original_position;
                 }
             }
 
