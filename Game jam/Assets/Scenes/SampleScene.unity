@@ -7751,6 +7751,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1721771572}
+  - component: {fileID: 1721771573}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -7778,6 +7779,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1721771573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721771571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb3a96ad9a3eff74b9807ab60d2ff6b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ob_gamblingparent: {fileID: 0}
+  ability1_slot: {fileID: 0}
+  ability2_slot: {fileID: 0}
+  ability3_slot: {fileID: 0}
+  meth_levitate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1836626147}
+        m_TargetAssemblyTypeName: ReturnScript, Assembly-CSharp
+        m_MethodName: ExplosionPathAbility
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 884547721288784740, guid: 1795b562a90319149b0e051845c2ec24, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  meth_explodingability:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1836626148}
+        m_TargetAssemblyTypeName: sc_Abilities, Assembly-CSharp
+        m_MethodName: LevitateEnemies
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  sprite_levitate: {fileID: 0}
+  sprite_explodepath: {fileID: 0}
 --- !u!1 &1741428108
 GameObject:
   m_ObjectHideFlags: 0
