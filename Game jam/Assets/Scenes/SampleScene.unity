@@ -3803,10 +3803,10 @@ MonoBehaviour:
   - {fileID: 676855490}
   - {fileID: 760150201}
   - {fileID: 1864685821}
-  enemy: {fileID: 5338783919543476209, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
+  enemy: {fileID: 828969336895915344, guid: dbb3449e24e4de64c9ef52a578ddd69d, type: 3}
   enemies: []
   enemy_list:
-  - {fileID: 5338783919543476209, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
+  - {fileID: 828969336895915344, guid: dbb3449e24e4de64c9ef52a578ddd69d, type: 3}
   - {fileID: 6845868788880733797, guid: c898474947a343e4eaf251cf5189d333, type: 3}
   enemyRound: 20
 --- !u!4 &843739052
