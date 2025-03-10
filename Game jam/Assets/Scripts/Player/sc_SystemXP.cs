@@ -9,6 +9,7 @@ public class Ability
     public string name;
     public string description;
     public Sprite icon;
+    public UnityEvent ability_event;
     public System.Action effect;
 }
 

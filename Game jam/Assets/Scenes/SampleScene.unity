@@ -1559,7 +1559,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 233510474}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721771573}
+        m_TargetAssemblyTypeName: AbilitiesSystem, Assembly-CSharp
+        m_MethodName: CloseGamblingMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &261010807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1817,7 +1829,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &314122227
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2759,7 +2771,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 81040aec1a28b7b448aef30f8842f039, type: 2}
+  - {fileID: -5605289326131794027, guid: 0ed6dbebb46364c45bb7776bc0919b68, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3262,11 +3274,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 314122227}
   - {fileID: 54365892}
   - {fileID: 1689241853}
   - {fileID: 565344}
   - {fileID: 980595152}
+  - {fileID: 314122227}
   - {fileID: 456120472}
   - {fileID: 311540688}
   - {fileID: 1001185081}
@@ -5126,7 +5138,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1135933815}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721771573}
+        m_TargetAssemblyTypeName: AbilitiesSystem, Assembly-CSharp
+        m_MethodName: CloseGamblingMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1139998184
 GameObject:
   m_ObjectHideFlags: 0
@@ -10135,7 +10159,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2053470051}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1721771573}
+        m_TargetAssemblyTypeName: AbilitiesSystem, Assembly-CSharp
+        m_MethodName: CloseGamblingMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2138436175
 GameObject:
   m_ObjectHideFlags: 0

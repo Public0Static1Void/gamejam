@@ -26,8 +26,7 @@ public class AbilitiesSystem : MonoBehaviour
     private UnityEngine.UI.Text ability3_text;
 
     [Header("Abilities Methods")]
-    public UnityEvent meth_levitate;
-    public UnityEvent meth_explodingability;
+    public List<UnityEvent> methods_abilities;
 
     [Header("Sprites")]
     public Sprite sprite_levitate;
@@ -46,11 +45,13 @@ public class AbilitiesSystem : MonoBehaviour
 
         ab.name = "Levitate";
         ab.description = ":)";
+        ab.ability_event = methods_abilities[(int)Abilities.LEVITATE];
 
         abilities.Add(ab);
 
         ab.name = "Exploding path";
         ab.description = "Boom boom on path";
+        ab.ability_event = methods_abilities[(int)Abilities.EXPLODE_PATH];
 
         abilities.Add(ab);
     }
