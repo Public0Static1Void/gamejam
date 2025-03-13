@@ -132,8 +132,6 @@ public class ReturnScript : MonoBehaviour
         {
             if (!PlayerMovement.instance.slide && !PlayerMovement.instance.sprinting)
             {
-                Debug.Log("Entra");
-
                 // La cámara vuelve a su posición original
                 if (Vector3.Distance(Camera.main.transform.position, PlayerMovement.instance.camera_original_position) > 0.05f)
                 {

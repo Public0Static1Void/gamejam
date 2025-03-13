@@ -53,10 +53,10 @@ public class Rounds : MonoBehaviour
     private IEnumerator SpawnLine()
     {
         spawning = true;
-        if (round > 0)
-            ReturnScript.instance.RandomUpgrade();
 
-        float wait_time = 12.5f - round * 0.1f; /// Función de espera entre rondas (cuánto más tiempo más rápido pasarán)
+        AbilitiesSystem.instance.GetRandomAbilities();
+
+        float wait_time = 12.5f - round * 0.1f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
         if (wait_time < 2) wait_time = 2;
         yield return new WaitForSeconds(wait_time);
 

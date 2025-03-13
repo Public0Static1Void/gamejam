@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject pause_menu;
 
+    private CursorLockMode previous_lockmode;
+
     void Awake()
     {
         if (gm == null)
@@ -80,8 +82,9 @@ public class GameManager : MonoBehaviour
         PlayerMovement.instance.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
 
         Time.timeScale = 1;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+
+        Cursor.lockState = previous_lockmode;
+        Cursor.visible = previous_lockmode == CursorLockMode.None ? true : false;
 
         pause_menu.SetActive(false);
         SoundManager.instance.SetHighPassEffect(10);
@@ -91,8 +94,11 @@ public class GameManager : MonoBehaviour
         pause_menu.SetActive(true);
         ShakeController(0, 0, 0);
         Time.timeScale = 0;
+
+        previous_lockmode = Cursor.lockState;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
         PlayerMovement.instance.GetComponent<PlayerInput>().SwitchCurrentActionMap("UI");
         StartCoroutine(InterpolateHighPass(1000));
     }

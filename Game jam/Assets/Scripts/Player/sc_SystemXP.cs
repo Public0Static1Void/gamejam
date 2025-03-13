@@ -11,6 +11,7 @@ public class Ability
     public Sprite icon;
     public UnityEvent ability_event;
     public System.Action effect;
+    public AbilitiesSystem.Abilities type;
 }
 
 public class Player : MonoBehaviour
