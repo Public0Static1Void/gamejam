@@ -91,11 +91,13 @@ public class GameManager : MonoBehaviour
     }
     public void PauseGame()
     {
+        if (!pause_menu.activeSelf)
+            previous_lockmode = Cursor.lockState;
+
         pause_menu.SetActive(true);
         ShakeController(0, 0, 0);
         Time.timeScale = 0;
 
-        previous_lockmode = Cursor.lockState;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 

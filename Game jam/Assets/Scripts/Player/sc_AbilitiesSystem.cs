@@ -8,7 +8,7 @@ public class AbilitiesSystem : MonoBehaviour
 {
     public static AbilitiesSystem instance {  get; private set; }
     protected List<Ability> abilities = new List<Ability>();
-    public enum Abilities { LEVITATE, EXPLODE_PATH, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, LAST_NO_USE }
 
     [Header("References")]
     public GameObject ob_gamblingparent;
@@ -28,6 +28,7 @@ public class AbilitiesSystem : MonoBehaviour
     [Header("Sprites")]
     public Sprite sprite_levitate;
     public Sprite sprite_explodepath;
+    public Sprite sprite_group;
     void Awake()
     {
         if (instance == null)
@@ -40,6 +41,7 @@ public class AbilitiesSystem : MonoBehaviour
     {
         CloseGamblingMenu();
 
+        // Levitate ability
         Ability ab = new Ability();
 
         ab.name = "Levitate";
@@ -48,6 +50,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.type = Abilities.LEVITATE;
         ab.icon = sprite_levitate;
 
+        // Exploding path ability
         abilities.Add(ab);
 
         ab = new Ability();
@@ -59,6 +62,18 @@ public class AbilitiesSystem : MonoBehaviour
         ab.icon = sprite_explodepath;
 
         abilities.Add(ab);
+
+        // Group ability
+        ab = new Ability();
+
+        ab.name = "Group n' xplode";
+        ab.description = "While you are returning, all the enemies you touch will start to levitate to you, grouping them. The more enemies you group, the faster will go so you can explode them!";
+        ab.ability_event = methods_abilities[(int)Abilities.GROUP];
+        ab.type = Abilities.GROUP;
+        ab.icon = sprite_group;
+
+        abilities.Add(ab);
+
 
         // Referencias de los slots de habilidades
 
@@ -76,17 +91,13 @@ public class AbilitiesSystem : MonoBehaviour
 
     public void GetRandomAbilities()
     {
-        const int ability_count = 2; /// Número de habilidades a mostrar
+        const int ability_count = 3; /// Número de habilidades a mostrar
         Ability[] abilities_to_show = new Ability[ability_count];
 
         for (int i = 0; i < ability_count; i++)
         {
             int rand = Random.Range(0, abilities.Count);
-            if (i > 0)
-            {
-                while (abilities_to_show[rand] == abilities_to_show[i - 1])
-                    rand = Random.Range(0, abilities.Count);
-            }
+
             abilities_to_show[i] = abilities[rand];
             Debug.Log(abilities_to_show[i].name);
         }
@@ -94,7 +105,6 @@ public class AbilitiesSystem : MonoBehaviour
         {
             // Añade el evento de añadir la habilidad al botón
             int ab_num = i;
-            //Debug.Log("Selected: " + abilities_to_show[ab_num].name);
 
             slots_buttons[i].onClick.AddListener(() => {
 

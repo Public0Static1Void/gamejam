@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
                 current_speed += Time.fixedDeltaTime * ((sprinting ? 0.5f : 5) * current_speed + target_speed);
                 if (current_speed > 800) current_speed = 800;
             }
-            Debug.Log(current_speed);
+
             // Dejará de deslizarse cuando el jugador pierda toda la velocidad o no esté en el suelo
             if (current_speed <= 0 || !Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f))
             {

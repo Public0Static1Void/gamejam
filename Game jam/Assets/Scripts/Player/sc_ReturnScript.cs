@@ -291,7 +291,7 @@ public class ReturnScript : MonoBehaviour
             if (explosion_timer > 0.5f)
             {
                 Instantiate(explosionParticle, positions[explosion_num], Quaternion.identity);
-                DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), 3, Vector3.up * 2);
+                DamageToEnemies(positions[explosion_num], (int)(damage * 0.1f), 3, Vector3.up * 2);
                 float dist = Vector3.Distance(positions[explosion_num], transform.position);
                 if (dist < 10) /// Si el jugador está cerca hará vibrár el mando
                 {   

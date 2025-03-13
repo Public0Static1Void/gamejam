@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class sc_Abilities : MonoBehaviour
 {
-    private bool active_levitate = false;
+    private bool active_levitate = false, active_group = false;
+    private bool check_collisions = false;
     private List<GameObject> enemy_targets = new List<GameObject>();
     private List<EnemyFollow> enemies_mov = new List<EnemyFollow>();
 
     [Header("Audio clips")]
     public AudioClip levitate_enemy;
     public AudioClip ground_smash_from_air;
+
+    Vector3 centroid;
+
+    private bool CheckActiveAbilities()
+    {
+        if (active_group || active_levitate)
+            return true;
+        return false;
+    }
 
     public void LevitateEnemies()
     {
@@ -19,6 +29,7 @@ public class sc_Abilities : MonoBehaviour
     IEnumerator LevitateRoutine()
     {
         active_levitate = true; /// El jugador empezará a detectar si choca con los enemigos
+        check_collisions = true;
 
         while (active_levitate)
         {
@@ -26,6 +37,7 @@ public class sc_Abilities : MonoBehaviour
             if (!ReturnScript.instance.returning)
             {
                 active_levitate = false; /// El jugador deja de detectar colisiones
+                check_collisions = CheckActiveAbilities();
 
                 yield return new WaitForSeconds(0.25f); /// Se espera un poco para que el jugador pueda ver como se estrellan los enemigos
 
@@ -52,30 +64,80 @@ public class sc_Abilities : MonoBehaviour
             yield return null;
         }
         // Se limpian las listas
-        enemies_mov.Clear();
-        enemy_targets.Clear();
+        if (!CheckActiveAbilities())
+        {
+            check_collisions = false;
+            enemies_mov.Clear();
+            enemy_targets.Clear();
+        }
+    }
+
+    public void GroupEnemies()
+    {
+        StartCoroutine(GroupRoutine());
+    }
+    private IEnumerator GroupRoutine()
+    {
+        active_group = true;
+        check_collisions = true;
+
+
+        while (ReturnScript.instance.returning)
+        {
+            for (int i = 0; i < enemy_targets.Count; i++)
+            {
+                Vector3 dir = ReturnScript.instance.transform.position - enemy_targets[i].transform.position;
+                dir = new Vector3(dir.x, dir.y + enemies_mov[i].rb.velocity.y, dir.z);
+                enemies_mov[i].AddForceToEnemy(dir.normalized * Mathf.Clamp((enemy_targets.Count * 0.5f), 0.5f, 5));
+            }
+
+            yield return null;
+        }
+
+
+        foreach(EnemyFollow ef in enemies_mov)
+        {
+            ef.rb.useGravity = true;
+        }
+
+        active_group = false;
+
+        // Se limpian las listas
+        if (!CheckActiveAbilities())
+        {
+            check_collisions = false;
+            enemies_mov.Clear();
+            enemy_targets.Clear();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            if (active_levitate)
+            if (check_collisions)
             {
                 // Se añade una fuerza para arriba al enemigo quitándole la gravedad
                 EnemyFollow e_fl = other.GetComponent<EnemyFollow>();
                 e_fl.agent.enabled = false;
                 e_fl.rb.useGravity = false;
-                e_fl.AddForceToEnemy(new Vector3(0, ReturnScript.instance.damage * 0.05f, 0));
+                /// Si la habilidad de levitar está activa añade una fuerza vertical
+                if (active_levitate)
+                    e_fl.AddForceToEnemy(new Vector3(e_fl.rb.velocity.x, ReturnScript.instance.damage * 0.05f, e_fl.rb.velocity.z));
 
                 // Suena el sonido de levitación
                 if (levitate_enemy != null)
                     SoundManager.instance.PlaySound(levitate_enemy);
 
-                // Se añade el enemigo a la lista de los que se harán bajar después
+                // Se añade el enemigo a la lista de los que se harán mover después
                 enemies_mov.Add(e_fl);
                 enemy_targets.Add(other.gameObject);
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(centroid, 2);
     }
 }
