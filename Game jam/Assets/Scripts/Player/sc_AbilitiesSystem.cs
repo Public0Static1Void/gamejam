@@ -7,7 +7,10 @@ using UnityEngine.UI;
 public class AbilitiesSystem : MonoBehaviour
 {
     public static AbilitiesSystem instance {  get; private set; }
+
     protected List<Ability> abilities = new List<Ability>();
+    private List<Ability> abilities_equipped = new List<Ability>();
+
     public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, LAST_NO_USE }
 
     [Header("References")]
@@ -94,26 +97,56 @@ public class AbilitiesSystem : MonoBehaviour
         const int ability_count = 3; /// Número de habilidades a mostrar
         Ability[] abilities_to_show = new Ability[ability_count];
 
+        // Asigna habilidades aleatorias
+        int repeated_ability = 0;
         for (int i = 0; i < ability_count; i++)
         {
             int rand = Random.Range(0, abilities.Count);
-
+            /// Buscará una habilidad random y comprueba si el jugador ya las tiene todas
+            while (abilities_equipped.Contains(abilities[rand]) && repeated_ability <= abilities.Count)
+            {
+                rand = Random.Range(0, abilities.Count);
+                repeated_ability++;
+            }
+            /// Si el jugador las tiene todas sale del bucle
+            if (repeated_ability >= abilities.Count)
+                break;
             abilities_to_show[i] = abilities[rand];
+
             Debug.Log(abilities_to_show[i].name);
         }
+
         for (int i = 0; i < ability_count; i++)
         {
             // Añade el evento de añadir la habilidad al botón
             int ab_num = i;
 
-            slots_buttons[i].onClick.AddListener(() => {
+            if (slots_buttons[i] != null)
+            {
+                slots_buttons[i].onClick.AddListener(() => {
 
-                ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)abilities_to_show[ab_num].type].Invoke());
-                CloseGamblingMenu();
+                    ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)abilities_to_show[ab_num].type].Invoke());
+                    Debug.Log("Ability selected: " + abilities_to_show[ab_num].name);
+                    
+                    abilities_equipped.Add(abilities_to_show[ab_num]);
 
-            });
+                    for (int i = 0; i < abilities_equipped.Count; i++)
+                    {
+                        Debug.Log(abilities_equipped[i].name);
+
+                    }
+
+                    CloseGamblingMenu();
+
+                    slots_buttons[ab_num].onClick.RemoveAllListeners();
+
+
+                });
+            }
+
             // Cambia la imagen del sprite
-            slots_images[i].sprite = abilities_to_show[i].icon;
+            if (slots_images[i] != null && abilities_to_show[i] != null)
+                slots_images[i].sprite = abilities_to_show[i].icon;
         }
 
         ob_gamblingparent.SetActive(true);

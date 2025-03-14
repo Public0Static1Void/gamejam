@@ -86,6 +86,8 @@ public class sc_Abilities : MonoBehaviour
         {
             for (int i = 0; i < enemy_targets.Count; i++)
             {
+                if (enemy_targets[i] == null) continue;
+
                 Vector3 dir = ReturnScript.instance.transform.position - enemy_targets[i].transform.position;
                 dir = new Vector3(dir.x, dir.y + enemies_mov[i].rb.velocity.y, dir.z);
                 enemies_mov[i].AddForceToEnemy(dir.normalized * Mathf.Clamp((enemy_targets.Count * 0.5f), 0.5f, 5));
@@ -97,6 +99,7 @@ public class sc_Abilities : MonoBehaviour
 
         foreach(EnemyFollow ef in enemies_mov)
         {
+            if (ef == null) continue;
             ef.rb.useGravity = true;
         }
 
