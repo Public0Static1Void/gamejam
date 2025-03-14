@@ -281,8 +281,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else 
         { 
-            current_speed = speed * 0.75f;
-            //fov_change = target_fov * 0.7f;
+            current_speed = speed * 0.65f;
+            //fov_change = target_fov * 0.6f;
         }
         
         target_speed = current_speed;
