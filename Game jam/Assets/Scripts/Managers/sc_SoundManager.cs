@@ -17,13 +17,30 @@ public class SoundManager : MonoBehaviour
 
     public bool funnySounds;
 
+    [Header("Stats")]
+    public int pool_number_audiosources;
+    private int current_audiosource;
+    private List<AudioSource> buffer_audiosources = new List<AudioSource>();
+
     private void Start()
     {
         if (audioMixerGroup != null && slider_volume != null)
         {
             audioMixerGroup.audioMixer.GetFloat("MasterVolume", out float v); /// Pone el slider según el volumen
             slider_volume.value = v;
-        }   
+        }
+
+        // Crea una pool de audiosources
+        for (int i = 0; i < pool_number_audiosources; i++)
+        {
+            GameObject audioSource = new GameObject();
+            audioSource.name = "Audiosource " + i.ToString();
+            AudioSource audio = audioSource.AddComponent<AudioSource>();
+
+            audio.outputAudioMixerGroup = audioMixerGroup;
+
+            buffer_audiosources.Add(audio);
+        }
     }
     private void Awake()
     {
@@ -50,17 +67,19 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// Instancia un sonido por el tiempo mandado en la posición indicada
     /// </summary>
-    public void InstantiateSound(AudioClip clip, Vector3 position, float seconds_to_destroy, AudioMixerGroup mixer = null)
+    public void InstantiateSound(AudioClip clip, Vector3 position, float volume = 0.5f, AudioMixerGroup mixer = null)
     {
-        GameObject ob = new GameObject();
+        AudioSource curr = buffer_audiosources[current_audiosource];
 
-        ob.transform.position = position;
-        AudioSource audio = ob.AddComponent<AudioSource>();
-        audio.clip = clip;
-        audio.outputAudioMixerGroup = mixer ?? audioMixerGroup; /// Si mixer no se pasa como parámetro se usará audioMixerGroup
-        audio.Play();
+        curr.clip = clip;
+        curr.transform.position = position;
+        curr.outputAudioMixerGroup = mixer ?? audioMixerGroup; /// Si mixer no se pasa como parámetro se usará audioMixerGroup
+        curr.volume = volume;
+        curr.Play();
 
-        Destroy(ob, seconds_to_destroy);
+        current_audiosource++;
+        if (current_audiosource >= buffer_audiosources.Count - 1)
+            current_audiosource = 0;
     }
 
     public void PlaySoundOnAudioSource(AudioClip clip, AudioSource audioSource, bool loop = false)

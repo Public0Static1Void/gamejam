@@ -130,7 +130,6 @@ public class PlayerMovement : MonoBehaviour
             Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10); /// Movimiento de la cámara
 
             /// Pérdida de velocidad
-            Debug.Log(current_speed);
             if (rb.velocity.y >= -0.1f)
             {
                 current_speed -= (Time.fixedDeltaTime * ((0.5f * current_speed + target_speed)));

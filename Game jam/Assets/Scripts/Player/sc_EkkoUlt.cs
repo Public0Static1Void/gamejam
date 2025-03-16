@@ -124,11 +124,11 @@ public class EkkoUlt : MonoBehaviour
 
                 if (SoundManager.instance.funnySounds)
                 {
-                    SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position, funny_explosion_clip.length);
+                    SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position);
                 }
                 else
                 {
-                    SoundManager.instance.InstantiateSound(explosion_clip, transform.position, explosion_clip.length);
+                    SoundManager.instance.InstantiateSound(explosion_clip, transform.position);
                 }
                 Collider[] colls = Physics.OverlapSphere(transform.position, explosion_radius, enemy_layer);
                 if (colls.Length > 0)
@@ -178,7 +178,7 @@ public class EkkoUlt : MonoBehaviour
         orb_cooldown.transform.position = return_position;
 
         /// Sonido de tic tac
-        SoundManager.instance.InstantiateSound(tictac_clip, return_position, period_time);
+        SoundManager.instance.InstantiateSound(tictac_clip, return_position);
 
         yield return new WaitForSeconds(period_time); /// Espera del código
 

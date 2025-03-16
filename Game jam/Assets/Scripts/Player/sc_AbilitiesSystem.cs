@@ -11,6 +11,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     protected List<Ability> abilities = new List<Ability>();
     private List<Ability> abilities_equipped = new List<Ability>();
+    List<int> rand_abilities_index = new List<int>();
 
     public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, LAST_NO_USE }
 
@@ -103,7 +104,6 @@ public class AbilitiesSystem : MonoBehaviour
 
         // Asigna habilidades aleatorias
         int repeated_ability = 0;
-        List<int> rand_abilities_index = new List<int>();
 
         for (int i = 0; i < ability_count; i++)
         {

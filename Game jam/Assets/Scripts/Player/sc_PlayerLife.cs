@@ -79,7 +79,7 @@ public class PlayerLife : MonoBehaviour
         if (!SoundManager.instance.audioSource.isPlaying) /// Le hace un efecto de shake a la cámara y pone el sonido de daño
         {
             cameraRotation.ShakeCamera(shakeAmount);
-            SoundManager.instance.PlaySound(damage_clips[Random.Range(0, damage_clips.Count)]);
+            SoundManager.instance.InstantiateSound(damage_clips[Random.Range(0, damage_clips.Count)], transform.position);
             GameManager.gm.ShakeController(0.5f, 0.1f, 0.25f);
         }
 

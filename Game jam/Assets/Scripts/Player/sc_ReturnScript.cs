@@ -109,11 +109,11 @@ public class ReturnScript : MonoBehaviour
                     #region DamageToEnemy
                     if (SoundManager.instance.funnySounds) /// Sonidos de explosión
                     {
-                        SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position, funny_explosion_clip.length);
+                        SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position);
                     }
                     else
                     {
-                        SoundManager.instance.InstantiateSound(explosion_clip, transform.position, explosion_clip.length);
+                        SoundManager.instance.InstantiateSound(explosion_clip, transform.position);
                     }
                     GameManager.gm.ShakeController(1, 0.25f, 1);
                     DamageToEnemies(transform.position, damage, explosion_range, Vector3.zero);
@@ -187,6 +187,7 @@ public class ReturnScript : MonoBehaviour
         {
             foreach (Collider coll in colls)
             {
+                Debug.Log("Killed");
                 Vector3 d = (coll.transform.position - transform.position).normalized;
                 dir += d;
                 coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f));
@@ -300,7 +301,7 @@ public class ReturnScript : MonoBehaviour
             {
                 // Cambia el radio de las partículas por el radio de la explosión
 
-                float range = 3;
+                float range = 3 + (damage * 0.2f);
                 if (water_explosion_particle.transform.childCount > 0)
                 {
                     ParticleSystem ground_explosion = explosionParticle.transform.GetChild(0).GetComponent<ParticleSystem>();
@@ -309,15 +310,18 @@ public class ReturnScript : MonoBehaviour
                 }
                 /// Instancia las partículas
                 Instantiate(explosionParticle, positions[explosion_num], explosionParticle.transform.rotation);
+
+
                 /// Aplica el daño a los enemigos
-                DamageToEnemies(positions[explosion_num], (int)(damage * 0.1f), range, Vector3.up * 2);
+                DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), range, Vector3.up * (2 + (damage * 0.1f)));
+
 
                 float dist = Vector3.Distance(positions[explosion_num], transform.position);
-                if (dist < 10) /// Si el jugador está cerca hará vibrár el mando
+                if (dist < 15) /// Si el jugador está cerca hará vibrár el mando
                 {   
                     if (nautilus_explosion != null) /// Sonido de explosión
-                        SoundManager.instance.InstantiateSound(nautilus_explosion, positions[explosion_num], nautilus_explosion.length);
-                    GameManager.gm.ShakeController(0.2f + (1 - (dist / 10)), 0.01f, (1 + (1 - (dist / 10))) * 2);
+                        SoundManager.instance.InstantiateSound(nautilus_explosion, positions[explosion_num]);
+                    GameManager.gm.ShakeController(0.05f + (1 - (dist / 10)), 0.05f, (1 + (1 - (dist / 15))));
                 }
                 explosion_num--;
                 explosion_timer = 0;

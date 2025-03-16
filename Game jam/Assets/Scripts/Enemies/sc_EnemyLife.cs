@@ -12,7 +12,9 @@ public class EnemyLife : MonoBehaviour
 
     private EnemyFollow enemyFollow;
     public List<AudioClip> clip_damaged;
-    public AudioClip clip_growl;
+    public AudioClip clip_growl, blood_explosion;
+    [Header("Particles")]
+    public ParticleSystem particle_explosion;
 
     float random_pitch = 0;
     private void Start()
@@ -38,8 +40,15 @@ public class EnemyLife : MonoBehaviour
         enemyFollow.audioSource.Play();
         if (hp <= 0)
         {
+            // Instancia las partículas de muerte
+            Instantiate(particle_explosion, transform.position, particle_explosion.transform.rotation);
+            /// Genera un sonido de explosión
+            SoundManager.instance.InstantiateSound(blood_explosion, transform.position, 0.1f);
+            // Añade el multiplicador
             ScoreManager.instance.AddMultiplier(0.1f);
+            // Suma la score
             ScoreManager.instance.ChangeScore(amount, transform.position, true);
+            // Se quita de la lista de enemigos vivos y se destruye
             Rounds.instance.enemies.Remove(this.gameObject);
             Destroy(gameObject);
         }

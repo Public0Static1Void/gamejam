@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5338783919543476209, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
       propertyPath: m_Name
-      value: Big enemy
+      value: pr_Big enemy
       objectReference: {fileID: 0}
     - target: {fileID: 6357616163282357247, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
       propertyPath: m_RootOrder
@@ -80,6 +80,14 @@ PrefabInstance:
       propertyPath: max_hp
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 6783335982719182573, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
+      propertyPath: blood_explosion
+      value: 
+      objectReference: {fileID: 8300000, guid: 158e1c912f63e034fbe52ee99b9baa4d, type: 3}
+    - target: {fileID: 6783335982719182573, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
+      propertyPath: particle_explosion
+      value: 
+      objectReference: {fileID: 1987862644109936140, guid: 5c3adb5c97a56d44996a7e83fe2d670d, type: 3}
     - target: {fileID: 8853771250279282788, guid: 0f83672d251003e41a93ee8fa63d052e, type: 3}
       propertyPath: m_Mass
       value: 1000

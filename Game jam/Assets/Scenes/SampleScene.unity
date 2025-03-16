@@ -3819,7 +3819,7 @@ MonoBehaviour:
   enemy_list:
   - {fileID: 828969336895915344, guid: dbb3449e24e4de64c9ef52a578ddd69d, type: 3}
   - {fileID: 6845868788880733797, guid: c898474947a343e4eaf251cf5189d333, type: 3}
-  enemyRound: 0
+  enemyRound: 20
 --- !u!4 &843739052
 Transform:
   m_ObjectHideFlags: 0
@@ -7268,6 +7268,7 @@ MonoBehaviour:
   audioMixerGroup: {fileID: 24300002, guid: 640085060d3d82749ade4e7338efd18d, type: 2}
   slider_volume: {fileID: 742061274}
   funnySounds: 0
+  pool_number_audiosources: 50
 --- !u!82 &1632659702
 AudioSource:
   m_ObjectHideFlags: 0
