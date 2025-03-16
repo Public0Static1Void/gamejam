@@ -296,7 +296,7 @@ public class ReturnScript : MonoBehaviour
         while (explosion_num > 0)
         {
             explosion_timer += Time.deltaTime;
-            if (explosion_timer > 0.5f)
+            if (explosion_timer > 0.75f)
             {
                 // Cambia el radio de las partículas por el radio de la explosión
 

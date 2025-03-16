@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Ability
 {
+    public int id;
     public string name;
     public string description;
     public Sprite icon;

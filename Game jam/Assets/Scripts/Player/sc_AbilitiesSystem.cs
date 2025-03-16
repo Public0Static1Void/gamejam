@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -47,6 +48,7 @@ public class AbilitiesSystem : MonoBehaviour
         // Levitate ability
         Ability ab = new Ability();
 
+        ab.id = (int)Abilities.LEVITATE;
         ab.name = "Levitate";
         ab.description = "When you are returning in time, all the enemies that you touch will start to levitate and crushed on the ground when you finish returning.";
         ab.ability_event = methods_abilities[(int)Abilities.LEVITATE];
@@ -58,6 +60,7 @@ public class AbilitiesSystem : MonoBehaviour
 
         ab = new Ability();
 
+        ab.id = (int)Abilities.EXPLODE_PATH;
         ab.name = "Exploding path";
         ab.description = "While you are returning the path you follow will start to explode, damaging and launching your enemies.";
         ab.ability_event = methods_abilities[(int)Abilities.EXPLODE_PATH];
@@ -69,6 +72,7 @@ public class AbilitiesSystem : MonoBehaviour
         // Group ability
         ab = new Ability();
 
+        ab.id = (int)Abilities.GROUP;
         ab.name = "Group n' xplode";
         ab.description = "While you are returning, all the enemies you touch will start to levitate to you, grouping them. The more enemies you group, the faster will go so you can explode them!";
         ab.ability_event = methods_abilities[(int)Abilities.GROUP];
@@ -99,19 +103,23 @@ public class AbilitiesSystem : MonoBehaviour
 
         // Asigna habilidades aleatorias
         int repeated_ability = 0;
+        List<int> rand_abilities_index = new List<int>();
+
         for (int i = 0; i < ability_count; i++)
         {
             int rand = Random.Range(0, abilities.Count);
             /// Buscará una habilidad random y comprueba si el jugador ya las tiene todas
-            while (abilities_equipped.Contains(abilities[rand]) && repeated_ability <= abilities.Count)
+            while (rand_abilities_index.Contains(abilities[rand].id) && repeated_ability <= abilities.Count * 10)
             {
                 rand = Random.Range(0, abilities.Count);
                 repeated_ability++;
             }
             /// Si el jugador las tiene todas sale del bucle
-            if (repeated_ability >= abilities.Count)
+            if (repeated_ability >= abilities.Count * 10)
                 break;
             abilities_to_show[i] = abilities[rand];
+
+            rand_abilities_index.Add(abilities[rand].id);
 
             Debug.Log(abilities_to_show[i].name);
         }
