@@ -125,6 +125,8 @@ public class AbilitiesSystem : MonoBehaviour
             {
                 slots_buttons[i].onClick.AddListener(() => {
 
+                    if (abilities_to_show[ab_num] == null || abilities_to_show[ab_num].name == "") return;
+
                     ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)abilities_to_show[ab_num].type].Invoke());
                     Debug.Log("Ability selected: " + abilities_to_show[ab_num].name);
                     

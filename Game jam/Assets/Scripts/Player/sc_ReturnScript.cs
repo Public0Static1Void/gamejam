@@ -20,7 +20,8 @@ public class ReturnScript : MonoBehaviour
     public LayerMask enemyMask;
     public UnityEvent ability;
     public Image cooldown_image;
-    public GameObject explosion_particle;
+    public GameObject water_explosion_particle;
+    public ParticleSystem explosion_particle;
 
     [Header("Sonidos")]
     public AudioClip return_clip;
@@ -100,9 +101,10 @@ public class ReturnScript : MonoBehaviour
                 }
                 else
                 {
+                    // El jugador ha llegado al último punto
+
                     Camera.main.transform.SetParent(transform);
 
-                    // El jugador ha llegado al último punto
                     cooldown_image.fillAmount = 0;
                     #region DamageToEnemy
                     if (SoundManager.instance.funnySounds) /// Sonidos de explosión
@@ -121,6 +123,11 @@ public class ReturnScript : MonoBehaviour
                     PlayerMovement.instance.canMove = true;
                     GetComponent<Rigidbody>().isKinematic = false;
                     GetComponent<Collider>().isTrigger = false;
+
+                    /// Instancia las partículas de explosión
+                    ParticleSystem.ShapeModule shape = explosion_particle.shape;
+                    shape.radius = explosion_range;
+                    Instantiate(explosion_particle, transform.position, explosion_particle.transform.rotation);
 
                     returning = false;
                     cooldown = true;
@@ -275,6 +282,7 @@ public class ReturnScript : MonoBehaviour
         explosion_range += 0.5f;
     }
 
+
     #region NautilusR
     public void ExplosionPathAbility(GameObject explosionParticle)
     {
@@ -290,8 +298,20 @@ public class ReturnScript : MonoBehaviour
             explosion_timer += Time.deltaTime;
             if (explosion_timer > 0.5f)
             {
+                // Cambia el radio de las partículas por el radio de la explosión
+
+                float range = 3;
+                if (water_explosion_particle.transform.childCount > 0)
+                {
+                    ParticleSystem ground_explosion = explosionParticle.transform.GetChild(0).GetComponent<ParticleSystem>();
+                    ParticleSystem.ShapeModule shape_module = ground_explosion.shape;
+                    shape_module.radius = range;
+                }
+                /// Instancia las partículas
                 Instantiate(explosionParticle, positions[explosion_num], explosionParticle.transform.rotation);
-                DamageToEnemies(positions[explosion_num], (int)(damage * 0.1f), 3, Vector3.up * 2);
+                /// Aplica el daño a los enemigos
+                DamageToEnemies(positions[explosion_num], (int)(damage * 0.1f), range, Vector3.up * 2);
+
                 float dist = Vector3.Distance(positions[explosion_num], transform.position);
                 if (dist < 10) /// Si el jugador está cerca hará vibrár el mando
                 {   

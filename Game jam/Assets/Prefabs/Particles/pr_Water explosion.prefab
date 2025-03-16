@@ -4855,6 +4855,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6390720781689548955}
     m_Modifications:
+    - target: {fileID: 2653404952180675221, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4233285187500450553, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
       propertyPath: m_Name
       value: pr_short water explosion
@@ -4889,11 +4893,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5673874707893516593, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5673874707893516593, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5673874707893516593, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
       propertyPath: m_LocalRotation.y
@@ -4905,7 +4909,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5673874707893516593, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5673874707893516593, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
