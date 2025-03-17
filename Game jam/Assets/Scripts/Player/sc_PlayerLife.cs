@@ -63,7 +63,7 @@ public class PlayerLife : MonoBehaviour
         if (ReturnScript.instance.returning || PlayerMovement.instance.slide)
             return;
 
-        hp -= value;
+        //hp -= value;
         if (hp > max_hp)
         {
             hp = max_hp;

@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     public Image stamina_image;
     public AudioSource audio_source;
+    public ParticleSystem particle_slide;
     
     public Rigidbody rb;
 
@@ -141,13 +142,15 @@ public class PlayerMovement : MonoBehaviour
                 if (current_speed > 800) current_speed = 800;
             }
 
-            // Dejará de deslizarse cuando el jugador pierda toda la velocidad o no esté en el suelo
+            // El jugador ha perdido bastante velocidad o no está en el suelo
             if (current_speed <= speed * 0.25f || !Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f))
             {
                 /// Deja de sonar el sonido de slide y se quita el loop
                 SoundManager.instance.PlaySound(null);
                 SoundManager.instance.audioSource.volume = 0.5f;
                 audio_source.UnPause();
+
+                particle_slide.Stop();
 
                 current_speed = target_speed;
                 slide = false;
@@ -242,6 +245,8 @@ public class PlayerMovement : MonoBehaviour
             SoundManager.instance.PlaySound(slide_sound, true);
             audio_source.Pause();
 
+            particle_slide.Play();
+
             if (!sprinting)
                 current_speed = target_speed * slide_walking_multiplier;
             else
@@ -254,6 +259,8 @@ public class PlayerMovement : MonoBehaviour
             // Deja de sonar el sonido de slide y se quita el loop
             SoundManager.instance.PlaySound(null);
             SoundManager.instance.audioSource.volume = 0.5f;
+
+            particle_slide.Stop();
 
             current_speed = target_speed;
             slide = false;

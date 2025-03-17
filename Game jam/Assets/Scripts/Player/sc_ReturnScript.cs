@@ -76,7 +76,8 @@ public class ReturnScript : MonoBehaviour
         {
             // La posición de la cámara se pasa al punto donde volverás en el tiempo para dar una vista aérea
             Camera.main.transform.parent = null;
-            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition,  new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z) - transform.forward * 2, Time.deltaTime * 3);
+            //Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition,  new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z) - transform.forward * 2, Time.deltaTime * 3);
+            Camera.main.transform.localPosition = new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z);
 
             // Calcula la distancia hasta el último punto en un rango de 1 a 0
             cooldown_image.fillAmount = 1 - (1 - (Vector3.Distance(transform.position, past_positions[0]) / Vector3.Distance(past_positions[0], past_positions[past_positions.Count - 1])));
@@ -85,11 +86,7 @@ public class ReturnScript : MonoBehaviour
                 Vector3 dir = (past_positions[current_point] - transform.position).normalized;
                 transform.Translate(dir * (return_speed * 0.75f + Vector3.Distance(transform.position, past_positions[current_point])) * Time.deltaTime, Space.World); /// Mueve al jugador en la dirección a su anterior posición
 
-                //cameraRotation.x = past_rotations[current_point].x; /// Cambia la rotación del script de la cámara, para que no haga cosas raras al acabar la transición
-                //cameraRotation.y = past_rotations[current_point].y;
-
                 transform.rotation = Quaternion.Lerp(transform.rotation, q_rotations[current_point], Time.deltaTime * return_speed);
-                //Camera.main.transform.rotation = Quaternion.Lerp(Camera.main.transform.rotation, Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0), Time.deltaTime * return_speed * 0.5f);
 
                 Camera.main.transform.LookAt(transform);
             }
@@ -105,6 +102,7 @@ public class ReturnScript : MonoBehaviour
 
                     SoundManager.instance.PlaySound(null);
 
+                    Camera.main.transform.position = transform.position;
                     Camera.main.transform.SetParent(transform);
 
                     cooldown_image.fillAmount = 0;

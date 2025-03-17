@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 [RequireComponent(typeof(AudioSource))]
 public class ScoreManager : MonoBehaviour
@@ -30,6 +32,13 @@ public class ScoreManager : MonoBehaviour
     public Color color_got_score;
 
     private bool spawning_number = false;
+
+    [HideInInspector]
+    public bool can_buy_door = false;
+    [HideInInspector]
+    public float door_cost;
+    [HideInInspector]
+    public Transform current_door;
 
 
     private float multiplier_timer = 0, timer = 0;
@@ -124,7 +133,7 @@ public class ScoreManager : MonoBehaviour
         if (show_text) /// Si es true mostrará un texto de score en la posición del sonido
         {
             Vector3 dir_to_player = sound_position - PlayerMovement.instance.transform.position; /// Calcula la dirección entre el origen del sonido al player
-            StartCoroutine(ShowTextOnPosition(sum_or_not + string_value, sound_position, dir_to_player.normalized));
+            StartCoroutine(ShowTextOnPosition(sum_or_not + string_value, sound_position, dir_to_player.normalized, 0));
         }
 
 
@@ -149,7 +158,7 @@ public class ScoreManager : MonoBehaviour
         
     }
 
-    private IEnumerator ShowTextOnPosition(string phrase, Vector3 position, Vector3 face_direction)
+    public IEnumerator ShowTextOnPosition(string phrase, Vector3 position, Vector3 face_direction, float duration)
     {
         float timer = 0;
         Quaternion look_rotation = Quaternion.LookRotation(face_direction, Vector3.up);
@@ -164,6 +173,9 @@ public class ScoreManager : MonoBehaviour
             text.color = new Color(col.r, col.g, col.b, timer * 1.5f);
             yield return null;
         }
+
+        yield return new WaitForSeconds(duration); /// Espera para empezar a desaparecer el texto
+
         while (text.color.a > 0) /// Hace un fade out del texto
         {
             timer -= Time.deltaTime;
@@ -228,5 +240,41 @@ public class ScoreManager : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+    }
+
+    public void BuyDoor(InputAction.CallbackContext con)
+    {
+        if (con.performed && can_buy_door)
+        {
+            if (score >= door_cost)
+            {
+                ChangeScore(-door_cost, transform.position, true);
+                StartCoroutine(OpenDoor(current_door.gameObject));
+            }
+            
+        }
+    }
+    private IEnumerator OpenDoor(GameObject door)
+    {
+        GameObject ob = door;
+
+        ob.GetComponent<Collider>().enabled = false;
+
+        Material[] m_ob = ob.GetComponent<MeshRenderer>().materials;
+        Color m_color = m_ob[0].color;
+
+        float alpha = m_ob[0].color.a;
+
+        while (m_ob[0].color.a > 0)
+        {
+            ob.transform.Translate(Vector3.up * 2 * Time.deltaTime);
+
+            alpha -= Time.deltaTime;
+            m_ob[0].color = new Color(m_color.r, m_color.g, m_color.b, alpha);
+
+            yield return null;
+        }
+
+        Destroy(ob);
     }
 }
