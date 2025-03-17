@@ -24,6 +24,9 @@ public class Rounds : MonoBehaviour
 
     private List<GameObject> enemy_pool;
     private int current_enemy = 0;
+
+    [Header("Sounds")]
+    public AudioClip clip_roundstart;
     void Start()
     {
         if (instance == null) instance = this;
@@ -60,8 +63,9 @@ public class Rounds : MonoBehaviour
         if (wait_time < 2) wait_time = 2;
         yield return new WaitForSeconds(wait_time);
 
-        // Muestra en texto por que ronda vas
+        // Muestra en texto por que ronda vas y suena un sonido para indicar la nueva ronda
         GameManager.gm.ShowText(string.Format("Round {0}", round + 1));
+        SoundManager.instance.InstantiateSound(clip_roundstart, ReturnScript.instance.transform.position);
 
         for (int i = 0; i < enemyRound; i++)
         {

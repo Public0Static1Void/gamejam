@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("References")]
     public Image stamina_image;
+    public AudioSource audio_source;
     
     public Rigidbody rb;
 
@@ -141,11 +142,12 @@ public class PlayerMovement : MonoBehaviour
             }
 
             // Dejará de deslizarse cuando el jugador pierda toda la velocidad o no esté en el suelo
-            if (current_speed <= 0 || !Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f))
+            if (current_speed <= speed * 0.25f || !Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f))
             {
                 /// Deja de sonar el sonido de slide y se quita el loop
                 SoundManager.instance.PlaySound(null);
                 SoundManager.instance.audioSource.volume = 0.5f;
+                audio_source.UnPause();
 
                 current_speed = target_speed;
                 slide = false;
@@ -170,6 +172,7 @@ public class PlayerMovement : MonoBehaviour
         else if (!moving || !slide)
         {
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            if (sprinting) sprinting = false;
         }
     }
 
@@ -187,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
 
             // Si el cambio no es mayor a 3 no cambiará el fov para evitar caída de fps
             float limit_cap = 0.5f;
-            if (sprinting) limit_cap = 0.25f;
+            if (sprinting) limit_cap = 0.1f;
 
             if (Mathf.Abs(new_fov - Camera.main.fieldOfView) > limit_cap)
             {
@@ -214,7 +217,14 @@ public class PlayerMovement : MonoBehaviour
             {
                 sprinting = !sprinting;
                 if (sprinting)
+                {
                     target_speed = speed * 1.5f;
+                    audio_source.pitch = 1.5f;
+                }
+                else
+                {
+                    audio_source.pitch = 1;
+                }
             }
         }
     }
@@ -230,6 +240,7 @@ public class PlayerMovement : MonoBehaviour
             cameraRotation.cameraSpeed = cameraRotation.cameraSpeed_slide; /// La cámara no podrá moverse tanto mientras te deslizas
 
             SoundManager.instance.PlaySound(slide_sound, true);
+            audio_source.Pause();
 
             if (!sprinting)
                 current_speed = target_speed * slide_walking_multiplier;
@@ -257,10 +268,12 @@ public class PlayerMovement : MonoBehaviour
         if (con.performed)
         {
             moving = true;
+            audio_source.Play();
         }
         else if (con.canceled)
         {
             moving = false;
+            audio_source.Stop();
         }
 
         dir = con.ReadValue<Vector2>();

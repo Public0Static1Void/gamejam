@@ -8,6 +8,7 @@ public class sc_Abilities : MonoBehaviour
     private bool check_collisions = false;
     private List<GameObject> enemy_targets = new List<GameObject>();
     private List<EnemyFollow> enemies_mov = new List<EnemyFollow>();
+    private List<GameObject> placed_mines = new List<GameObject>();
 
     [Header("Audio clips")]
     public AudioClip levitate_enemy;
@@ -127,6 +128,11 @@ public class sc_Abilities : MonoBehaviour
     }
     private IEnumerator PlantMinesRoutine()
     {
+        // Destruye las minas colocadas anteriormente
+        for (int i = 0; i < placed_mines.Count; i++)
+        {
+            Destroy(placed_mines[i]);
+        }
         List<Vector3> path_points = ReturnScript.instance.past_positions;
         while (ReturnScript.instance.returning)
         {
@@ -135,7 +141,10 @@ public class sc_Abilities : MonoBehaviour
 
         for (int i = 0; i < path_points.Count; i++)
         {
-            Instantiate(prefab_mine, path_points[i], prefab_mine.transform.rotation);
+            // A los 30 segundos de crearse la mina se destruirá
+            GameObject mine = Instantiate(prefab_mine, path_points[i], prefab_mine.transform.rotation);
+            Destroy(mine, 30);
+            placed_mines.Add(mine);
         }
     }
 
