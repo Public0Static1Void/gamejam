@@ -9130,7 +9130,7 @@ MonoBehaviour:
   cooldown_image: {fileID: 1415155665}
   water_explosion_particle: {fileID: 884547721288784740, guid: 1795b562a90319149b0e051845c2ec24, type: 3}
   explosion_particle: {fileID: 4982277033034756837, guid: 9bb1651a046ee994fb34e201a5dd52fc, type: 3}
-  return_clip: {fileID: 8300000, guid: 118137395082184419559d7dace005a4, type: 3}
+  return_clip: {fileID: 8300000, guid: 71dff78d00e82c045a2751c706202012, type: 3}
   explosion_clip: {fileID: 8300000, guid: 0edd2431d56b5c5478751db762fb5952, type: 3}
   funny_explosion_clip: {fileID: 8300000, guid: 01fb40017319b9c42ab26d5eb663302f, type: 3}
   tictac_clip: {fileID: 8300000, guid: 7ec8dc921391ad7498723735d30aee2d, type: 3}

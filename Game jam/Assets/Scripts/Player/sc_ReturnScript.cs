@@ -103,6 +103,8 @@ public class ReturnScript : MonoBehaviour
                 {
                     // El jugador ha llegado al último punto
 
+                    SoundManager.instance.PlaySound(null);
+
                     Camera.main.transform.SetParent(transform);
 
                     cooldown_image.fillAmount = 0;
@@ -207,6 +209,8 @@ public class ReturnScript : MonoBehaviour
                 GetComponent<Collider>().isTrigger = true;
                 PlayerMovement.instance.canMove = false; /// Evita que el jugador pueda moverse mientras vuelve
                 current_point = past_positions.Count - 1;
+
+                SoundManager.instance.PlaySound(return_clip);
 
                 if (ability != null) /// Ejecuta la habilidad del player
                 {

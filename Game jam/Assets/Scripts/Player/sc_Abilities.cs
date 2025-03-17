@@ -139,7 +139,8 @@ public class sc_Abilities : MonoBehaviour
             yield return null;
         }
 
-        for (int i = 0; i < path_points.Count; i++)
+        // Plantará una mina cada 2 posiciones del path
+        for (int i = 0; i < path_points.Count; i+=2)
         {
             // A los 30 segundos de crearse la mina se destruirá
             GameObject mine = Instantiate(prefab_mine, path_points[i], prefab_mine.transform.rotation);
