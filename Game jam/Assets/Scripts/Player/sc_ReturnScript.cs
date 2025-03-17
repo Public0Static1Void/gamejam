@@ -180,14 +180,13 @@ public class ReturnScript : MonoBehaviour
         }
     }
 
-    private void DamageToEnemies(Vector3 origin, int damage_amount, float range, Vector3 dir)
+    public void DamageToEnemies(Vector3 origin, int damage_amount, float range, Vector3 dir = new Vector3())
     {
         Collider[] colls = Physics.OverlapSphere(origin, range, enemyMask);
         if (colls.Length > 0)
         {
             foreach (Collider coll in colls)
             {
-                Debug.Log("Killed");
                 Vector3 d = (coll.transform.position - transform.position).normalized;
                 dir += d;
                 coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f));

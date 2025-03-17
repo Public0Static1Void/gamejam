@@ -221,8 +221,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void Slide(InputAction.CallbackContext con)
     {
-        // Compueba si puede hacer el slide y está encima de algo
-        if (con.performed && can_slide && Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f))
+        // Compueba si puede hacer el slide, está encima de algo y puede moverse
+        if (con.performed && can_slide && Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f) && canMove)
         {
             can_slide = false;
             slide = true;

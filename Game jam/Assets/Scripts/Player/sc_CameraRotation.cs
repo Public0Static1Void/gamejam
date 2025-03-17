@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class CameraRotation : MonoBehaviour
 {
+    public static CameraRotation instance { get; private set; }
+
     [SerializeField] private Transform player;
     [Header("Speed")]
     public float cameraSpeed;
@@ -26,7 +28,14 @@ public class CameraRotation : MonoBehaviour
     Vector2 inp;
 
     public bool shake = false;
-    private float amount, timer = 0, real_timer = 0;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+    }
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -47,53 +56,6 @@ public class CameraRotation : MonoBehaviour
     void Update()
     {
         if (!PlayerMovement.instance.canMove) return;
-
-        if (shake)
-        {
-            timer += Time.deltaTime;
-            real_timer += Time.deltaTime;
-            // Right
-            if (timer >= 0.05f)
-            {
-                amount *= -1;
-                timer = 0;
-            }
-            if (real_timer > 0.5f)
-            {
-                timer = 0;
-                real_timer = 0;
-                amount = 0;
-                shake = false;
-            }
-
-            switch (Random.Range(0, 7))
-            {
-                case 0:
-                    x += amount * Time.deltaTime;
-                    break;
-                case 1:
-                    y += amount * Time.deltaTime;
-                    break;
-                case 2:
-                    x += amount * Time.deltaTime;
-                    y += amount * Time.deltaTime;
-                    break;
-                case 3:
-                    x += amount * Time.deltaTime;
-                    y -= amount * Time.deltaTime;
-                    break;
-                case 4:
-                    x -= amount * Time.deltaTime;
-                    y += amount * Time.deltaTime;
-                    break;
-                case 5:
-                    y -= amount * Time.deltaTime;
-                    break;
-                case 6:
-                    x -= amount * Time.deltaTime;
-                    break;
-            }
-        }
 
         if (inp.x > 1 || inp.x < -1)
         {
@@ -134,10 +96,30 @@ public class CameraRotation : MonoBehaviour
         inp = con.ReadValue<Vector2>();
     }
 
-    public void ShakeCamera(float value)
+    public void ShakeCamera(float duration, float force)
     {
-        amount = value;
+        StartCoroutine(ShakeCameraRoutine(duration, force));
+    }
+    private IEnumerator ShakeCameraRoutine(float duration, float force)
+    {
         shake = true;
+        Vector3 original_position = transform.localPosition;
+        float timer = 0;
+        while (timer < duration)
+        {
+            if (!PlayerMovement.instance.canMove) break;
+            timer += Time.deltaTime;
+
+            float x = Random.Range(-1, 1) * force;
+            float y = Random.Range(-1, 1) * force;
+
+            transform.localPosition = Vector3.Lerp(original_position, original_position + new Vector3(x, y, 0), Time.deltaTime);
+
+            yield return null;
+        }
+
+        transform.localPosition = original_position;
+        shake = false;
     }
 
     public void SetRotation(float x_rotation, float y_rotation)

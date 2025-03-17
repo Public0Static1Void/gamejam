@@ -67,7 +67,7 @@ public class PlayerLife : MonoBehaviour
         if (hp > max_hp)
         {
             hp = max_hp;
-            return; /// No hará más comprobaciones si no pierde vida
+            return; /// No hará más comprobaciones si no puede ganar más vida
         }
 
         curr_color.r += value * 0.025f;
@@ -78,7 +78,7 @@ public class PlayerLife : MonoBehaviour
 
         if (!SoundManager.instance.audioSource.isPlaying) /// Le hace un efecto de shake a la cámara y pone el sonido de daño
         {
-            cameraRotation.ShakeCamera(shakeAmount);
+            cameraRotation.ShakeCamera(0.75f, shakeAmount);
             SoundManager.instance.InstantiateSound(damage_clips[Random.Range(0, damage_clips.Count)], transform.position);
             GameManager.gm.ShakeController(0.5f, 0.1f, 0.25f);
         }

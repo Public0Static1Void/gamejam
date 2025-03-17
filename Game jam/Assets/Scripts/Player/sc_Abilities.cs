@@ -13,6 +13,9 @@ public class sc_Abilities : MonoBehaviour
     public AudioClip levitate_enemy;
     public AudioClip ground_smash_from_air;
 
+    [Header("References")]
+    public GameObject prefab_mine;
+
     Vector3 centroid;
 
     private bool CheckActiveAbilities()
@@ -22,6 +25,7 @@ public class sc_Abilities : MonoBehaviour
         return false;
     }
 
+    #region Levitate
     public void LevitateEnemies()
     {
         StartCoroutine(LevitateRoutine());
@@ -71,7 +75,9 @@ public class sc_Abilities : MonoBehaviour
             enemy_targets.Clear();
         }
     }
+    #endregion
 
+    #region Group
     public void GroupEnemies()
     {
         StartCoroutine(GroupRoutine());
@@ -111,6 +117,25 @@ public class sc_Abilities : MonoBehaviour
             check_collisions = false;
             enemies_mov.Clear();
             enemy_targets.Clear();
+        }
+    }
+    #endregion
+
+    public void PlantMines()
+    {
+        StartCoroutine(PlantMinesRoutine());
+    }
+    private IEnumerator PlantMinesRoutine()
+    {
+        List<Vector3> path_points = ReturnScript.instance.past_positions;
+        while (ReturnScript.instance.returning)
+        {
+            yield return null;
+        }
+
+        for (int i = 0; i < path_points.Count; i++)
+        {
+            Instantiate(prefab_mine, path_points[i], prefab_mine.transform.rotation);
         }
     }
 

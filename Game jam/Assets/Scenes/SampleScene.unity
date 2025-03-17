@@ -7268,7 +7268,7 @@ MonoBehaviour:
   audioMixerGroup: {fileID: 24300002, guid: 640085060d3d82749ade4e7338efd18d, type: 2}
   slider_volume: {fileID: 742061274}
   funnySounds: 0
-  pool_number_audiosources: 50
+  pool_number_audiosources: 100
 --- !u!82 &1632659702
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7865,9 +7865,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1836626148}
+        m_TargetAssemblyTypeName: sc_Abilities, Assembly-CSharp
+        m_MethodName: PlantMines
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   sprite_levitate: {fileID: 21300000, guid: a7113af17439c75428a03d7a0327be1a, type: 3}
   sprite_explodepath: {fileID: 21300000, guid: f30e172021665db4f898f96e4bc02865, type: 3}
   sprite_group: {fileID: 21300000, guid: 5d171dbf84860a349a35e08e1f4432b4, type: 3}
+  sprite_mine: {fileID: 21300000, guid: 6daa2dde5d8f366459163b4f1225b786, type: 3}
 --- !u!1 &1741428108
 GameObject:
   m_ObjectHideFlags: 0
@@ -8968,7 +8983,19 @@ MonoBehaviour:
     m_Bits: 64
   ability:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1836626148}
+        m_TargetAssemblyTypeName: sc_Abilities, Assembly-CSharp
+        m_MethodName: PlantMines
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   cooldown_image: {fileID: 1415155665}
   water_explosion_particle: {fileID: 884547721288784740, guid: 1795b562a90319149b0e051845c2ec24, type: 3}
   explosion_particle: {fileID: 4982277033034756837, guid: 9bb1651a046ee994fb34e201a5dd52fc, type: 3}
@@ -9000,6 +9027,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levitate_enemy: {fileID: 8300000, guid: 3f26f8faaad298140bf52324c319dff1, type: 3}
   ground_smash_from_air: {fileID: 8300000, guid: 347c14881727e1d438bfc41793b714d7, type: 3}
+  prefab_mine: {fileID: 3690719515193124413, guid: d325f05266f7cb54ea657ea28854bc4d, type: 3}
 --- !u!1 &1854669003
 GameObject:
   m_ObjectHideFlags: 0

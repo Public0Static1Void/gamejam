@@ -13,7 +13,7 @@ public class AbilitiesSystem : MonoBehaviour
     private List<Ability> abilities_equipped = new List<Ability>();
     List<int> rand_abilities_index = new List<int>();
 
-    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, LAST_NO_USE }
 
     [Header("References")]
     public GameObject ob_gamblingparent;
@@ -34,6 +34,7 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_levitate;
     public Sprite sprite_explodepath;
     public Sprite sprite_group;
+    public Sprite sprite_mine;
     void Awake()
     {
         if (instance == null)
@@ -56,9 +57,9 @@ public class AbilitiesSystem : MonoBehaviour
         ab.type = Abilities.LEVITATE;
         ab.icon = sprite_levitate;
 
-        // Exploding path ability
         abilities.Add(ab);
 
+        // Exploding path ability
         ab = new Ability();
 
         ab.id = (int)Abilities.EXPLODE_PATH;
@@ -82,6 +83,19 @@ public class AbilitiesSystem : MonoBehaviour
 
         abilities.Add(ab);
 
+        // Plant mine ability
+        ab = new Ability();
+        ab.name = "Path mine";
+        ab.description = "When you finish your return in time, mines will automatically plant on the path you made. Mines will explode when an enemy enters its range.";
+        ab.ability_event = methods_abilities[(int)Abilities.MINE];
+        ab.type = Abilities.MINE;
+        ab.icon = sprite_mine;
+
+        abilities.Add(ab);
+
+        if (abilities.Count != (int)Abilities.LAST_NO_USE)
+            Debug.LogWarning("Las habilidades del enum no coinciden con las añadidas en el void Start");
+
 
         // Referencias de los slots de habilidades
 
@@ -97,6 +111,9 @@ public class AbilitiesSystem : MonoBehaviour
         slots_images.Add(ability3_slot.GetComponent<Image>());
     }
 
+    /// <summary>
+    /// Abre el menú de selección y muestra tres habilidades aleatorias
+    /// </summary>
     public void GetRandomAbilities()
     {
         const int ability_count = 3; /// Número de habilidades a mostrar

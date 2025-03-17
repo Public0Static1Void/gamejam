@@ -65,7 +65,7 @@ public class SoundManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// Instancia un sonido por el tiempo mandado en la posición indicada
+    /// Hace sonar un audioClip en la posición indicada
     /// </summary>
     public void InstantiateSound(AudioClip clip, Vector3 position, float volume = 0.5f, AudioMixerGroup mixer = null)
     {
