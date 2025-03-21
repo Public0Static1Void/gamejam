@@ -16,6 +16,7 @@ public class sc_Abilities : MonoBehaviour
 
     [Header("References")]
     public GameObject prefab_mine;
+    public AudioClip clip_plant_mine;
 
     Vector3 centroid;
 
@@ -138,6 +139,7 @@ public class sc_Abilities : MonoBehaviour
         {
             // A los 30 segundos de crearse la mina se destruirá
             GameObject mine = Instantiate(prefab_mine, ReturnScript.instance.transform.position, prefab_mine.transform.rotation);
+            SoundManager.instance.InstantiateSound(clip_plant_mine, ReturnScript.instance.transform.position);
             Destroy(mine, 30);
             placed_mines.Add(mine);
 

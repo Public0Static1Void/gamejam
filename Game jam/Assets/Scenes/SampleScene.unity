@@ -2732,7 +2732,7 @@ GameObject:
   - component: {fileID: 599048297}
   - component: {fileID: 599048296}
   - component: {fileID: 599048300}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9123,6 +9123,9 @@ MonoBehaviour:
   stamina_image: {fileID: 1988724743}
   audio_source: {fileID: 1456147743}
   particle_slide: {fileID: 169367689}
+  layer_ground:
+    serializedVersion: 2
+    m_Bits: 128
   rb: {fileID: 0}
   dir: {x: 0, y: 0}
 --- !u!82 &1836626145
@@ -9297,6 +9300,7 @@ MonoBehaviour:
   levitate_enemy: {fileID: 8300000, guid: 3f26f8faaad298140bf52324c319dff1, type: 3}
   ground_smash_from_air: {fileID: 8300000, guid: 347c14881727e1d438bfc41793b714d7, type: 3}
   prefab_mine: {fileID: 3690719515193124413, guid: d325f05266f7cb54ea657ea28854bc4d, type: 3}
+  clip_plant_mine: {fileID: 0}
 --- !u!195 &1836626149
 NavMeshAgent:
   m_ObjectHideFlags: 0
