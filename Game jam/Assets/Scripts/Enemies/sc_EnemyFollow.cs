@@ -15,6 +15,8 @@ public class EnemyFollow : MonoBehaviour
 
     public Rigidbody rb;
 
+    private Collider collider;
+
     private Vector3 original_position;
 
     private float timer = 0;
@@ -27,6 +29,7 @@ public class EnemyFollow : MonoBehaviour
         target = PlayerMovement.instance.transform;
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        collider = GetComponent<Collider>();
 
         audioSource = GetComponent<AudioSource>();
 
@@ -39,6 +42,7 @@ public class EnemyFollow : MonoBehaviour
 
         rb.isKinematic = false;
         agent.enabled = false;
+        collider.isTrigger = false;
         rb.velocity = dir;
     }
 
@@ -50,6 +54,7 @@ public class EnemyFollow : MonoBehaviour
             {
                 rb.isKinematic = true;
                 agent.enabled = true;
+                collider.isTrigger = true;
             }
             else
             {

@@ -81,7 +81,8 @@ public class ReturnScript : MonoBehaviour
 
             // Calcula la distancia hasta el último punto en un rango de 1 a 0
             cooldown_image.fillAmount = 1 - (1 - (Vector3.Distance(transform.position, past_positions[0]) / Vector3.Distance(past_positions[0], past_positions[past_positions.Count - 1])));
-            if (Vector3.Distance(transform.position, past_positions[current_point]) > 0.1f)
+
+            if (Vector3.Distance(transform.position, past_positions[current_point]) > 1f)
             {
                 Vector3 dir = (past_positions[current_point] - transform.position).normalized;
                 transform.Translate(dir * (return_speed * 0.75f + Vector3.Distance(transform.position, past_positions[current_point])) * Time.deltaTime, Space.World); /// Mueve al jugador en la dirección a su anterior posición

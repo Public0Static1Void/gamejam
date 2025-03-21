@@ -67,11 +67,11 @@ public class CameraRotation : MonoBehaviour
         }
         if (inp.y > 1 || inp.y < -1)
         {
-            y += Input.GetAxis("Mouse Y") * cameraSpeed * Time.deltaTime;
+            y += Input.GetAxis("Mouse Y") * (cameraSpeed * 0.25f) * Time.deltaTime;
         }
         else
         {
-            y += inp.y * cameraSpeed * Time.deltaTime;
+            y += inp.y * (cameraSpeed * 0.25f) * Time.deltaTime;
         }
 
         y = Mathf.Clamp(y, -40, 60);

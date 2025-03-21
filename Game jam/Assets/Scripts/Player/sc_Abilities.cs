@@ -133,19 +133,16 @@ public class sc_Abilities : MonoBehaviour
         {
             Destroy(placed_mines[i]);
         }
-        List<Vector3> path_points = ReturnScript.instance.past_positions;
+        
         while (ReturnScript.instance.returning)
         {
-            yield return null;
-        }
-
-        // Plantará una mina cada 2 posiciones del path
-        for (int i = 0; i < path_points.Count; i+=2)
-        {
             // A los 30 segundos de crearse la mina se destruirá
-            GameObject mine = Instantiate(prefab_mine, path_points[i], prefab_mine.transform.rotation);
+            GameObject mine = Instantiate(prefab_mine, ReturnScript.instance.transform.position, prefab_mine.transform.rotation);
             Destroy(mine, 30);
             placed_mines.Add(mine);
+
+            // Plantará una mina cada segundo mientras vuelves
+            yield return new WaitForSeconds(1);
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -36,6 +37,9 @@ public class PlayerMovement : MonoBehaviour
     public Image stamina_image;
     public AudioSource audio_source;
     public ParticleSystem particle_slide;
+    public LayerMask layer_ground;
+
+    private NavMeshAgent player_agent;
     
     public Rigidbody rb;
 
@@ -72,6 +76,8 @@ public class PlayerMovement : MonoBehaviour
         camera_original_position = Camera.main.transform.localPosition;
 
         cameraRotation = Camera.main.gameObject.GetComponent<CameraRotation>();
+
+        player_agent = GetComponent<NavMeshAgent>();
     }
 
     private void FixedUpdate()
@@ -151,6 +157,8 @@ public class PlayerMovement : MonoBehaviour
                 audio_source.UnPause();
 
                 particle_slide.Stop();
+
+                player_agent.enabled = true;
 
                 current_speed = target_speed;
                 slide = false;
@@ -235,7 +243,7 @@ public class PlayerMovement : MonoBehaviour
     public void Slide(InputAction.CallbackContext con)
     {
         // Compueba si puede hacer el slide, está encima de algo y puede moverse
-        if (con.performed && can_slide && Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f) && canMove)
+        if (con.performed && can_slide && Physics.Raycast(transform.position, Vector2.down, transform.localScale.y + 0.5f, layer_ground) && canMove)
         {
             can_slide = false;
             slide = true;
@@ -246,6 +254,8 @@ public class PlayerMovement : MonoBehaviour
             audio_source.Pause();
 
             particle_slide.Play();
+
+            player_agent.enabled = false;
 
             if (!sprinting)
                 current_speed = target_speed * slide_walking_multiplier;
@@ -261,6 +271,8 @@ public class PlayerMovement : MonoBehaviour
             SoundManager.instance.audioSource.volume = 0.5f;
 
             particle_slide.Stop();
+
+            player_agent.enabled = true;
 
             current_speed = target_speed;
             slide = false;
@@ -307,7 +319,7 @@ public class PlayerMovement : MonoBehaviour
         target_speed = current_speed;
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
         if (slide && other.gameObject.CompareTag("Enemy")) // Mientras se desliza empujará a los enemigos
         {
