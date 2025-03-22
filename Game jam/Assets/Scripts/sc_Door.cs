@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class sc_Door : MonoBehaviour
@@ -8,11 +9,10 @@ public class sc_Door : MonoBehaviour
     public float range_interaction;
     public float door_cost;
 
-    private bool text_shown = false;
-
     private bool player_on_range = false;
 
-    private float timer = 0;
+    private bool text_shown = false;
+
     void Update()
     {
         if (Vector3.Distance(transform.position, player.position) < range_interaction)
@@ -21,28 +21,24 @@ public class sc_Door : MonoBehaviour
             ScoreManager.instance.can_buy_door = true;
             ScoreManager.instance.current_door = this.transform;
             ScoreManager.instance.door_cost = door_cost;
-            if (!text_shown)
-            {
-                Vector3 dir_to_player = (transform.position - player.position).normalized;
-                StartCoroutine(ScoreManager.instance.ShowTextOnPosition("Press F to buy", transform.position + dir_to_player, dir_to_player, 120));
-                text_shown = true;
-            }
+            // Muestra el texto de compra
+            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "Press F to buy", 1);
+            text_shown = true;
         }
         else if (player_on_range)
         {
             ScoreManager.instance.can_buy_door = false;
+            // Esconde el texto de compra
+            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "Press F to buy", -15);
+            text_shown = false;
             player_on_range = false;
         }
+    }
 
+    private void OnDestroy()
+    {
         if (text_shown)
-        {
-            timer += Time.deltaTime;
-            if (timer > 120)
-            {
-                text_shown = false;
-                timer = 0;
-            }
-        }
+            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "Press F to buy", -15);
     }
 
     private void OnDrawGizmosSelected()

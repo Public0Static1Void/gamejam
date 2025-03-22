@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
 
     private CursorLockMode previous_lockmode;
 
+    public enum TextPositions { CENTER, CENTER_LOWER, LAST_NO_USE }
+
+    public List<TMP_Text> screen_texts;
+
     void Awake()
     {
         if (gm == null)
@@ -145,6 +149,33 @@ public class GameManager : MonoBehaviour
         txt_show_speed = show_speed;
         show_announce = true;
     }
+    /// <summary>
+    /// Cambia la opacidad y el contenido del texto que le indiques, según si le das una velocidad positiva o negativa
+    /// </summary>
+    public void ShowText(TextPositions text_position, string text, float showspeed)
+    {
+        StartCoroutine(ShowTextCoroutine(screen_texts[(int)text_position], text,  showspeed));
+    }
+    
+    private IEnumerator ShowTextCoroutine(TMP_Text text_reference, string text, float show_speed)
+    {
+        text_reference.text = text;
+
+        float alpha = 0;
+        float timer = 0;
+        Color col = text_reference.color;
+
+        while (timer < 1)
+        {
+            timer += Time.deltaTime * (show_speed < 0 ? -show_speed : show_speed);
+            
+            /// Cambia el color del texto
+            alpha += Time.deltaTime * show_speed;
+            text_reference.color = new Color(col.r, col.g, col.b, alpha);
+
+            yield return null;
+        }
+    }
 
     public void LoadScene(string scene)
     {
@@ -156,7 +187,7 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    public IEnumerator HideImage(float hide_speed, Image image_to_hide, TMP_Text text_to_hide = null)
+    public IEnumerator HideImage(float hide_speed, UnityEngine.UI.Image image_to_hide, TMP_Text text_to_hide = null)
     {
         Color col = image_to_hide.color;
         while (image_to_hide.color.a > 0)
