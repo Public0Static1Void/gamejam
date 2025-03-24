@@ -13,6 +13,7 @@ public class Ability
     public UnityEvent ability_event;
     public System.Action effect;
     public AbilitiesSystem.Abilities type;
+    public AbilitiesSystem.AbilityType rarity;
 }
 
 public class Player : MonoBehaviour
