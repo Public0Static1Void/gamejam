@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class sc_Abilities : MonoBehaviour
 {
     private bool active_levitate = false, active_group = false;
+    [HideInInspector]
+    public bool active_hook = false;
     private bool check_collisions = false;
     private List<GameObject> enemy_targets = new List<GameObject>();
     private List<EnemyFollow> enemies_mov = new List<EnemyFollow>();
@@ -16,6 +19,7 @@ public class sc_Abilities : MonoBehaviour
 
     [Header("References")]
     public GameObject prefab_mine;
+    public GameObject prefab_hook;
     public AudioClip clip_plant_mine;
 
     Vector3 centroid;
@@ -123,6 +127,7 @@ public class sc_Abilities : MonoBehaviour
     }
     #endregion
 
+    #region PlantMines
     public void PlantMines()
     {
         StartCoroutine(PlantMinesRoutine());
@@ -145,6 +150,16 @@ public class sc_Abilities : MonoBehaviour
 
             // Plantará una mina cada segundo mientras vuelves
             yield return new WaitForSeconds(1);
+        }
+    }
+    #endregion
+
+    public void LaunchHook()
+    {
+        if (!active_hook)
+        {
+            Instantiate(prefab_hook, transform.position + transform.right, transform.rotation);
+            active_hook = true;
         }
     }
 

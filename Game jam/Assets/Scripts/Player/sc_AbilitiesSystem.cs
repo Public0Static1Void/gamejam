@@ -14,7 +14,8 @@ public class AbilitiesSystem : MonoBehaviour
     private List<Ability> abilities_equipped = new List<Ability>();
     List<int> rand_abilities_index = new List<int>();
 
-    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, LAST_NO_USE }
+    public enum AbilityType { BASIC, ULTIMATE, LAST_NO_USE }
 
     [Header("References")]
     public GameObject ob_gamblingparent;
@@ -37,6 +38,7 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_explodepath;
     public Sprite sprite_group;
     public Sprite sprite_mine;
+    public Sprite sprite_hook;
     void Awake()
     {
         if (instance == null)
@@ -58,6 +60,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.ability_event = methods_abilities[(int)Abilities.LEVITATE];
         ab.type = Abilities.LEVITATE;
         ab.icon = sprite_levitate;
+        ab.rarity = AbilityType.ULTIMATE;
 
         abilities.Add(ab);
 
@@ -70,6 +73,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.ability_event = methods_abilities[(int)Abilities.EXPLODE_PATH];
         ab.type = Abilities.EXPLODE_PATH;
         ab.icon = sprite_explodepath;
+        ab.rarity = AbilityType.ULTIMATE;
 
         abilities.Add(ab);
 
@@ -82,6 +86,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.ability_event = methods_abilities[(int)Abilities.GROUP];
         ab.type = Abilities.GROUP;
         ab.icon = sprite_group;
+        ab.rarity = AbilityType.ULTIMATE;
 
         abilities.Add(ab);
 
@@ -94,8 +99,23 @@ public class AbilitiesSystem : MonoBehaviour
         ab.ability_event = methods_abilities[(int)Abilities.MINE];
         ab.type = Abilities.MINE;
         ab.icon = sprite_mine;
+        ab.rarity = AbilityType.ULTIMATE;
 
         abilities.Add(ab);
+
+        // Hook
+        ab = new Ability();
+
+        ab.id = (int)Abilities.HOOK;
+        ab.name = "Hook";
+        ab.description = "Launch a hook forward and catch the first enemy hit and pulling it towards you. If you press the ability again, you are pulled to the enemy instead.";
+        ab.ability_event = methods_abilities[(int)Abilities.HOOK];
+        ab.type = Abilities.HOOK;
+        ab.icon = sprite_hook;
+        ab.rarity = AbilityType.BASIC;
+
+        abilities.Add(ab);
+
 
         if (abilities.Count != (int)Abilities.LAST_NO_USE)
             Debug.LogWarning("Las habilidades del enum no coinciden con las añadidas en el void Start");
@@ -125,99 +145,77 @@ public class AbilitiesSystem : MonoBehaviour
     /// </summary>
     public void GetRandomAbilities()
     {
-        // Si el jugador ya tiene todas las habilidades no saldrán más
+        // If the player already has all abilities, return
         if (abilities_equipped.Count >= abilities.Count) return;
 
         const int ability_count = 3;
         Ability[] abilities_to_show = new Ability[ability_count];
 
         rand_abilities_index.Clear();
-        List<int> usedIndexes = new List<int>();
+        HashSet<int> usedIndexes = new HashSet<int>();
 
-        int repeated_ability = 0;
-        Debug.Log("Abs: " + abilities.Count);
+        int max_attempts = abilities.Count * 10; // Prevent infinite loops
+        int attempts = 0;
+        int foundAbilities = 0;
 
-
-        if (abilities_equipped.Count < abilities.Count - 2)
+        while (foundAbilities < ability_count && attempts < max_attempts)
         {
-            for (int i = 0; i < ability_count; i++)
-            {
-                int rand = Random.Range(0, abilities.Count);
+            int rand = Random.Range(0, abilities.Count);
+            attempts++;
 
+            // Skip abilities already equipped or already chosen in this selection
+            if (usedIndexes.Contains(rand) || abilities_equipped.Exists(a => a.id == abilities[rand].id))
+                continue;
 
-                // Evita habilidades repetidas (ya equipadas o en la misma selección)
-                while ((usedIndexes.Contains(rand) || abilities_equipped.Exists(a => a.id == abilities[rand].id)) &&
-                       repeated_ability <= abilities.Count * 20)
-                {
-                    rand = Random.Range(0, abilities.Count);
-                    repeated_ability++;
-                }
-
-                if (repeated_ability >= abilities.Count * 20) break;
-                if (abilities[rand] == null) continue;
-
-                // Comprueba que la habilidad random no esté ya equipada
-                bool has_repeated = false;
-                for (int j = 0; j < abilities_equipped.Count; j++)
-                {
-                    Debug.Log("Equipped: " + abilities_equipped[j].name + ", Random: " + abilities[rand].name);
-
-                    if (abilities[rand].name == abilities_equipped[j].name)
-                    {
-                        Debug.Log("Repeated");
-                        has_repeated = true;
-                        break;
-                    }
-                    Debug.Log("Not repeated");
-                }
-                if (has_repeated) continue;
-
-                abilities_to_show[i] = abilities[rand];
-                usedIndexes.Add(rand);
-                rand_abilities_index.Add(abilities[rand].id);
-            }
+            // Assign ability and mark it as used
+            abilities_to_show[foundAbilities] = abilities[rand];
+            usedIndexes.Add(rand);
+            rand_abilities_index.Add(abilities[rand].id);
+            foundAbilities++;
         }
-            
 
-        // Asigna los métodos a los botones
+        // Assign the selected abilities to UI elements
         for (int i = 0; i < ability_count; i++)
         {
-
-            if (slots_buttons[i] != null)
+            if (abilities_to_show[i] != null)
             {
-                int ab_num = i;
+                int ab_num = i; // Necessary for lambda closure capture
 
                 slots_buttons[i].onClick.RemoveAllListeners();
-                slots_buttons[i].onClick.AddListener(() => {
-                    if (abilities_to_show[ab_num] == null || abilities_to_show[ab_num].name == "") return;
+                slots_buttons[i].onClick.AddListener(() =>
+                {
+                    switch (abilities_to_show[ab_num].rarity)
+                    {
+                        case AbilityType.ULTIMATE: // habilidades activadas a lvolver en el tiempo
+                            ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)abilities_to_show[ab_num].type].Invoke());
 
-                    ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)abilities_to_show[ab_num].type].Invoke());
+                            GameObject ab_icon = new GameObject();
+                            ab_icon.name = abilities_to_show[ab_num].name;
+
+                            Image im = ab_icon.AddComponent<Image>();
+                            im.sprite = abilities_to_show[ab_num].icon;
+
+                            ab_icon.transform.SetParent(ob_abilities_ui_holder.transform);
+                            break;
+
+
+                        case AbilityType.BASIC: // habilidades melee
+                            AttackSystem.instance.equipped_attacks.Add(abilities_to_show[ab_num]);
+                            break;
+                    }
+
+
                     Debug.Log("Ability selected: " + abilities_to_show[ab_num].name);
 
                     abilities_equipped.Add(abilities_to_show[ab_num]);
 
-                    GameObject ab_icon = new GameObject();
-                    ab_icon.name = abilities_to_show[ab_num].name;
-
-                    Image im = ab_icon.AddComponent<Image>();
-                    im.sprite = abilities_to_show[ab_num].icon;
-
-                    ab_icon.transform.SetParent(ob_abilities_ui_holder.transform);
-
                     CloseGamblingMenu();
                     slots_buttons[ab_num].onClick.RemoveAllListeners();
                 });
-            }
 
-            if (abilities_to_show[i] != null)
-            {
-                if (slots_images[i] != null)
-                    slots_images[i].sprite = abilities_to_show[i].icon;
-
-                if (slots_texts[i] != null)
-                    slots_texts[i].text = abilities_to_show[i].name;
+                slots_images[i].sprite = abilities_to_show[i].icon;
+                slots_texts[i].text = abilities_to_show[i].name;
             }
-            
         }
 
         ob_gamblingparent.SetActive(true);
