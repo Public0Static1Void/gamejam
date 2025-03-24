@@ -242,7 +242,7 @@ public class GameManager : MonoBehaviour
         playerData.speed = PlayerMovement.instance.speed;
         playerData.damage = ReturnScript.instance.damage;
         playerData.explosion_range = ReturnScript.instance.damage;
-        playerData.hp = ReturnScript.instance.GetComponent<PlayerLife>().hp;
+        playerData.hp = ReturnScript.instance.GetComponent<PlayerLife>().max_hp;
         playerData.score = ScoreManager.instance.score;
 
         saveManager.SaveGame(playerData);
