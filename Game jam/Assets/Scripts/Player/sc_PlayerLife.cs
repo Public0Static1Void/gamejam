@@ -32,9 +32,24 @@ public class PlayerLife : MonoBehaviour
         m = GetComponent<MeshRenderer>().material;
 
         curr_color = m.color;
-        hp = max_hp;
 
         damaged = false;
+
+
+        // Carga los datos guardados
+        SaveManager saveManager = new SaveManager();
+        PlayerData pd = saveManager.LoadSaveData();
+
+        if (pd != null )
+        {
+            max_hp = pd.hp;
+            ReturnScript.instance.damage = pd.damage;
+            ReturnScript.instance.explosion_range = pd.explosion_range;
+            PlayerMovement.instance.speed = pd.speed;
+            PlayerMovement.instance.max_stamina = pd.stamina;
+        }
+
+        hp = max_hp;
     }
 
     void Update()
@@ -85,7 +100,7 @@ public class PlayerLife : MonoBehaviour
 
         if (hp <= 0)
         {
-            GameManager.gm.LoadScene("Menu");
+            GameManager.gm.EndGame();
         }
     }
 

@@ -33,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip slide_sound;
     private float slide_sprinting_multiplier = 2.1f, slide_walking_multiplier = 7;
 
+    public bool onGround = false;
+
     [Header("References")]
     public Image stamina_image;
     public AudioSource audio_source;
@@ -78,11 +80,15 @@ public class PlayerMovement : MonoBehaviour
         cameraRotation = Camera.main.gameObject.GetComponent<CameraRotation>();
 
         player_agent = GetComponent<NavMeshAgent>();
+        player_agent.updatePosition = false;
+        player_agent.updateRotation = false;
     }
 
     private void FixedUpdate()
     {
         if (!canMove) return;
+
+        onGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 2);
 
         #region Sprint
         if (sprinting)
@@ -149,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             // El jugador ha perdido bastante velocidad o no está en el suelo
-            if (current_speed <= speed * 0.25f || !Physics.Raycast(transform.position, Vector2.down, transform.localScale.y / 2 + 0.5f))
+            if (current_speed <= speed * 0.25f || !onGround)
             {
                 /// Deja de sonar el sonido de slide y se quita el loop
                 SoundManager.instance.PlaySound(null);
@@ -158,7 +164,10 @@ public class PlayerMovement : MonoBehaviour
 
                 particle_slide.Stop();
 
+                /// Asegura que el jugador mantiene su posición después de activar el agente
+                Vector3 pos = transform.position;
                 player_agent.enabled = true;
+                transform.position = pos;
 
                 current_speed = target_speed;
                 slide = false;
@@ -243,26 +252,28 @@ public class PlayerMovement : MonoBehaviour
     public void Slide(InputAction.CallbackContext con)
     {
         // Compueba si puede hacer el slide, está encima de algo y puede moverse
-
-        if (con.performed && can_slide && Physics.Raycast(transform.position, Vector2.down, transform.localScale.y * 3, layer_ground) && canMove)
+        if (con.performed)
         {
-            can_slide = false;
-            slide = true;
-
-            cameraRotation.cameraSpeed = cameraRotation.cameraSpeed_slide; /// La cámara no podrá moverse tanto mientras te deslizas
-
-            SoundManager.instance.PlaySound(slide_sound, true);
-            audio_source.Pause();
-
-            particle_slide.Play();
-
             player_agent.enabled = false;
+            if (can_slide && onGround && canMove)
+            {
+                can_slide = false;
+                slide = true;
 
-            if (!sprinting)
-                current_speed = target_speed * slide_walking_multiplier;
-            else
-                current_speed = target_speed * slide_sprinting_multiplier;
+                cameraRotation.cameraSpeed = cameraRotation.cameraSpeed_slide; /// La cámara no podrá moverse tanto mientras te deslizas
+
+                SoundManager.instance.PlaySound(slide_sound, true);
+                audio_source.Pause();
+
+                particle_slide.Play();
+
+                if (!sprinting)
+                    current_speed = target_speed * slide_walking_multiplier;
+                else
+                    current_speed = target_speed * slide_sprinting_multiplier;
+            }
         }
+        
         if (con.canceled)
         {
             cameraRotation.cameraSpeed = cameraRotation.cameraSpeed_slide * 5; /// La cámara vuelve a su velocidad original
@@ -273,7 +284,10 @@ public class PlayerMovement : MonoBehaviour
 
             particle_slide.Stop();
 
+            /// Asegura que el jugador mantiene su posición después de activar el agente
+            Vector3 pos = transform.position;
             player_agent.enabled = true;
+            transform.position = pos;
 
             current_speed = target_speed;
             slide = false;

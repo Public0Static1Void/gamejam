@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ public class AbilitiesSystem : MonoBehaviour
     public GameObject ability3_slot;
 
     private List<Image> slots_images;
-    public List<Text> slots_texts;
+    public List<TMP_Text> slots_texts;
     private List<Button> slots_buttons;
 
     [Header("Abilities Methods")]
@@ -85,6 +86,8 @@ public class AbilitiesSystem : MonoBehaviour
 
         // Plant mine ability
         ab = new Ability();
+
+        ab.id = (int)Abilities.MINE;
         ab.name = "Path mine";
         ab.description = "When you finish your return in time, mines will automatically plant on the path you made. Mines will explode when an enemy enters its range.";
         ab.ability_event = methods_abilities[(int)Abilities.MINE];
@@ -101,14 +104,19 @@ public class AbilitiesSystem : MonoBehaviour
 
         slots_buttons = new List<Button>();
         slots_images = new List<Image>();
+        slots_texts = new List<TMP_Text>();
 
         slots_buttons.Add(ability1_slot.GetComponent<Button>());
         slots_buttons.Add(ability2_slot.GetComponent<Button>());
         slots_buttons.Add(ability3_slot.GetComponent<Button>());
 
-        slots_images.Add(ability1_slot.GetComponent<Image>());
-        slots_images.Add(ability2_slot.GetComponent<Image>());
-        slots_images.Add(ability3_slot.GetComponent<Image>());
+        slots_images.Add(ability1_slot.transform.GetChild(0).GetComponent<Image>());
+        slots_images.Add(ability2_slot.transform.GetChild(0).GetComponent<Image>());
+        slots_images.Add(ability3_slot.transform.GetChild(0).GetComponent<Image>());
+        
+        slots_texts.Add(ability1_slot.transform.GetChild(1).GetComponent<TMP_Text>());
+        slots_texts.Add(ability2_slot.transform.GetChild(1).GetComponent<TMP_Text>());
+        slots_texts.Add(ability3_slot.transform.GetChild(1).GetComponent<TMP_Text>());
     }
 
     /// <summary>
@@ -116,64 +124,85 @@ public class AbilitiesSystem : MonoBehaviour
     /// </summary>
     public void GetRandomAbilities()
     {
-        const int ability_count = 3; /// Número de habilidades a mostrar
+        // Si el jugador ya tiene todas las habilidades no saldrán más
+        if (abilities_equipped.Count >= abilities.Count) return;
+
+        const int ability_count = 3;
         Ability[] abilities_to_show = new Ability[ability_count];
 
-        // Asigna habilidades aleatorias
+        rand_abilities_index.Clear();
+        List<int> usedIndexes = new List<int>();
+
         int repeated_ability = 0;
+        Debug.Log("Abs: " + abilities.Count);
 
         for (int i = 0; i < ability_count; i++)
         {
             int rand = Random.Range(0, abilities.Count);
-            /// Buscará una habilidad random y comprueba si el jugador ya las tiene todas
-            while (rand_abilities_index.Contains(abilities[rand].id) && repeated_ability <= abilities.Count * 10)
+
+            // Evita habilidades repetidas (ya equipadas o en la misma selección)
+            while ((usedIndexes.Contains(rand) || abilities_equipped.Exists(a => a.id == abilities[rand].id)) &&
+                   repeated_ability <= abilities.Count * 20)
             {
                 rand = Random.Range(0, abilities.Count);
                 repeated_ability++;
             }
-            /// Si el jugador las tiene todas sale del bucle
-            if (repeated_ability >= abilities.Count * 10)
-                break;
+
+            if (repeated_ability >= abilities.Count * 20) break;
+            if (abilities[rand] == null) continue;
+
+            // Comprueba que la habilidad random no esté ya equipada
+            bool has_repeated = false;
+            for (int j = 0; j < abilities_equipped.Count; j++)
+            {
+                Debug.Log("Equipped: " + abilities_equipped[j].name + ", Random: " + abilities[rand].name);
+
+                if (abilities[rand].name == abilities_equipped[j].name)
+                {
+                    Debug.Log("Repeated");
+                    has_repeated = true;
+                    break;
+                }
+                Debug.Log("Not repeated");
+            }
+            if (has_repeated) continue;
+
             abilities_to_show[i] = abilities[rand];
-
+            usedIndexes.Add(rand);
             rand_abilities_index.Add(abilities[rand].id);
-
-            Debug.Log(abilities_to_show[i].name);
         }
 
+        // Asigna los métodos a los botones
         for (int i = 0; i < ability_count; i++)
         {
-            // Añade el evento de añadir la habilidad al botón
-            int ab_num = i;
 
             if (slots_buttons[i] != null)
             {
-                slots_buttons[i].onClick.AddListener(() => {
+                int ab_num = i;
 
+                slots_buttons[i].onClick.RemoveAllListeners();
+                slots_buttons[i].onClick.AddListener(() => {
                     if (abilities_to_show[ab_num] == null || abilities_to_show[ab_num].name == "") return;
 
                     ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)abilities_to_show[ab_num].type].Invoke());
                     Debug.Log("Ability selected: " + abilities_to_show[ab_num].name);
-                    
+
                     abilities_equipped.Add(abilities_to_show[ab_num]);
 
-                    for (int i = 0; i < abilities_equipped.Count; i++)
-                    {
-                        Debug.Log(abilities_equipped[i].name);
-
-                    }
-
                     CloseGamblingMenu();
-
                     slots_buttons[ab_num].onClick.RemoveAllListeners();
-
-
                 });
             }
 
-            // Cambia la imagen del sprite
-            if (slots_images[i] != null && abilities_to_show[i] != null)
-                slots_images[i].sprite = abilities_to_show[i].icon;
+            if (abilities_to_show[i] != null)
+            {
+                if (slots_images[i] != null)
+                    slots_images[i].sprite = abilities_to_show[i].icon;
+
+                if (slots_texts[i] != null)
+                    slots_texts[i].text = abilities_to_show[i].name;
+            }
+            
         }
 
         ob_gamblingparent.SetActive(true);

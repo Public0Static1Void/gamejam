@@ -22,6 +22,7 @@ public class sc_Door : MonoBehaviour
             ScoreManager.instance.current_door = this.transform;
             ScoreManager.instance.door_cost = door_cost;
             // Muestra el texto de compra
+            Debug.Log("Showing text");
             GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "Press F to buy", 1);
             text_shown = true;
         }
@@ -29,7 +30,8 @@ public class sc_Door : MonoBehaviour
         {
             ScoreManager.instance.can_buy_door = false;
             // Esconde el texto de compra
-            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "Press F to buy", -15);
+            Debug.Log("Hiding text");
+            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "", -15);
             text_shown = false;
             player_on_range = false;
         }
@@ -38,7 +40,7 @@ public class sc_Door : MonoBehaviour
     private void OnDestroy()
     {
         if (text_shown)
-            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "Press F to buy", -15);
+            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "", -15);
     }
 
     private void OnDrawGizmosSelected()

@@ -165,12 +165,19 @@ public class GameManager : MonoBehaviour
         float timer = 0;
         Color col = text_reference.color;
 
+        int multiplier = 1;
+        if (show_speed < 0)
+        {
+            multiplier = -1;
+            show_speed *= -1;
+        }
+
         while (timer < 1)
         {
-            timer += Time.deltaTime * (show_speed < 0 ? -show_speed : show_speed);
+            timer += Time.deltaTime * show_speed;
             
             /// Cambia el color del texto
-            alpha += Time.deltaTime * show_speed;
+            alpha += (Time.deltaTime * show_speed) * multiplier;
             text_reference.color = new Color(col.r, col.g, col.b, alpha);
 
             yield return null;
@@ -219,5 +226,27 @@ public class GameManager : MonoBehaviour
             element2.anchoredPosition = anch_pos;
             element2.position = new Vector2(pos.x - element1.rect.width / 3, pos.y);
         }
+    }
+
+
+    public void EndGame()
+    {
+        // Mostrar UI con resumen de estadísticas de la partida
+
+        SaveManager saveManager = new SaveManager();
+
+        // Estructura los datos para guardarlos
+        PlayerData playerData = new PlayerData();
+
+        playerData.stamina = PlayerMovement.instance.max_stamina;
+        playerData.speed = PlayerMovement.instance.speed;
+        playerData.damage = ReturnScript.instance.damage;
+        playerData.explosion_range = ReturnScript.instance.damage;
+        playerData.hp = ReturnScript.instance.GetComponent<PlayerLife>().hp;
+        playerData.score = ScoreManager.instance.score;
+
+        saveManager.SaveGame(playerData);
+
+        LoadScene("Menu");
     }
 }
