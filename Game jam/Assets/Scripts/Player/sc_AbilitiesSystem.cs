@@ -18,6 +18,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     [Header("References")]
     public GameObject ob_gamblingparent;
+    public GameObject ob_abilities_ui_holder;
 
     public GameObject ability1_slot;
     public GameObject ability2_slot;
@@ -136,41 +137,47 @@ public class AbilitiesSystem : MonoBehaviour
         int repeated_ability = 0;
         Debug.Log("Abs: " + abilities.Count);
 
-        for (int i = 0; i < ability_count; i++)
+
+        if (abilities_equipped.Count < abilities.Count - 2)
         {
-            int rand = Random.Range(0, abilities.Count);
-
-            // Evita habilidades repetidas (ya equipadas o en la misma selección)
-            while ((usedIndexes.Contains(rand) || abilities_equipped.Exists(a => a.id == abilities[rand].id)) &&
-                   repeated_ability <= abilities.Count * 20)
+            for (int i = 0; i < ability_count; i++)
             {
-                rand = Random.Range(0, abilities.Count);
-                repeated_ability++;
-            }
+                int rand = Random.Range(0, abilities.Count);
 
-            if (repeated_ability >= abilities.Count * 20) break;
-            if (abilities[rand] == null) continue;
 
-            // Comprueba que la habilidad random no esté ya equipada
-            bool has_repeated = false;
-            for (int j = 0; j < abilities_equipped.Count; j++)
-            {
-                Debug.Log("Equipped: " + abilities_equipped[j].name + ", Random: " + abilities[rand].name);
-
-                if (abilities[rand].name == abilities_equipped[j].name)
+                // Evita habilidades repetidas (ya equipadas o en la misma selección)
+                while ((usedIndexes.Contains(rand) || abilities_equipped.Exists(a => a.id == abilities[rand].id)) &&
+                       repeated_ability <= abilities.Count * 20)
                 {
-                    Debug.Log("Repeated");
-                    has_repeated = true;
-                    break;
+                    rand = Random.Range(0, abilities.Count);
+                    repeated_ability++;
                 }
-                Debug.Log("Not repeated");
-            }
-            if (has_repeated) continue;
 
-            abilities_to_show[i] = abilities[rand];
-            usedIndexes.Add(rand);
-            rand_abilities_index.Add(abilities[rand].id);
+                if (repeated_ability >= abilities.Count * 20) break;
+                if (abilities[rand] == null) continue;
+
+                // Comprueba que la habilidad random no esté ya equipada
+                bool has_repeated = false;
+                for (int j = 0; j < abilities_equipped.Count; j++)
+                {
+                    Debug.Log("Equipped: " + abilities_equipped[j].name + ", Random: " + abilities[rand].name);
+
+                    if (abilities[rand].name == abilities_equipped[j].name)
+                    {
+                        Debug.Log("Repeated");
+                        has_repeated = true;
+                        break;
+                    }
+                    Debug.Log("Not repeated");
+                }
+                if (has_repeated) continue;
+
+                abilities_to_show[i] = abilities[rand];
+                usedIndexes.Add(rand);
+                rand_abilities_index.Add(abilities[rand].id);
+            }
         }
+            
 
         // Asigna los métodos a los botones
         for (int i = 0; i < ability_count; i++)
@@ -188,6 +195,14 @@ public class AbilitiesSystem : MonoBehaviour
                     Debug.Log("Ability selected: " + abilities_to_show[ab_num].name);
 
                     abilities_equipped.Add(abilities_to_show[ab_num]);
+
+                    GameObject ab_icon = new GameObject();
+                    ab_icon.name = abilities_to_show[ab_num].name;
+
+                    Image im = ab_icon.AddComponent<Image>();
+                    im.sprite = abilities_to_show[ab_num].icon;
+
+                    ab_icon.transform.SetParent(ob_abilities_ui_holder.transform);
 
                     CloseGamblingMenu();
                     slots_buttons[ab_num].onClick.RemoveAllListeners();
