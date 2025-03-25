@@ -42,14 +42,14 @@ public class PlayerLife : MonoBehaviour
 
         if (pd != null )
         {
-            max_hp = pd.hp;
+            max_hp = 100;
             ReturnScript.instance.damage = pd.damage;
             ReturnScript.instance.explosion_range = pd.explosion_range;
             PlayerMovement.instance.speed = pd.speed;
             PlayerMovement.instance.max_stamina = pd.stamina;
         }
 
-        hp = max_hp;
+        hp = 100;
     }
 
     void Update()

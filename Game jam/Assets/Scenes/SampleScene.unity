@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2705,14 +2705,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 510706842}
-  m_LocalRotation: {x: -0.24508213, y: -0, z: -0, w: 0.96950233}
-  m_LocalPosition: {x: 0.05299759, y: -0.13, z: 0.723}
+  m_LocalRotation: {x: -0.3089336, y: -0.18049937, z: 0.075656384, w: 0.93072885}
+  m_LocalPosition: {x: -0.5299988, y: -0.1299998, z: 0.72300065}
   m_LocalScale: {x: 0.1764054, y: 0.15262347, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1836626140}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: -22.694, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -33.213, y: -27.224, z: 17.556}
 --- !u!65 &510706844
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2796,6 +2796,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0471ab837fc30ae40a2e67ba6a168211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1836626140}
+  swingSpeed: 10
+  maxSwingAngle: 90
 --- !u!1 &517432474
 GameObject:
   m_ObjectHideFlags: 0
@@ -10139,7 +10142,19 @@ MonoBehaviour:
     m_ActionId: 33857a78-e348-42ef-9957-2750de4d742a
     m_ActionName: Player/Open/Close shop[/Keyboard/e]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 510706847}
+        m_TargetAssemblyTypeName: sc_bate, Assembly-CSharp
+        m_MethodName: OnSwing
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 79a9bbea-eaa2-477c-9521-cf0e611368ef
     m_ActionName: Player/Bate[/Mouse/leftButton]
   - m_PersistentCalls:
