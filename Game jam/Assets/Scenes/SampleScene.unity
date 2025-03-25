@@ -2706,7 +2706,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 510706842}
   m_LocalRotation: {x: -0.24508213, y: -0, z: -0, w: 0.96950233}
-  m_LocalPosition: {x: 0.05299759, y: 0.023812748, z: 0.684002}
+  m_LocalPosition: {x: 0.05299759, y: -0.13, z: 0.723}
   m_LocalScale: {x: 0.1764054, y: 0.15262347, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10369,6 +10369,7 @@ MonoBehaviour:
   active_hook: 0
   levitate_enemy: {fileID: 8300000, guid: 3f26f8faaad298140bf52324c319dff1, type: 3}
   ground_smash_from_air: {fileID: 8300000, guid: 347c14881727e1d438bfc41793b714d7, type: 3}
+  stomp_on_ground: {fileID: 8300000, guid: 6d6e69d41ff98324197b4ef380895a85, type: 3}
   prefab_mine: {fileID: 3690719515193124413, guid: d325f05266f7cb54ea657ea28854bc4d, type: 3}
   prefab_hook: {fileID: 1518214880047292071, guid: fa312cb7577df0b4ea2a5622ae54f327, type: 3}
   clip_plant_mine: {fileID: 8300000, guid: 01af89733871bf2498c895a4e07ae859, type: 3}

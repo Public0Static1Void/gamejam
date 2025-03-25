@@ -16,7 +16,9 @@ public class sc_Abilities : MonoBehaviour
 
     [Header("Audio clips")]
     public AudioClip levitate_enemy;
+    public AudioClip levitate_player;
     public AudioClip ground_smash_from_air;
+    public AudioClip stomp_on_ground;
 
     [Header("References")]
     public GameObject prefab_mine;
@@ -193,6 +195,7 @@ public class sc_Abilities : MonoBehaviour
         if (PlayerMovement.instance.onGround)
         {
             PlayerMovement.instance.rb.velocity = Vector3.up * force;
+            SoundManager.instance.InstantiateSound(levitate_player, transform.position);
 
             // Espera a que el jugador deje de subir
             while (rb.velocity.y > 0)
@@ -210,12 +213,16 @@ public class sc_Abilities : MonoBehaviour
         while (!PlayerMovement.instance.onGround)
             yield return null;
 
+        rb.velocity *= 0.5f;
+        SoundManager.instance.InstantiateSound(stomp_on_ground, transform.position);
+
         // Detecta a todos los enemigos alcanzados y los envía por los aires
-        Collider[] colls = Physics.OverlapSphere(transform.position, 10, layer_enemy);
+        Collider[] colls = Physics.OverlapSphere(transform.position, 5, layer_enemy);
         foreach (Collider coll in colls)
         {
-            coll.GetComponent<EnemyFollow>().AddForceToEnemy(Vector3.up * force * hit.distance);
-            coll.GetComponent<EnemyLife>().Damage(force);
+            Debug.Log("Dist: " + hit.distance);
+            coll.GetComponent<EnemyFollow>().AddForceToEnemy(Vector3.up * ((force + hit.distance) * 0.5f));
+            //coll.GetComponent<EnemyLife>().Damage((int)((force * 0.25f) + hit.distance));
         }
     }
 

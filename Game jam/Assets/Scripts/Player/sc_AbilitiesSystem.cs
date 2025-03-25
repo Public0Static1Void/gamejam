@@ -143,6 +143,14 @@ public class AbilitiesSystem : MonoBehaviour
         slots_texts.Add(ability3_slot.transform.GetChild(1).GetComponent<TMP_Text>());
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GetRandomAbilities();
+        }
+    }
+
     /// <summary>
     /// Abre el menú de selección y muestra tres habilidades aleatorias
     /// </summary>

@@ -48,7 +48,10 @@ public class Hook : MonoBehaviour
         transform.parent = null;
 
         transform.position = player.transform.position + player.transform.right;
-        transform.rotation = player.transform.rotation;
+        if (PlayerMovement.instance.onGround)
+            transform.rotation = player.transform.rotation;
+        else
+            transform.rotation = Camera.main.transform.rotation;
 
         launch_point = transform.position;
 
@@ -120,7 +123,7 @@ public class Hook : MonoBehaviour
         }
         else
         {
-            transform.Translate(Camera.main.transform.forward * speed * Time.deltaTime, Space.World);
+            transform.Translate(transform.forward * speed * Time.deltaTime, Space.World);
             // Si no ha enganchado nada por x metros vuelve
             if (Vector3.Distance(transform.position, launch_point) > 15) enemy_hooked = true;
         }

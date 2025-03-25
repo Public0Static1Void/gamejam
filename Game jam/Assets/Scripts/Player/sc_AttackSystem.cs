@@ -12,13 +12,18 @@ public class AttackSystem : MonoBehaviour
     private int current_attack = 0;
 
     public List<UnityEngine.UI.Image> slots_abilities;
-
+    private Ability[] abilities_order;
     void Awake()
     {
         if (instance == null)
             instance = this;
         else
             Destroy(this.gameObject);
+    }
+
+    void Start()
+    {
+        abilities_order = new Ability[slots_abilities.Count];
     }
 
     public Ability GetCurrentAbility()
@@ -28,21 +33,24 @@ public class AttackSystem : MonoBehaviour
 
     public void UpdateUI()
     {
-        // Cambia los sprites de los slots según la habilidad que se pueda usar
-        for (int i = current_attack, j = 0; i < slots_abilities.Count && i < equipped_attacks.Count; i++)
+        abilities_order[0] = equipped_attacks[current_attack];
+        for (int i = 0, j = 1; i < equipped_attacks.Count; i++)
         {
-            /// Cambia el sprite y le quita la transparencia
-            slots_abilities[i].sprite = equipped_attacks[i].icon;
-            Color col = slots_abilities[i].color;
-            slots_abilities[i].color = new Color(col.r, col.g, col.b, 1);
-
-            if (j < current_attack && j < equipped_attacks.Count)
+            if (abilities_order[0] != equipped_attacks[i])
             {
-                slots_abilities[j].sprite = equipped_attacks[j].icon;
-                col = slots_abilities[j].color;
-                slots_abilities[j].color = new Color(col.r, col.g, col.b, 1);
+                abilities_order[j] = equipped_attacks[i];
                 j++;
             }
+        }
+        Debug.Log("Ab 0: " + abilities_order[0].name);
+        // Cambia los sprites de los slots según la habilidad que se pueda usar
+        for (int i = 0; i <  abilities_order.Length; i++)
+        {
+            if (abilities_order[i] == null) continue;
+
+            slots_abilities[i].sprite = abilities_order[i].icon;
+            Color col = slots_abilities[i].color;
+            slots_abilities[i].color = new Color(col.r, col.g, col.b, 1);
         }
 
         // Esconde todos los slots que no tengan una habilidad
@@ -65,8 +73,6 @@ public class AttackSystem : MonoBehaviour
             current_attack++;
             if (current_attack >= equipped_attacks.Count)
                 current_attack = 0;
-
-            Debug.Log(equipped_attacks[current_attack].name);
 
             UpdateUI();
         }
