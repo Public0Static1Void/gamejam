@@ -10,43 +10,159 @@ public class Hook : MonoBehaviour
     public LayerMask layer_enemy;
 
     private GameObject player;
+    private Vector3 launch_point;
     public GameObject target_hooked;
 
     public bool enemy_hooked = false;
 
+    private EnemyFollow enemyFollow;
+
     private sc_Abilities abs;
-    void Start()
+
+    private float timer = 0;
+
+    private bool launched = false;
+    public bool launch_player = false;
+    private bool added_force_to_player = false;
+
+    private MeshRenderer ob_renderer;
+
+    private void Start()
     {
         player = ReturnScript.instance.gameObject;
         abs = ReturnScript.instance.GetComponent<sc_Abilities>();
-
+        ob_renderer = GetComponent<MeshRenderer>();
+        ob_renderer.enabled = false;
+    }
+    // Se configuran las variables del hook para posteriormente lanzarse
+    public void Launch()
+    {
         transform.parent = null;
+
+        transform.position = player.transform.position + player.transform.right;
+        transform.rotation = player.transform.rotation;
+
+        launch_point = transform.position;
+
+        ob_renderer.enabled = true;
+
+        timer = 0;
+        enemy_hooked = false;
+        added_force_to_player = false;
+        launched = true;
     }
 
     void Update()
     {
+        if (!launched) return;
+
         if (enemy_hooked)
         {
-            transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * speed);
-            if (Vector3.Distance(transform.position, player.transform.position) < detection_range)
+            timer += Time.deltaTime;
+            if (enemyFollow == null) timer = 1; /// Si no se ha enganchado a un enemigo se salta la espera
+            if (timer > 0.75f)
             {
-                abs.active_hook = false;
-                Destroy(this.gameObject);
+                // El jugador no se acercará al enemigo con un salto
+                if (!launch_player)
+                {
+                    PullHook();
+                }
+                else if (target_hooked != null && enemyFollow != null) // El jugador se acercará al enemigo con un salto
+                {
+                    if (!added_force_to_player)
+                    {
+                        enemyFollow.agent.enabled = false;
+
+                        Vector3 dir = (target_hooked.transform.position - transform.position).normalized;
+                        float dist = Vector3.Distance(player.transform.position, target_hooked.transform.position);
+
+                        PlayerMovement.instance.canMove = false;
+                        PlayerMovement.instance.onGround = false;
+
+                        player.GetComponent<Rigidbody>().AddForce((-dir + Vector3.up * 1.5f) * (dist / 2), ForceMode.VelocityChange);
+                        
+                        added_force_to_player = true;
+                    }
+
+                    if (PlayerMovement.instance.rb.velocity.y < 0)
+                    {
+                        HideHook();
+                    }
+                }
+                else
+                {
+                    PullHook();
+                }
+                
             }
         }
         else
+        {
             transform.Translate(transform.forward * speed * Time.deltaTime, Space.World);
+            // Si no ha enganchado nada por x metros vuelve
+            if (Vector3.Distance(transform.position, launch_point) > 15) enemy_hooked = true;
+        }
     }
     private void FixedUpdate()
     {
-        if (enemy_hooked) return;
+        if (enemy_hooked || !launched) return;
 
         Collider[] colls = Physics.OverlapSphere(transform.position, detection_range, layer_enemy);
         if (colls.Length > 0)
         {
             enemy_hooked = true;
             target_hooked = colls[0].transform.gameObject;
+            enemyFollow = target_hooked.GetComponent<EnemyFollow>();
+            enemyFollow.rb.useGravity = false;
+            enemyFollow.agent.enabled = false;
+
+            transform.position = target_hooked.transform.position;
+
+            enemyFollow.transform.SetParent(transform);
         }
+    }
+
+    /// <summary>
+    /// Si el jugador ha vuelto a pulsar el input dentro del margen de 0.75 segundos saltará hacia el enemigo
+    /// </summary>
+    public void LaunchPlayer()
+    {
+        if (timer < 0.75f && enemy_hooked)
+        {
+            launch_player = true;
+        }
+    }
+
+    void PullHook()
+    {
+        transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * speed);
+        if (Vector3.Distance(transform.position, player.transform.position) < 3f)
+        {
+            HideHook();
+        }
+    }
+
+    void HideHook()
+    {
+        abs.active_hook = false;
+        launched = false;
+        ob_renderer.enabled = false;
+
+        if (enemyFollow != null)
+        {
+            enemyFollow.transform.parent = null;
+            enemyFollow.rb.useGravity = true;
+            enemyFollow.AddForceToEnemy(Vector3.zero);
+        }
+
+        if (added_force_to_player)
+        {
+            Debug.Log("si");
+            PlayerMovement.instance.canMove = true;
+            added_force_to_player = false;
+        }
+
+        launch_player = false;
     }
 
     private void OnDrawGizmos()

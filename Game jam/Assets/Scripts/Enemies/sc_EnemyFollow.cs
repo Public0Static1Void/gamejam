@@ -78,7 +78,7 @@ public class EnemyFollow : MonoBehaviour
         if (!agent.isOnNavMesh)
         {
             timer += Time.deltaTime;
-            if (timer > 10 || rb.isKinematic) /// Si pasa cierto tiempo sin estar en la navmesh o es kinematic sin estar en ella se destruye
+            if (timer > 15 || rb.isKinematic) /// Si pasa cierto tiempo sin estar en la navmesh o es kinematic sin estar en ella se destruye
             {
                 Destroy(this.gameObject);
             }

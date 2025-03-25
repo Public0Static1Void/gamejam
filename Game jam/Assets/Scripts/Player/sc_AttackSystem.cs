@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class AttackSystem : MonoBehaviour
 {
     public static AttackSystem instance { get; private set; }
-    public List<Ability> equipped_attacks;
+    public List<Ability> equipped_attacks = new List<Ability>();
 
     private int current_attack = 0;
 

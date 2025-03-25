@@ -86,9 +86,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        onGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 2);
+
         if (!canMove) return;
 
-        onGround = Physics.Raycast(transform.position, Vector3.down, transform.localScale.y * 2);
 
         #region Sprint
         if (sprinting)
@@ -191,7 +192,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (!moving || !slide)
         {
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            rb.velocity = new Vector3(rb.velocity.x * 0.9f, rb.velocity.y, rb.velocity.z * 0.9f);
             if (sprinting) sprinting = false;
         }
     }

@@ -24,6 +24,14 @@ public class sc_Abilities : MonoBehaviour
 
     Vector3 centroid;
 
+    //Hook
+    private Hook spawned_hook;
+
+    void Start()
+    {
+        spawned_hook = Instantiate(prefab_hook).GetComponent<Hook>();
+    }
+
     private bool CheckActiveAbilities()
     {
         if (active_group || active_levitate)
@@ -158,8 +166,12 @@ public class sc_Abilities : MonoBehaviour
     {
         if (!active_hook)
         {
-            Instantiate(prefab_hook, transform.position + transform.right, transform.rotation);
+            spawned_hook.Launch();
             active_hook = true;
+        }
+        else
+        {
+            spawned_hook.LaunchPlayer();
         }
     }
 
