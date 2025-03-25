@@ -10368,6 +10368,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active_hook: 0
   levitate_enemy: {fileID: 8300000, guid: 3f26f8faaad298140bf52324c319dff1, type: 3}
+  levitate_player: {fileID: 8300000, guid: 9f8d11ba0b00f684bab674f3a417b477, type: 3}
   ground_smash_from_air: {fileID: 8300000, guid: 347c14881727e1d438bfc41793b714d7, type: 3}
   stomp_on_ground: {fileID: 8300000, guid: 6d6e69d41ff98324197b4ef380895a85, type: 3}
   prefab_mine: {fileID: 3690719515193124413, guid: d325f05266f7cb54ea657ea28854bc4d, type: 3}
