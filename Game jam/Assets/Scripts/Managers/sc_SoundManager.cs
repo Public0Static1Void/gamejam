@@ -67,7 +67,7 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// Hace sonar un audioClip en la posición indicada
     /// </summary>
-    public void InstantiateSound(AudioClip clip, Vector3 position, float volume = 0.5f, AudioMixerGroup mixer = null)
+    public AudioSource InstantiateSound(AudioClip clip, Vector3 position, float volume = 0.5f, AudioMixerGroup mixer = null, bool play_on_creation = true)
     {
         AudioSource curr = buffer_audiosources[current_audiosource];
 
@@ -75,11 +75,15 @@ public class SoundManager : MonoBehaviour
         curr.transform.position = position;
         curr.outputAudioMixerGroup = mixer ?? audioMixerGroup; /// Si mixer no se pasa como parámetro se usará audioMixerGroup
         curr.volume = volume;
-        curr.Play();
+        curr.loop = false;
+        if (play_on_creation)
+            curr.Play();
 
         current_audiosource++;
         if (current_audiosource >= buffer_audiosources.Count - 1)
             current_audiosource = 0;
+
+        return curr;
     }
 
     public void PlaySoundOnAudioSource(AudioClip clip, AudioSource audioSource, bool loop = false)

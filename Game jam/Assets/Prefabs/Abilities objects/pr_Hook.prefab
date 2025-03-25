@@ -97,9 +97,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  detection_range: 3
+  detection_range: 1.5
   layer_enemy:
     serializedVersion: 2
     m_Bits: 64
   target_hooked: {fileID: 0}
   enemy_hooked: 0
+  launch_player: 0
+  clip_chainmoving: {fileID: 8300000, guid: 4248224417375d24cb18a120216a3d94, type: 3}
+  clip_chainpulled: {fileID: 8300000, guid: cf6351c721af90045b2f0fd361dc18ec, type: 3}

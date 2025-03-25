@@ -14,7 +14,7 @@ public class AbilitiesSystem : MonoBehaviour
     private List<Ability> abilities_equipped = new List<Ability>();
     List<int> rand_abilities_index = new List<int>();
 
-    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, LAST_NO_USE }
     public enum AbilityType { BASIC, ULTIMATE, LAST_NO_USE }
 
     [Header("References")]
@@ -39,6 +39,7 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_group;
     public Sprite sprite_mine;
     public Sprite sprite_hook;
+    public Sprite sprite_stomp;
     void Awake()
     {
         if (instance == null)
@@ -54,11 +55,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Levitate ability
         Ability ab = new Ability();
 
-        ab.id = (int)Abilities.LEVITATE;
         ab.name = "Levitate";
         ab.description = "When you are returning in time, all the enemies that you touch will start to levitate and crushed on the ground when you finish returning.";
-        ab.ability_event = methods_abilities[(int)Abilities.LEVITATE];
-        ab.type = Abilities.LEVITATE;
         ab.icon = sprite_levitate;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -67,11 +65,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Exploding path ability
         ab = new Ability();
 
-        ab.id = (int)Abilities.EXPLODE_PATH;
         ab.name = "Exploding path";
         ab.description = "While you are returning the path you follow will start to explode, damaging and launching your enemies.";
-        ab.ability_event = methods_abilities[(int)Abilities.EXPLODE_PATH];
-        ab.type = Abilities.EXPLODE_PATH;
         ab.icon = sprite_explodepath;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -80,11 +75,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Group ability
         ab = new Ability();
 
-        ab.id = (int)Abilities.GROUP;
         ab.name = "Group n' xplode";
         ab.description = "While you are returning, all the enemies you touch will start to levitate to you, grouping them. The more enemies you group, the faster will go so you can explode them!";
-        ab.ability_event = methods_abilities[(int)Abilities.GROUP];
-        ab.type = Abilities.GROUP;
         ab.icon = sprite_group;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -93,11 +85,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Plant mine ability
         ab = new Ability();
 
-        ab.id = (int)Abilities.MINE;
         ab.name = "Path mine";
         ab.description = "When you finish your return in time, mines will automatically plant on the path you made. Mines will explode when an enemy enters its range.";
-        ab.ability_event = methods_abilities[(int)Abilities.MINE];
-        ab.type = Abilities.MINE;
         ab.icon = sprite_mine;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -106,16 +95,30 @@ public class AbilitiesSystem : MonoBehaviour
         // Hook
         ab = new Ability();
 
-        ab.id = (int)Abilities.HOOK;
         ab.name = "Hook";
         ab.description = "Launch a hook forward and catch the first enemy hit and pulling it towards you. If you press the ability again, you are pulled to the enemy instead.";
-        ab.ability_event = methods_abilities[(int)Abilities.HOOK];
-        ab.type = Abilities.HOOK;
         ab.icon = sprite_hook;
         ab.rarity = AbilityType.BASIC;
 
         abilities.Add(ab);
 
+        // Stomp
+        ab = new Ability();
+
+        ab.name = "Stomp";
+        ab.description = "[ON GROUND] Jump to immediately stomp the ground with your body and launch the enemies on the air" +
+                         "[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
+        ab.icon = sprite_stomp;
+        ab.rarity = AbilityType.BASIC;
+
+        abilities.Add(ab);
+
+        for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
+        {
+            abilities[i].id = i;
+            abilities[i].ability_event = methods_abilities[i];
+            abilities[i].type = (Abilities)i;
+        }
 
         if (abilities.Count != (int)Abilities.LAST_NO_USE)
             Debug.LogWarning("Las habilidades del enum no coinciden con las añadidas en el void Start");
@@ -201,6 +204,7 @@ public class AbilitiesSystem : MonoBehaviour
 
                         case AbilityType.BASIC: // habilidades melee
                             AttackSystem.instance.equipped_attacks.Add(abilities_to_show[ab_num]);
+                            AttackSystem.instance.UpdateUI();
                             break;
                     }
 

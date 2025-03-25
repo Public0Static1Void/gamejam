@@ -14,6 +14,8 @@ public class Ability
     public System.Action effect;
     public AbilitiesSystem.Abilities type;
     public AbilitiesSystem.AbilityType rarity;
+
+    public bool onExecution = false;
 }
 
 public class Player : MonoBehaviour

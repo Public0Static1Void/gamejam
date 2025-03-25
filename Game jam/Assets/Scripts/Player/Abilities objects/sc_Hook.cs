@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Hook : MonoBehaviour
 {
+    [Header("Stats")]
     public float speed;
     public float detection_range;
 
+
+    [Header("References")]
     public LayerMask layer_enemy;
 
     private GameObject player;
@@ -26,6 +29,11 @@ public class Hook : MonoBehaviour
     private bool added_force_to_player = false;
 
     private MeshRenderer ob_renderer;
+
+    public Ability ab_hook;
+
+    private AudioSource audioSource;
+    public AudioClip clip_chainmoving, clip_chainpulled;
 
     private void Start()
     {
@@ -50,11 +58,22 @@ public class Hook : MonoBehaviour
         enemy_hooked = false;
         added_force_to_player = false;
         launched = true;
+
+        ab_hook = AttackSystem.instance.GetCurrentAbility();
+        if (ab_hook.type != AbilitiesSystem.Abilities.HOOK)
+            Debug.LogWarning("The ability type on sc_hook dosen't coincide!!");
+        
+        ab_hook.onExecution = true;
+
+        audioSource = SoundManager.instance.InstantiateSound(clip_chainmoving, transform.position);
+        audioSource.loop = true;
     }
 
     void Update()
     {
         if (!launched) return;
+
+        audioSource.transform.position = player.transform.position;
 
         if (enemy_hooked)
         {
@@ -79,12 +98,15 @@ public class Hook : MonoBehaviour
                         PlayerMovement.instance.canMove = false;
                         PlayerMovement.instance.onGround = false;
 
-                        player.GetComponent<Rigidbody>().AddForce((-dir + Vector3.up * 1.5f) * (dist / 2), ForceMode.VelocityChange);
+                        player.GetComponent<Rigidbody>().AddForce((-dir + Vector3.up * 2) * (dist / 2), ForceMode.VelocityChange);
+
+                        audioSource.Stop();
+                        SoundManager.instance.InstantiateSound(clip_chainpulled, player.transform.position);
                         
                         added_force_to_player = true;
                     }
 
-                    if (PlayerMovement.instance.rb.velocity.y < 0)
+                    if (PlayerMovement.instance.rb.velocity.y < -0.25f)
                     {
                         HideHook();
                     }
@@ -98,7 +120,7 @@ public class Hook : MonoBehaviour
         }
         else
         {
-            transform.Translate(transform.forward * speed * Time.deltaTime, Space.World);
+            transform.Translate(Camera.main.transform.forward * speed * Time.deltaTime, Space.World);
             // Si no ha enganchado nada por x metros vuelve
             if (Vector3.Distance(transform.position, launch_point) > 15) enemy_hooked = true;
         }
@@ -135,7 +157,7 @@ public class Hook : MonoBehaviour
 
     void PullHook()
     {
-        transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * speed);
+        transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * (speed * 0.5f));
         if (Vector3.Distance(transform.position, player.transform.position) < 3f)
         {
             HideHook();
@@ -157,12 +179,15 @@ public class Hook : MonoBehaviour
 
         if (added_force_to_player)
         {
-            Debug.Log("si");
             PlayerMovement.instance.canMove = true;
             added_force_to_player = false;
         }
 
         launch_player = false;
+        ab_hook.onExecution = false;
+        audioSource.Stop();
+
+        AttackSystem.instance.ChangeAttack();
     }
 
     private void OnDrawGizmos()
