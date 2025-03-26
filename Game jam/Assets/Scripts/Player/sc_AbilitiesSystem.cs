@@ -159,6 +159,10 @@ public class AbilitiesSystem : MonoBehaviour
         // If the player already has all abilities, return
         if (abilities_equipped.Count >= abilities.Count) return;
 
+        Time.timeScale = 0;
+
+        slots_buttons[0].Select();
+
         const int ability_count = 3;
         Ability[] abilities_to_show = new Ability[ability_count];
 
@@ -240,5 +244,6 @@ public class AbilitiesSystem : MonoBehaviour
         ob_gamblingparent.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        Time.timeScale = 1;
     }
 }

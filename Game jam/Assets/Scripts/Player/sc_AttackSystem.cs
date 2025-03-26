@@ -80,9 +80,10 @@ public class AttackSystem : MonoBehaviour
 
     public void Attack(InputAction.CallbackContext con)
     {
-        if (con.performed)
+        if (con.performed && equipped_attacks.Count > 0)
         {
-            equipped_attacks[current_attack].ability_event.Invoke();
+            if (current_attack < equipped_attacks.Count)
+                equipped_attacks[current_attack].ability_event.Invoke();
 
             ChangeAttack();
         }

@@ -439,7 +439,7 @@
                 {
                     "name": "",
                     "id": "fa97ae61-f067-496d-9293-6a2feef360c6",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Gamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -450,7 +450,7 @@
                 {
                     "name": "",
                     "id": "4c664a97-f515-474a-9825-1f51471a5c1e",
-                    "path": "<DualShockGamepad>/buttonEast",
+                    "path": "<DualShockGamepad>/rightStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -461,7 +461,7 @@
                 {
                     "name": "",
                     "id": "4f50efaa-6cb3-4294-99ae-976aa4016524",
-                    "path": "<XInputController>/buttonEast",
+                    "path": "<XInputController>/rightStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -483,7 +483,18 @@
                 {
                     "name": "",
                     "id": "a4095cc8-6b86-4a25-bbf0-102020f051ae",
-                    "path": "<Gamepad>/dpad/up",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Buy",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0aa5a4f5-fc1f-4a61-a404-289e959a22a3",
+                    "path": "<DualShockGamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -538,7 +549,7 @@
                 {
                     "name": "",
                     "id": "2735de2d-9fdf-4393-94cf-4608398ef5a0",
-                    "path": "",
+                    "path": "<XInputController>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

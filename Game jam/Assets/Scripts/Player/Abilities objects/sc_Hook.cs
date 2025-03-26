@@ -39,7 +39,7 @@ public class Hook : MonoBehaviour
     {
         player = ReturnScript.instance.gameObject;
         abs = ReturnScript.instance.GetComponent<sc_Abilities>();
-        ob_renderer = GetComponent<MeshRenderer>();
+        ob_renderer = transform.GetChild(0).GetComponent<MeshRenderer>();
         ob_renderer.enabled = false;
     }
     // Se configuran las variables del hook para posteriormente lanzarse

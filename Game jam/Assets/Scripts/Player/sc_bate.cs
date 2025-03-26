@@ -13,21 +13,24 @@ public class sc_bate : MonoBehaviour
     private bool isSwinging = false;
     private float currentRotation = 0f;
 
+    public Animator anim;
+
+    public AudioClip clip_swing, clip_hit;
+
+    private AudioSource audioSource;
+
+
     private void Update()
     {
         if (isSwinging)
         {
-            float rotationAmount = swingSpeed * Time.deltaTime;
-            currentRotation += rotationAmount;
+            AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
-            if (currentRotation >= maxSwingAngle)
+            // Check if animation is done (normalizedTime >= 1)
+            if (stateInfo.IsName("Swing") && stateInfo.normalizedTime >= 0.8f)
             {
-                currentRotation = 0f;
+                anim.SetBool("swing", false);
                 isSwinging = false;
-            }
-            else
-            {
-                transform.RotateAround(player.position, Vector3.up, rotationAmount);
             }
         }
     }
@@ -37,7 +40,9 @@ public class sc_bate : MonoBehaviour
         if (con.performed && !isSwinging)
         {
             isSwinging = true;
-            currentRotation = 0f; // Reinicia el contador de rotación
+            anim.SetBool("swing", true);
+
+            SoundManager.instance.InstantiateSound(clip_swing, transform.position);
         }
     }
 
@@ -45,9 +50,17 @@ public class sc_bate : MonoBehaviour
     {
         if (other.CompareTag("Enemy") && isSwinging)
         {
-            Vector3 dir = (other.transform.position - transform.position).normalized;
+            Vector3 dir = (other.transform.position - player.position).normalized;
             Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
-            other.GetComponent<Rigidbody>().AddForce(forceDir * 10f, ForceMode.Impulse);
+            other.GetComponent<EnemyFollow>().AddForceToEnemy(forceDir * 10f);
+            if (audioSource == null)
+            {
+                audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
+            }
+            else if (!audioSource.isPlaying)
+            {
+                audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
+            }
         }
     }
 }

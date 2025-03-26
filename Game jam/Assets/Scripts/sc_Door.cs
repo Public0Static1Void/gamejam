@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class sc_Door : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class sc_Door : MonoBehaviour
 
     private bool text_shown = false;
 
+    PlayerInput pInput;
+
+    private void Start()
+    {
+        pInput = PlayerMovement.instance.GetComponent<PlayerInput>();
+    }
     void Update()
     {
         if (Vector3.Distance(transform.position, player.position) < range_interaction)
@@ -21,9 +28,25 @@ public class sc_Door : MonoBehaviour
             ScoreManager.instance.can_buy_door = true;
             ScoreManager.instance.current_door = this.transform;
             ScoreManager.instance.door_cost = door_cost;
+
             // Muestra el texto de compra
-            Debug.Log("Showing text");
-            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "Press F to buy", 1);
+            string door_text = "Press F to buy";
+            if (pInput.currentControlScheme == "Gamepad")
+            {
+                if (Gamepad.current != null)
+                {
+                    string controller_name = Gamepad.current.device.displayName;
+                    if (controller_name.ToLower().Contains("dualshock") || controller_name.ToLower().Contains("dualsense"))
+                    {
+                        door_text = "Press X to buy";
+                    }
+                    else if (controller_name.ToLower().Contains("xbox") || controller_name.ToLower().Contains("xinput"))
+                    {
+                        door_text = "Press A to buy";
+                    }
+                }
+            }
+            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, door_text, 1);
             text_shown = true;
         }
         else if (player_on_range)

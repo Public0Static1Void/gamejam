@@ -26,7 +26,10 @@ public class GameManager : MonoBehaviour
 
     public enum TextPositions { CENTER, CENTER_LOWER, LAST_NO_USE }
 
+    [Header("References")]
     public List<TMP_Text> screen_texts;
+
+    public Button btn_resume;
 
     void Awake()
     {
@@ -85,7 +88,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerMovement.instance.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
 
-        Time.timeScale = 1;
+        Time.timeScale = previous_lockmode == CursorLockMode.None ? 0 : 1;
 
         Cursor.lockState = previous_lockmode;
         Cursor.visible = previous_lockmode == CursorLockMode.None ? true : false;
@@ -97,6 +100,8 @@ public class GameManager : MonoBehaviour
     {
         if (!pause_menu.activeSelf)
             previous_lockmode = Cursor.lockState;
+
+        btn_resume.Select();
 
         pause_menu.SetActive(true);
         ShakeController(0, 0, 0);
@@ -129,6 +134,11 @@ public class GameManager : MonoBehaviour
     public void ShowOrHideGameobject(GameObject ob)
     {
         ob.SetActive(!ob.gameObject.activeSelf);
+    }
+
+    public void SelectUIButton(Button button)
+    {
+        button.Select();
     }
 
     public void InputPause(InputAction.CallbackContext con)

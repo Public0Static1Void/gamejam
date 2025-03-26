@@ -48,9 +48,18 @@ public class CameraRotation : MonoBehaviour
             trigger = ui_sensivity_slider.gameObject.AddComponent<EventTrigger>();
 
         EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.Deselect;
+        entry.callback.AddListener((data) => { UI_HideImage(); });
+        trigger.triggers.Add(entry);
+        
+        entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerUp;
         entry.callback.AddListener((data) => { UI_HideImage(); });
         trigger.triggers.Add(entry);
+
+        Color col = ui_sensivity_value_image.color;
+        ui_sensivity_value_image.color = new Color(col.r, col.g, col.b, 0);
+        ui_sensivity_value.text = "";
     }
 
     void Update()

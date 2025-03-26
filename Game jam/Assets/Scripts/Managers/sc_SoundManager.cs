@@ -64,6 +64,20 @@ public class SoundManager : MonoBehaviour
             audioSource.Stop();
         }
     }
+    public void PlaySound(AudioClip clip)
+    {
+        audioSource.loop = false;
+        if (clip != null)
+        {
+            audioSource.clip = clip;
+            audioSource.Play();
+        }
+        else
+        {
+            audioSource.clip = null;
+            audioSource.Stop();
+        }
+    }
     /// <summary>
     /// Hace sonar un audioClip en la posición indicada
     /// </summary>
