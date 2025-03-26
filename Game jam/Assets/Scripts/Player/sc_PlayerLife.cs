@@ -37,8 +37,7 @@ public class PlayerLife : MonoBehaviour
 
 
         // Carga los datos guardados
-        SaveManager saveManager = new SaveManager();
-        PlayerData pd = saveManager.LoadSaveData();
+        PlayerData pd = GameManager.gm.saveManager.LoadSaveData();
 
         if (pd != null )
         {
@@ -86,9 +85,9 @@ public class PlayerLife : MonoBehaviour
         }
         // Guarda estadísticas de daño
         if (value < 0)
-            GameManager.gm.damage_recieved += value;
+            GameManager.gm. damage_healed += value;
         else
-            GameManager.gm.damage_healed += value;
+            GameManager.gm.damage_recieved += value;
 
         curr_color.r += value * 0.025f;
         curr_color.g -= value * 0.025f;

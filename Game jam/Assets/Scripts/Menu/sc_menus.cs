@@ -31,15 +31,18 @@ public class menus : MonoBehaviour
 
     Scene actualScene;
 
+    SaveManager sm;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        sm = GetComponent<SaveManager>();
     }
 
     public void LoadStatsTexts()
     {
-        SaveManager sm = new SaveManager();
         PlayerData pd = sm.LoadSaveData();
 
         if (pd == null)
@@ -78,7 +81,6 @@ public class menus : MonoBehaviour
     public void UpgradeStat(GameObject stat)
     {
 
-        SaveManager sm = new SaveManager();
         PlayerData pd = sm.LoadSaveData();
 
         if (pd == null || pd.score < 1) return;
@@ -118,8 +120,8 @@ public class menus : MonoBehaviour
 
     public void PlayGame()
     {
-        SoundManager.instance.PlaySound(audiosToPlay[0]);
-        StartCoroutine(WaitToContinue());
+        DontDestroyOnLoad(SoundManager.instance.InstantiateSound(audiosToPlay[0], transform.position));
+        SceneManager.LoadScene("SampleScene");
     }
 
     public void ButtonSelected()

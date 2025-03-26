@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(SaveManager))]
 public class GameManager : MonoBehaviour
 {
     public static GameManager gm { get; private set; }
@@ -47,6 +48,8 @@ public class GameManager : MonoBehaviour
     public int damage_healed = 0;
     private float score_points_converted = 0;
 
+    public SaveManager saveManager;
+
     void Awake()
     {
         if (gm == null)
@@ -56,6 +59,8 @@ public class GameManager : MonoBehaviour
 
         Application.targetFrameRate = 60;
         ShakeController(0, 0, 0);
+
+        saveManager = GetComponent<SaveManager>();
     }
 
     void Update()
@@ -256,8 +261,6 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
-        SaveManager saveManager = new SaveManager();
-
         // Estructura los datos para guardarlos
         PlayerData playerData = new PlayerData();
 
