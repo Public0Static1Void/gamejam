@@ -46,6 +46,7 @@ public class sc_Door : MonoBehaviour
                     }
                 }
             }
+            door_text += $" ({door_cost} cost)";
             GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, door_text, 1);
             text_shown = true;
         }
