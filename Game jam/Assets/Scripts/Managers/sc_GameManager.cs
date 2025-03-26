@@ -288,6 +288,8 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
+        ShakeController(0, 0, 0);
+
         Time.timeScale = 0;
 
         txt_damage_done.text = "Damage dealt: " + damage_done.ToString();
