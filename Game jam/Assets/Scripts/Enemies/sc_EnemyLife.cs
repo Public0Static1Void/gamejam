@@ -34,12 +34,16 @@ public class EnemyLife : MonoBehaviour
     {
         hp -= amount;
 
+        GameManager.gm.damage_done += amount;
+
         // El enemigo hace un sonido de dañado
         enemyFollow.audioSource.clip = clip_damaged[Random.Range(0, clip_damaged.Count - 1)];
         enemyFollow.audioSource.loop = false;
         enemyFollow.audioSource.Play();
         if (hp <= 0)
         {
+            GameManager.gm.enemies_killed++;
+
             // Instancia las partículas de muerte
             Instantiate(particle_explosion, transform.position, particle_explosion.transform.rotation);
             /// Genera un sonido de explosión

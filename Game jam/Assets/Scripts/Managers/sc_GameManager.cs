@@ -31,6 +31,22 @@ public class GameManager : MonoBehaviour
 
     public Button btn_resume;
 
+    public GameObject stats_resume_holder;
+
+    public TMP_Text txt_enemies_killed;
+    public TMP_Text txt_damage_done;
+    public TMP_Text txt_damage_recieved;
+    public TMP_Text txt_damage_healed;
+    public TMP_Text txt_total_score_points;
+    public TMP_Text txt_converted_score_points;
+
+    [Header("Stats")]
+    public int enemies_killed = 0;
+    public int damage_done = 0;
+    public int damage_recieved = 0;
+    public int damage_healed = 0;
+    private float score_points_converted = 0;
+
     void Awake()
     {
         if (gm == null)
@@ -238,11 +254,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    public void EndGame()
+    public void SaveGame()
     {
-        // Mostrar UI con resumen de estadísticas de la partida
-
         SaveManager saveManager = new SaveManager();
 
         // Estructura los datos para guardarlos
@@ -256,7 +269,37 @@ public class GameManager : MonoBehaviour
         playerData.score = ScoreManager.instance.score;
 
         saveManager.SaveGame(playerData);
+    }
 
+    IEnumerator EndGameCoroutine()
+    {
+        yield return new WaitForSeconds(10);
         LoadScene("Menu");
+    }
+
+    public void EndGame()
+    {
+        // Mostrar UI con resumen de estadísticas de la partida
+        StartCoroutine(EndGameCoroutine());
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Time.timeScale = 0;
+
+        txt_damage_done.text = "Damage dealt: " + damage_done.ToString();
+        txt_damage_healed.text = "Damage healed: " + damage_healed.ToString();
+        txt_damage_recieved.text = "Damage recieved: " + damage_recieved.ToString();
+
+        txt_enemies_killed.text = "Enemies killed: " + enemies_killed.ToString();
+
+        txt_total_score_points.text = "Score: " + ScoreManager.instance.score.ToString();
+        txt_converted_score_points.text = "Skill points: " + (ScoreManager.instance.score / 100).ToString();
+
+        stats_resume_holder.SetActive(true);
+
+        ScoreManager.instance.score += ScoreManager.instance.score / 100;
+
+        SaveGame();
     }
 }

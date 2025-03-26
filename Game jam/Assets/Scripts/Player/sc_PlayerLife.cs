@@ -42,14 +42,14 @@ public class PlayerLife : MonoBehaviour
 
         if (pd != null )
         {
-            max_hp = 100;
+            max_hp = pd.hp;
             ReturnScript.instance.damage = pd.damage;
             ReturnScript.instance.explosion_range = pd.explosion_range;
             PlayerMovement.instance.speed = pd.speed;
             PlayerMovement.instance.max_stamina = pd.stamina;
         }
 
-        hp = 100;
+        hp = max_hp;
     }
 
     void Update()
@@ -84,6 +84,11 @@ public class PlayerLife : MonoBehaviour
             hp = max_hp;
             return; /// No hará más comprobaciones si no puede ganar más vida
         }
+        // Guarda estadísticas de daño
+        if (value < 0)
+            GameManager.gm.damage_recieved += value;
+        else
+            GameManager.gm.damage_healed += value;
 
         curr_color.r += value * 0.025f;
         curr_color.g -= value * 0.025f;
