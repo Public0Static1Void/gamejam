@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class AbilitiesSystem : MonoBehaviour
@@ -28,6 +30,9 @@ public class AbilitiesSystem : MonoBehaviour
     private List<Image> slots_images;
     public List<TMP_Text> slots_texts;
     private List<Button> slots_buttons;
+
+    public Image im_description;
+    public TMP_Text txt_description;
 
     [Header("Abilities Methods")]
     public List<UnityEvent> methods_abilities;
@@ -107,7 +112,7 @@ public class AbilitiesSystem : MonoBehaviour
 
         ab.name = "Stomp";
         ab.description = "[ON GROUND] Jump to immediately stomp the ground with your body and launch the enemies on the air" +
-                         "[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
+                         "\n[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
         ab.icon = sprite_stomp;
         ab.rarity = AbilityType.BASIC;
 
@@ -228,6 +233,102 @@ public class AbilitiesSystem : MonoBehaviour
                     CloseGamblingMenu();
                     slots_buttons[ab_num].onClick.RemoveAllListeners();
                 });
+
+
+                EventTrigger bt_events;
+
+                if (slots_buttons[i].gameObject.TryGetComponent<EventTrigger>(out bt_events))
+                {
+                    // Todo ok
+                }
+                else
+                {
+                    bt_events = slots_buttons[i].gameObject.AddComponent<EventTrigger>();
+                }
+
+                // Configura el tipo de evento para entrada del ratón
+                EventTrigger.Entry entry = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerEnter
+                };
+
+                entry.callback.AddListener((data) =>
+                {
+                    txt_description.text = abilities_to_show[ab_num].description;
+
+                    RectTransform rect = slots_buttons[ab_num].gameObject.GetComponent<RectTransform>();
+                    txt_description.rectTransform.anchoredPosition = rect.anchoredPosition;
+                    txt_description.rectTransform.sizeDelta = new Vector2(txt_description.rectTransform.sizeDelta.x, txt_description.preferredHeight);
+                    txt_description.rectTransform.position = new Vector2(Input.mousePosition.x + txt_description.rectTransform.sizeDelta.x * 0.75f,
+                                                                         Input.mousePosition.y + txt_description.rectTransform.sizeDelta.y * 0.75f);
+
+                    RectTransform txt_rect = txt_description.rectTransform;
+
+                    im_description.rectTransform.anchoredPosition = txt_description.rectTransform.anchoredPosition;
+                    im_description.rectTransform.sizeDelta = txt_description.rectTransform.sizeDelta * 1.25f;
+
+                    txt_description.gameObject.SetActive(true);
+                    im_description.gameObject.SetActive(true);
+                });
+
+                bt_events.triggers.Add(entry);
+                
+                // Configura el evento de selección para mando
+                entry = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.Select
+                };
+
+                entry.callback.AddListener((data) =>
+                {
+                    txt_description.text = abilities_to_show[ab_num].description;
+
+                    RectTransform rect = slots_buttons[ab_num].gameObject.GetComponent<RectTransform>();
+                    txt_description.rectTransform.anchoredPosition = rect.anchoredPosition;
+                    txt_description.rectTransform.position = new Vector2(rect.position.x, rect.position.y + rect.rect.height);
+                    txt_description.rectTransform.sizeDelta = new Vector2(txt_description.rectTransform.sizeDelta.x, txt_description.preferredHeight);
+
+                    RectTransform txt_rect = txt_description.rectTransform;
+
+                    im_description.rectTransform.anchoredPosition = txt_description.rectTransform.anchoredPosition;
+                    im_description.rectTransform.sizeDelta = txt_description.rectTransform.sizeDelta * 1.25f;
+
+                    txt_description.gameObject.SetActive(true);
+                    im_description.gameObject.SetActive(true);
+                });
+
+                bt_events.triggers.Add(entry);
+                
+                // Configura el evento de salida del ratón
+                entry = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerExit
+                };
+
+                entry.callback.AddListener((data) =>
+                {
+                    txt_description.gameObject.SetActive(false);
+                    im_description.gameObject.SetActive(false);
+                });
+
+                bt_events.triggers.Add(entry);
+                
+                // Configura el evento de deselección
+                entry = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.Deselect
+                };
+
+                entry.callback.AddListener((data) =>
+                {
+                    txt_description.gameObject.SetActive(false);
+                    im_description.gameObject.SetActive(false);
+                });
+
+                bt_events.triggers.Add(entry);
+
+
+
 
                 slots_images[i].sprite = abilities_to_show[i].icon;
                 slots_texts[i].text = abilities_to_show[i].name;

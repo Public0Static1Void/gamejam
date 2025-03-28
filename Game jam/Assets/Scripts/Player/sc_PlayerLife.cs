@@ -85,7 +85,7 @@ public class PlayerLife : MonoBehaviour
         }
         // Guarda estadísticas de daño
         if (value < 0)
-            GameManager.gm. damage_healed += value;
+            GameManager.gm.damage_healed -= value;
         else
             GameManager.gm.damage_recieved += value;
 

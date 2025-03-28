@@ -86,7 +86,7 @@ public class Rounds : MonoBehaviour
             GameObject enemy_inst = Instantiate(enemy, SpawnPoint[randSpawn].position, transform.rotation);
             if (round > 0)
                 enemy_hp *= 1.5f;
-            enemy_inst.GetComponent<EnemyLife>().hp = (int)enemy_hp;
+            enemy_inst.transform.GetChild(0).GetComponent<EnemyLife>().hp = (int)enemy_hp;
             enemies.Add(enemy_inst);
             yield return new WaitForSeconds(0.5f);
         }

@@ -45,11 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4133d16a20f3faa40ba3a3798d8de1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 30
   detection_range: 1.5
   layer_enemy:
     serializedVersion: 2
     m_Bits: 64
+  layer_player:
+    serializedVersion: 2
+    m_Bits: 8
   target_hooked: {fileID: 0}
   enemy_hooked: 0
   launch_player: 0
@@ -123,6 +126,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: e4ef9422e83b6194ab7948499e8cf7ad, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e1f39b6d85fdfbb4eacf446760e93dab, type: 2}
     - target: {fileID: 919132149155446097, guid: e4ef9422e83b6194ab7948499e8cf7ad, type: 3}
       propertyPath: m_Name
       value: cadena(1)

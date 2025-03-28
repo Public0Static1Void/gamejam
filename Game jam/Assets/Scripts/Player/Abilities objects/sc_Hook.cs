@@ -10,7 +10,7 @@ public class Hook : MonoBehaviour
 
 
     [Header("References")]
-    public LayerMask layer_enemy;
+    public LayerMask layer_enemy, layer_player;
 
     private GameObject player;
     private Vector3 launch_point;
@@ -35,19 +35,29 @@ public class Hook : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip clip_chainmoving, clip_chainpulled;
 
+    public Animator anim;
+
+    private PlayerLife playerLife;
+
     private void Start()
     {
         player = ReturnScript.instance.gameObject;
         abs = ReturnScript.instance.GetComponent<sc_Abilities>();
         ob_renderer = transform.GetChild(0).GetComponent<MeshRenderer>();
         ob_renderer.enabled = false;
+
+        Debug.Log("Remember to put the left hand of the player as the second child");
+        anim = ReturnScript.instance.transform.GetChild(1).GetComponent<Animator>();
+
+        playerLife = ReturnScript.instance.gameObject.GetComponent<PlayerLife>();
     }
+
     // Se configuran las variables del hook para posteriormente lanzarse
     public void Launch()
     {
         transform.parent = null;
 
-        transform.position = player.transform.position + player.transform.right;
+        transform.position = player.transform.position - player.transform.right;
         if (PlayerMovement.instance.onGround)
             transform.rotation = player.transform.rotation;
         else
@@ -70,6 +80,8 @@ public class Hook : MonoBehaviour
 
         audioSource = SoundManager.instance.InstantiateSound(clip_chainmoving, transform.position);
         audioSource.loop = true;
+
+        anim.SetBool("Launch", true);
     }
 
     void Update()
@@ -123,7 +135,7 @@ public class Hook : MonoBehaviour
         }
         else
         {
-            transform.Translate(transform.forward * speed * Time.deltaTime, Space.World);
+            transform.Translate(((transform.forward * speed) + (-Vector3.up)) * Time.deltaTime, Space.World);
             // Si no ha enganchado nada por x metros vuelve
             if (Vector3.Distance(transform.position, launch_point) > 15) enemy_hooked = true;
         }
@@ -141,9 +153,21 @@ public class Hook : MonoBehaviour
             enemyFollow.rb.useGravity = false;
             enemyFollow.agent.enabled = false;
 
-            transform.position = target_hooked.transform.position;
-
+            transform.position = target_hooked.transform.position + (target_hooked.transform.right / (target_hooked.transform.localScale.x * 2));
             enemyFollow.transform.SetParent(transform);
+        }
+
+        colls = Physics.OverlapSphere(transform.position, 0.15f);
+        if (colls.Length > 0)
+        {
+            foreach (Collider coll in colls)
+            {
+                if (coll.gameObject.layer != layer_player)
+                {
+                    enemy_hooked = true;
+                    break;
+                }
+            }
         }
     }
 
@@ -160,8 +184,8 @@ public class Hook : MonoBehaviour
 
     void PullHook()
     {
-        transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * (speed * 0.5f));
-        if (Vector3.Distance(transform.position, player.transform.position) < 3f)
+        transform.position = Vector3.Lerp(transform.position, player.transform.position, Time.deltaTime * (speed * 0.25f));
+        if (Vector3.Distance(transform.position, player.transform.position - player.transform.right) < detection_range * 2)
         {
             HideHook();
         }
@@ -172,6 +196,11 @@ public class Hook : MonoBehaviour
         abs.active_hook = false;
         launched = false;
         ob_renderer.enabled = false;
+
+        // El jugador tiene una ventana de tiempo para atacar sin hacerse daño
+        playerLife.Invulnerable();
+
+        anim.SetBool("Launch", false);
 
         if (enemyFollow != null)
         {

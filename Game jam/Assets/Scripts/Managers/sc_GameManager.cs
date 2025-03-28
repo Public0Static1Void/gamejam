@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     public List<TMP_Text> screen_texts;
 
-    public Button btn_resume;
+    public Button btn_resume, btn_continue;
 
     public GameObject stats_resume_holder;
 
@@ -46,9 +46,14 @@ public class GameManager : MonoBehaviour
     public int damage_done = 0;
     public int damage_recieved = 0;
     public int damage_healed = 0;
-    private float score_points_converted = 0;
+
+
 
     public SaveManager saveManager;
+
+    public PlayerInput playerInput;
+
+    public string controller_name;
 
     void Awake()
     {
@@ -90,8 +95,26 @@ public class GameManager : MonoBehaviour
             message_text.color = new Color(col.r, col.g, col.b, alpha);
         }
     }
+
+    public string GetCurrentControllerName()
+    {
+        string name = "Keyboard";
+        if (playerInput.currentControlScheme == "Gamepad")
+        {
+            if (Gamepad.current != null)
+            {
+                name = Gamepad.current.displayName;
+            }
+        }
+
+        return name;
+    }
+
     public void ShakeController(float time, float low_frequency, float high_frequency)
     {
+        // Solo vibrará el mando cuando se esté usando
+        if (GetCurrentControllerName() == "Keyboard") return;
+
         StartCoroutine(ControllerShake(time, low_frequency, high_frequency));
     }
     private IEnumerator ControllerShake(float time, float low_frequency, float high_frequency)
@@ -284,6 +307,8 @@ public class GameManager : MonoBehaviour
     {
         // Mostrar UI con resumen de estadísticas de la partida
         StartCoroutine(EndGameCoroutine());
+
+        SelectUIButton(btn_continue);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

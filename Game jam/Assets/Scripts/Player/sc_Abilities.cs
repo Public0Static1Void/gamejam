@@ -114,7 +114,7 @@ public class sc_Abilities : MonoBehaviour
 
                 Vector3 dir = ReturnScript.instance.transform.position - enemy_targets[i].transform.position;
                 dir = new Vector3(dir.x, dir.y + enemies_mov[i].rb.velocity.y, dir.z);
-                enemies_mov[i].AddForceToEnemy(dir.normalized * Mathf.Clamp((enemy_targets.Count * 0.5f), 0.5f, 5));
+                enemies_mov[i].AddForceToEnemy(dir.normalized * Mathf.Clamp(enemy_targets.Count, 1, 8));
             }
 
             yield return null;
