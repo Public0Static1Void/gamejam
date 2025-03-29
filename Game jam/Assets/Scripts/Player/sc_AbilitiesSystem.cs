@@ -16,6 +16,8 @@ public class AbilitiesSystem : MonoBehaviour
     private List<Ability> abilities_equipped = new List<Ability>();
     List<int> rand_abilities_index = new List<int>();
 
+    public bool gambling_open = false;
+
     public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, LAST_NO_USE }
     public enum AbilityType { BASIC, ULTIMATE, LAST_NO_USE }
 
@@ -91,7 +93,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab = new Ability();
 
         ab.name = "Path mine";
-        ab.description = "When you finish your return in time, mines will automatically plant on the path you made. Mines will explode when an enemy enters its range.";
+        ab.description = "Place a mine per second when you are returning. Mines explode when in contact with an enemy.";
         ab.icon = sprite_mine;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -101,7 +103,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab = new Ability();
 
         ab.name = "Hook";
-        ab.description = "Launch a hook forward and catch the first enemy hit and pulling it towards you. If you press the ability again, you are pulled to the enemy instead.";
+        ab.description = "Launch a hook forward and catch the first enemy hit, pulling it towards you after a short delay. If you press the ability again, you jump to the enemy instead.";
         ab.icon = sprite_hook;
         ab.rarity = AbilityType.BASIC;
 
@@ -112,7 +114,7 @@ public class AbilitiesSystem : MonoBehaviour
 
         ab.name = "Stomp";
         ab.description = "[ON GROUND] Jump to immediately stomp the ground with your body and launch the enemies on the air" +
-                         "\n[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
+                         "[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
         ab.icon = sprite_stomp;
         ab.rarity = AbilityType.BASIC;
 
@@ -163,6 +165,8 @@ public class AbilitiesSystem : MonoBehaviour
     {
         // If the player already has all abilities, return
         if (abilities_equipped.Count >= abilities.Count) return;
+
+        gambling_open = true;
 
         Time.timeScale = 0;
 
@@ -347,7 +351,7 @@ public class AbilitiesSystem : MonoBehaviour
             txt_description.rectTransform.position = new Vector2(Input.mousePosition.x + txt_description.rectTransform.sizeDelta.x * 0.7f,
                                                                  Input.mousePosition.y + txt_description.rectTransform.sizeDelta.y * 0.7f);
 
-            im_description.rectTransform.sizeDelta = txt_description.rectTransform.sizeDelta * 1.25f;
+            im_description.rectTransform.sizeDelta = txt_description.rectTransform.sizeDelta * 1.1f;
 
             txt_description.rectTransform.position = new Vector2(Mathf.Clamp(txt_description.rectTransform.position.x, 0, resolution.x - (im_description.rectTransform.sizeDelta.x / 2)),
                                                                  Mathf.Clamp(txt_description.rectTransform.position.y, 0, resolution.y - (im_description.rectTransform.sizeDelta.y / 2)));
@@ -360,6 +364,8 @@ public class AbilitiesSystem : MonoBehaviour
 
     public void CloseGamblingMenu()
     {
+        gambling_open = false;
+
         ob_gamblingparent.SetActive(false);
 
         txt_description.gameObject.SetActive(false);

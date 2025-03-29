@@ -71,18 +71,21 @@ public class PlayerLife : MonoBehaviour
 
     public void Damage(int value)
     {
-        /// Barra de vida
-        life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
-
-        if (ReturnScript.instance.returning || PlayerMovement.instance.slide)
+        if ((ReturnScript.instance.returning && value > 0) || PlayerMovement.instance.slide)
             return;
 
+        Debug.Log("Before: " + hp);
         hp -= value;
+        Debug.Log("After: " + hp);
         if (hp > max_hp)
         {
             hp = max_hp;
             return; /// No hará más comprobaciones si no puede ganar más vida
         }
+
+        /// Barra de vida
+        life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
+
         // Guarda estadísticas de daño
         if (value < 0)
             GameManager.gm.damage_healed -= value;
@@ -112,7 +115,7 @@ public class PlayerLife : MonoBehaviour
     {
         if (coll.transform.tag == "Enemy" && !damaged)
         {
-            Damage(1);
+            Damage(2);
             damaged = true;
         }
     }

@@ -16,6 +16,9 @@ public class ReturnScript : MonoBehaviour
     public int damage;
     public float cooldown_time;
 
+    private bool healed = false;
+    private float heal_timer = 0;
+
     [Header("References")]
     public LayerMask enemyMask;
     public UnityEvent ability;
@@ -179,6 +182,16 @@ public class ReturnScript : MonoBehaviour
                 timer += Time.deltaTime;
             }
         }
+
+        if (healed)
+        {
+            heal_timer += Time.deltaTime;
+            if (heal_timer > 0.1f)
+            {
+                heal_timer = 0;
+                healed = false;
+            }
+        }
     }
 
     public void DamageToEnemies(Vector3 origin, int damage_amount, float range, Vector3 dir = new Vector3())
@@ -192,14 +205,17 @@ public class ReturnScript : MonoBehaviour
                 dir += d;
                 coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f));
                 coll.GetComponent<EnemyLife>().Damage(damage_amount);
-                playerLife.Damage(-1);
+                if (!healed)
+                {
+                    playerLife.Damage(-1);
+                }
             }
         }
     }
 
     public void ReturnToLastPosition(InputAction.CallbackContext con)
     {
-        if (con.performed) // Se ha pulsado espacio y no está en cooldown
+        if (con.performed && !AbilitiesSystem.instance.gambling_open) // Se ha pulsado espacio y no está abierto el panel de gambling
         {
             if (!cooldown && !returning)
             {

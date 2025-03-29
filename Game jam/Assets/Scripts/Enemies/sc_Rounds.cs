@@ -36,16 +36,16 @@ public class Rounds : MonoBehaviour
     void Update()
     {
         if (enemies.Count == 0 && !spawning)
-        {
-            StartCoroutine(SpawnLine());
+        { 
             onRound = true;
             enemyRound *= 1.5f;
+            StartCoroutine(SpawnLine());
         }
 
         if (onRound && !spawning)
         {
             timer += Time.deltaTime;
-            if (timer > 30)
+            if (timer > Mathf.Clamp(30 - round, 10, 30))
             {
                 StartCoroutine(SpawnLine());
                 timer = 0;
@@ -85,8 +85,8 @@ public class Rounds : MonoBehaviour
             }
             GameObject enemy_inst = Instantiate(enemy, SpawnPoint[randSpawn].position, transform.rotation);
             if (round > 0)
-                enemy_hp *= 1.5f;
-            enemy_inst.transform.GetChild(0).GetComponent<EnemyLife>().hp = (int)enemy_hp;
+                enemy_hp *= 1.25f;
+            enemy_inst.transform.GetChild(0).GetComponent<EnemyLife>().max_hp = (int)enemy_hp;
             enemies.Add(enemy_inst);
             yield return new WaitForSeconds(0.5f);
         }
