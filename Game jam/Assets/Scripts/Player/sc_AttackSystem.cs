@@ -88,4 +88,20 @@ public class AttackSystem : MonoBehaviour
             ChangeAttack();
         }
     }
+
+    public void AddAttack(Ability ability)
+    {
+        // A partir de 2 habilidades añadidas,
+        if (equipped_attacks.Count < 2)
+        {
+            equipped_attacks.Add(ability);
+        }
+        else
+        {
+            equipped_attacks[1] = equipped_attacks[0];
+            equipped_attacks[0] = ability;
+        }
+
+        UpdateUI();
+    }
 }

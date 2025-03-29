@@ -224,8 +224,7 @@ public class AbilitiesSystem : MonoBehaviour
 
 
                         case AbilityType.BASIC: // habilidades melee
-                            AttackSystem.instance.equipped_attacks.Add(abilities_to_show[ab_num]);
-                            AttackSystem.instance.UpdateUI();
+                            AttackSystem.instance.AddAttack(abilities_to_show[ab_num]);
                             break;
                     }
 

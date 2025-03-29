@@ -27,6 +27,7 @@ public class Rounds : MonoBehaviour
 
     [Header("Sounds")]
     public AudioClip clip_roundstart;
+
     void Start()
     {
         if (instance == null) instance = this;
@@ -75,7 +76,7 @@ public class Rounds : MonoBehaviour
                 randSpawn = Random.Range(0, SpawnPoint.Length);
             }
             int rand_enemy = Random.Range(0, round);
-            if (round > 10) /// Hasta la ronda 10 no podrá aparecer el boss
+            if (round > 5) /// Hasta la ronda 5 no podrá aparecer el boss
             {
                 enemy = enemy_list[rand_enemy];
             }
