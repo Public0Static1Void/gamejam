@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: dogicapixel_TMP
+  m_Name: ft_dogicapixel_TMP
   m_EditorClassIdentifier: 
   hashCode: -1895229223
   material: {fileID: 1938271904999458537}
