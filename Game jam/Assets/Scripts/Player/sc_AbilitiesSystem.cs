@@ -256,19 +256,7 @@ public class AbilitiesSystem : MonoBehaviour
                 {
                     txt_description.text = abilities_to_show[ab_num].description;
 
-                    RectTransform rect = slots_buttons[ab_num].gameObject.GetComponent<RectTransform>();
-                    txt_description.rectTransform.anchoredPosition = rect.anchoredPosition;
-                    txt_description.rectTransform.sizeDelta = new Vector2(txt_description.rectTransform.sizeDelta.x, txt_description.preferredHeight);
-                    txt_description.rectTransform.position = new Vector2(Input.mousePosition.x + txt_description.rectTransform.sizeDelta.x * 0.75f,
-                                                                         Input.mousePosition.y + txt_description.rectTransform.sizeDelta.y * 0.75f);
-
-                    RectTransform txt_rect = txt_description.rectTransform;
-
-                    im_description.rectTransform.anchoredPosition = txt_description.rectTransform.anchoredPosition;
-                    im_description.rectTransform.sizeDelta = txt_description.rectTransform.sizeDelta * 1.25f;
-
-                    txt_description.gameObject.SetActive(true);
-                    im_description.gameObject.SetActive(true);
+                    StartCoroutine(MoveDescriptionUIToCursor(ab_num));
                 });
 
                 bt_events.triggers.Add(entry);
@@ -287,8 +275,6 @@ public class AbilitiesSystem : MonoBehaviour
                     txt_description.rectTransform.anchoredPosition = rect.anchoredPosition;
                     txt_description.rectTransform.position = new Vector2(rect.position.x, rect.position.y + rect.rect.height);
                     txt_description.rectTransform.sizeDelta = new Vector2(txt_description.rectTransform.sizeDelta.x, txt_description.preferredHeight);
-
-                    RectTransform txt_rect = txt_description.rectTransform;
 
                     im_description.rectTransform.anchoredPosition = txt_description.rectTransform.anchoredPosition;
                     im_description.rectTransform.sizeDelta = txt_description.rectTransform.sizeDelta * 1.25f;
@@ -309,6 +295,8 @@ public class AbilitiesSystem : MonoBehaviour
                 {
                     txt_description.gameObject.SetActive(false);
                     im_description.gameObject.SetActive(false);
+
+                    StopAllCoroutines();
                 });
 
                 bt_events.triggers.Add(entry);
@@ -340,9 +328,43 @@ public class AbilitiesSystem : MonoBehaviour
         Cursor.visible = true;
     }
 
+    IEnumerator MoveDescriptionUIToCursor(int ab_num)
+    {
+        txt_description.gameObject.SetActive(true);
+        im_description.gameObject.SetActive(true);
+
+        Vector2 resolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
+
+        while (true)
+        {
+
+            RectTransform rect = slots_buttons[ab_num].gameObject.GetComponent<RectTransform>();
+
+
+            txt_description.rectTransform.anchoredPosition = rect.anchoredPosition;
+            txt_description.rectTransform.sizeDelta = new Vector2(txt_description.rectTransform.sizeDelta.x, txt_description.preferredHeight);
+
+            txt_description.rectTransform.position = new Vector2(Input.mousePosition.x + txt_description.rectTransform.sizeDelta.x * 0.7f,
+                                                                 Input.mousePosition.y + txt_description.rectTransform.sizeDelta.y * 0.7f);
+
+            im_description.rectTransform.sizeDelta = txt_description.rectTransform.sizeDelta * 1.25f;
+
+            txt_description.rectTransform.position = new Vector2(Mathf.Clamp(txt_description.rectTransform.position.x, 0, resolution.x - (im_description.rectTransform.sizeDelta.x / 2)),
+                                                                 Mathf.Clamp(txt_description.rectTransform.position.y, 0, resolution.y - (im_description.rectTransform.sizeDelta.y / 2)));
+
+            im_description.rectTransform.anchoredPosition = txt_description.rectTransform.anchoredPosition;
+
+            yield return null;
+        }
+    }
+
     public void CloseGamblingMenu()
     {
         ob_gamblingparent.SetActive(false);
+
+        txt_description.gameObject.SetActive(false);
+        im_description.gameObject.SetActive(false);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Time.timeScale = 1;

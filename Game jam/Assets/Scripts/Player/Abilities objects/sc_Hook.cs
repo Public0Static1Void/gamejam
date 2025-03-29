@@ -39,6 +39,8 @@ public class Hook : MonoBehaviour
 
     private PlayerLife playerLife;
 
+    float gravity_timer = 0;
+
     private void Start()
     {
         player = ReturnScript.instance.gameObject;
@@ -68,6 +70,8 @@ public class Hook : MonoBehaviour
         ob_renderer.enabled = true;
 
         timer = 0;
+        gravity_timer = 0;
+
         enemy_hooked = false;
         added_force_to_player = false;
         launched = true;
@@ -135,7 +139,8 @@ public class Hook : MonoBehaviour
         }
         else
         {
-            transform.Translate(((transform.forward * speed) + (-Vector3.up)) * Time.deltaTime, Space.World);
+            gravity_timer += Time.deltaTime;
+            transform.Translate(((transform.forward * speed) + (-Vector3.up * (0.5f + gravity_timer))) * Time.deltaTime, Space.World);
             // Si no ha enganchado nada por x metros vuelve
             if (Vector3.Distance(transform.position, launch_point) > 15) enemy_hooked = true;
         }
