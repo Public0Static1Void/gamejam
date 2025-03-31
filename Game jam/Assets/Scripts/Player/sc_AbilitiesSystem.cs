@@ -164,7 +164,7 @@ public class AbilitiesSystem : MonoBehaviour
     public void GetRandomAbilities()
     {
         // If the player already has all abilities, return
-        if (abilities_equipped.Count >= abilities.Count) return;
+        if (abilities.Count <= 0) return;
 
         gambling_open = true;
 
@@ -178,7 +178,7 @@ public class AbilitiesSystem : MonoBehaviour
         rand_abilities_index.Clear();
         HashSet<int> usedIndexes = new HashSet<int>();
 
-        int max_attempts = abilities.Count * 10; // Prevent infinite loops
+        int max_attempts = abilities.Count * 10;
         int attempts = 0;
         int foundAbilities = 0;
 
@@ -187,15 +187,25 @@ public class AbilitiesSystem : MonoBehaviour
             int rand = Random.Range(0, abilities.Count);
             attempts++;
 
-            // Skip abilities already equipped or already chosen in this selection
             if (usedIndexes.Contains(rand) || abilities_equipped.Exists(a => a.id == abilities[rand].id))
                 continue;
 
-            // Assign ability and mark it as used
+            // Marca la habilidad como usada
             abilities_to_show[foundAbilities] = abilities[rand];
             usedIndexes.Add(rand);
             rand_abilities_index.Add(abilities[rand].id);
             foundAbilities++;
+        }
+
+        for (int i = 0; i < ability_count; i++)
+        {
+            for (int j = 0; j < abilities_equipped.Count; j++)
+            {
+                if (abilities_to_show[i] == null || abilities_to_show[i].id == abilities_equipped[j].id)
+                {
+                    abilities_to_show[i] = abilities[Random.Range(0, abilities.Count)];
+                }
+            }
         }
 
         // Assign the selected abilities to UI elements
@@ -232,6 +242,8 @@ public class AbilitiesSystem : MonoBehaviour
                     Debug.Log("Ability selected: " + abilities_to_show[ab_num].name);
 
                     abilities_equipped.Add(abilities_to_show[ab_num]);
+
+                    abilities.Remove(abilities_to_show[ab_num]);
 
                     CloseGamblingMenu();
                     slots_buttons[ab_num].onClick.RemoveAllListeners();

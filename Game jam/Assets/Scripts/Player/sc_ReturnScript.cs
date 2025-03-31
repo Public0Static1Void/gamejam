@@ -225,6 +225,8 @@ public class ReturnScript : MonoBehaviour
                 PlayerMovement.instance.canMove = false; /// Evita que el jugador pueda moverse mientras vuelve
                 current_point = past_positions.Count - 1;
 
+                StartCoroutine(HideObjectsOnView());
+
                 SoundManager.instance.PlaySound(return_clip);
 
                 if (ability != null) /// Ejecuta la habilidad del player
@@ -267,6 +269,36 @@ public class ReturnScript : MonoBehaviour
         past_rotations.Add(new Vector2(cameraRotation.x, cameraRotation.y));
         q_rotations.Add(transform.rotation);
     }
+
+
+    private IEnumerator HideObjectsOnView()
+    {
+        List<MeshRenderer> meshes_to_hide = new List<MeshRenderer>();
+        List<float> alpha = new List<float>();
+        while (returning)
+        {
+            if (Physics.Raycast(Camera.main.transform.position, transform.position, out RaycastHit hit))
+            {
+                if (meshes_to_hide.Count == 0)
+                {
+                    meshes_to_hide.Add(hit.transform.gameObject.GetComponent<MeshRenderer>());
+                    alpha.Add(0);
+                }
+                for (int i = 0; i < meshes_to_hide.Count; i++)
+                {
+                    if (alpha[i] > 0)
+                    {
+                        Color col = meshes_to_hide[i].materials[0].color;
+                        alpha[i] -= Time.deltaTime;
+                        meshes_to_hide[i].materials[0].color = new Color(col.r, col.g, col.b, alpha[i]);
+                    }
+                }
+            }
+
+            yield return null;
+        }
+    }
+
 
     public void RandomUpgrade()
     {
