@@ -180,6 +180,7 @@ public class sc_Abilities : MonoBehaviour
         }
     }
 
+    #region Stomp
     // Stomp on ground
     public void StompOnGround()
     {
@@ -195,6 +196,7 @@ public class sc_Abilities : MonoBehaviour
         if (PlayerMovement.instance.onGround)
         {
             PlayerMovement.instance.rb.velocity = Vector3.up * force;
+            PlayerMovement.instance.rb.useGravity = true;
             SoundManager.instance.InstantiateSound(levitate_player, transform.position);
 
             // Espera a que el jugador deje de subir
@@ -220,11 +222,11 @@ public class sc_Abilities : MonoBehaviour
         Collider[] colls = Physics.OverlapSphere(transform.position, 5, layer_enemy);
         foreach (Collider coll in colls)
         {
-            Debug.Log("Dist: " + hit.distance);
-            coll.GetComponent<EnemyFollow>().AddForceToEnemy(Vector3.up * ((force + hit.distance) * 0.5f));
-            //coll.GetComponent<EnemyLife>().Damage((int)((force * 0.25f) + hit.distance));
+            coll.GetComponent<EnemyFollow>().AddForceToEnemy(Vector3.up * ((force + hit.distance * 1.5f) * 0.5f));
+            coll.GetComponent<EnemyLife>().Damage((int)((hit.distance) * 0.25f));
         }
     }
+    #endregion
 
     private void OnTriggerEnter(Collider other)
     {

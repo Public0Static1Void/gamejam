@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
     public string GetCurrentControllerName()
     {
         string name = "Keyboard";
-        if (playerInput.currentControlScheme == "Gamepad")
+        if (playerInput != null && playerInput.currentControlScheme == "Gamepad")
         {
             if (Gamepad.current != null)
             {
@@ -292,7 +292,7 @@ public class GameManager : MonoBehaviour
         playerData.damage = ReturnScript.instance.damage;
         playerData.explosion_range = ReturnScript.instance.damage;
         playerData.hp = ReturnScript.instance.GetComponent<PlayerLife>().max_hp;
-        playerData.score = ScoreManager.instance.score;
+        playerData.score += ScoreManager.instance.score;
 
         saveManager.SaveGame(playerData);
     }

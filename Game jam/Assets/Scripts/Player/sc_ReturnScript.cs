@@ -275,27 +275,76 @@ public class ReturnScript : MonoBehaviour
     {
         List<MeshRenderer> meshes_to_hide = new List<MeshRenderer>();
         List<float> alpha = new List<float>();
+
         while (returning)
         {
-            if (Physics.Raycast(Camera.main.transform.position, transform.position, out RaycastHit hit))
+            Vector3 dir = (transform.position - Camera.main.transform.position).normalized;
+
+            if (Physics.Raycast(Camera.main.transform.position, dir, out RaycastHit hit, Vector3.Distance(Camera.main.transform.position, transform.position)))
             {
-                if (meshes_to_hide.Count == 0)
+                MeshRenderer renderer = hit.transform.GetComponent<MeshRenderer>();
+                if (renderer != null && !meshes_to_hide.Contains(renderer) && hit.transform.name != "Player")
                 {
-                    meshes_to_hide.Add(hit.transform.gameObject.GetComponent<MeshRenderer>());
-                    alpha.Add(0);
+                    meshes_to_hide.Add(renderer);
+                    alpha.Add(1);
+
+                    // Pone el material como transparente
+                    foreach (Material mat in renderer.materials)
+                    {
+                        mat.SetFloat("_Mode", 3);
+                        mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                        mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                        mat.SetInt("_ZWrite", 0);
+                        mat.DisableKeyword("_ALPHATEST_ON");
+                        mat.EnableKeyword("_ALPHABLEND_ON");
+                        mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                        mat.renderQueue = 3000;
+                    }
                 }
+
                 for (int i = 0; i < meshes_to_hide.Count; i++)
                 {
                     if (alpha[i] > 0)
                     {
-                        Color col = meshes_to_hide[i].materials[0].color;
-                        alpha[i] -= Time.deltaTime;
-                        meshes_to_hide[i].materials[0].color = new Color(col.r, col.g, col.b, alpha[i]);
+                        foreach (Material mat in meshes_to_hide[i].materials)
+                        {
+                            Color col = mat.color;
+                            alpha[i] -= Time.deltaTime;
+                            mat.color = new Color(col.r, col.g, col.b, alpha[i]);
+                        }
                     }
                 }
             }
 
             yield return null;
+        }
+
+
+
+        for (int i = 0; i < meshes_to_hide.Count; i++)
+        {
+            foreach (Material mat in meshes_to_hide[i].materials)
+            {
+                while (alpha[i] < 1)
+                {
+                    Color col = mat.color;
+                    alpha[i] += Time.deltaTime; // Gradually increase transparency
+                    alpha[i] = Mathf.Clamp01(alpha[i]); // Prevent alpha from exceeding 1
+                    mat.color = new Color(col.r, col.g, col.b, alpha[i]); // Restore transparency
+                    yield return null;
+                }
+                    
+
+                // Restore material to Opaque mode
+                mat.SetFloat("_Mode", 0); // Opaque
+                mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+                mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+                mat.SetInt("_ZWrite", 1);
+                mat.DisableKeyword("_ALPHATEST_ON");
+                mat.DisableKeyword("_ALPHABLEND_ON");
+                mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                mat.renderQueue = -1; // Default render queue for opaque objects
+            }
         }
     }
 
