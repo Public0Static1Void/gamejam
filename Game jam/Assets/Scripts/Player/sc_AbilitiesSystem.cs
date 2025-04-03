@@ -18,8 +18,8 @@ public class AbilitiesSystem : MonoBehaviour
 
     public bool gambling_open = false;
 
-    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, LAST_NO_USE }
-    public enum AbilityType { BASIC, ULTIMATE, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, LAST_NO_USE }
+    public enum AbilityType { BASIC, ULTIMATE, PASSIVE, LAST_NO_USE }
 
     [Header("References")]
     public GameObject ob_gamblingparent;
@@ -47,6 +47,8 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_mine;
     public Sprite sprite_hook;
     public Sprite sprite_stomp;
+    public Sprite sprite_byebye;
+    public Sprite sprite_bloodthirsty;
     void Awake()
     {
         if (instance == null)
@@ -93,7 +95,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab = new Ability();
 
         ab.name = "Path mine";
-        ab.description = "Place a mine per second when you are returning. Mines explode when in contact with an enemy.";
+        ab.description = $"Place a mine per second when you are returning. Mines explode dealing {ReturnScript.instance.damage * 2} when in contact with an enemy.";
         ab.icon = sprite_mine;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -117,6 +119,26 @@ public class AbilitiesSystem : MonoBehaviour
                          "[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
         ab.icon = sprite_stomp;
         ab.rarity = AbilityType.BASIC;
+
+        abilities.Add(ab);
+        
+        // Hit N' Byebye
+        ab = new Ability();
+
+        ab.name = "Hit N' Bye";
+        ab.description = $"[PASSIVE]\nWhen taking damage, You have a 1 on 3 chance of launching the enemy away, scaling the distance with your damage ({ReturnScript.instance.damage})";
+        ab.icon = sprite_byebye;
+        ab.rarity = AbilityType.PASSIVE;
+
+        abilities.Add(ab);
+        
+        // Bloodthirsty
+        ab = new Ability();
+
+        ab.name = "Bloodthirsty";
+        ab.description = $"[PASSIVE]\nWhen dealing damage, heal for 15% ({(ReturnScript.instance.damage * 0.15f).ToString("F2")}) of your damage";
+        ab.icon = sprite_bloodthirsty;
+        ab.rarity = AbilityType.PASSIVE;
 
         abilities.Add(ab);
 
@@ -156,6 +178,17 @@ public class AbilitiesSystem : MonoBehaviour
         {
             GetRandomAbilities();
         }
+    }
+
+    void AddAbilityIconOnUI(Ability ab)
+    {
+        GameObject ab_icon = new GameObject();
+        ab_icon.name = ab.name;
+
+        Image im = ab_icon.AddComponent<Image>();
+        im.sprite = ab.icon;
+
+        ab_icon.transform.SetParent(ob_abilities_ui_holder.transform);
     }
 
     /// <summary>
@@ -220,21 +253,22 @@ public class AbilitiesSystem : MonoBehaviour
                 {
                     switch (abilities_to_show[ab_num].rarity)
                     {
-                        case AbilityType.ULTIMATE: // habilidades activadas a lvolver en el tiempo
+                        case AbilityType.ULTIMATE: // habilidades activadas al volver en el tiempo
                             ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)abilities_to_show[ab_num].type].Invoke());
 
-                            GameObject ab_icon = new GameObject();
-                            ab_icon.name = abilities_to_show[ab_num].name;
-
-                            Image im = ab_icon.AddComponent<Image>();
-                            im.sprite = abilities_to_show[ab_num].icon;
-
-                            ab_icon.transform.SetParent(ob_abilities_ui_holder.transform);
+                            AddAbilityIconOnUI(abilities_to_show[ab_num]);
                             break;
 
 
                         case AbilityType.BASIC: // habilidades melee
                             AttackSystem.instance.AddAttack(abilities_to_show[ab_num]);
+                            break;
+
+                        case AbilityType.PASSIVE:
+                            // Inicializa la habilidad pasiva
+                            abilities_to_show[ab_num].ability_event.Invoke();
+
+                            AddAbilityIconOnUI(abilities_to_show[ab_num]);
                             break;
                     }
 

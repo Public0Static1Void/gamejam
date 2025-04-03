@@ -59,6 +59,12 @@ public class EnemyLife : MonoBehaviour
         StartCoroutine(ActivateKinematic());
     }
 
+    private void OnDestroy()
+    {
+        if (transform.parent != null)
+            Destroy(transform.parent.gameObject);
+    }
+
     private IEnumerator ActivateKinematic()
     {
         yield return new WaitForSeconds(1.5f);

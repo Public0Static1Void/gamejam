@@ -17,6 +17,7 @@ public class ReturnScript : MonoBehaviour
     public float cooldown_time;
 
     private bool healed = false;
+    public bool can_heal = false;
     private float heal_timer = 0;
 
     [Header("References")]
@@ -141,20 +142,6 @@ public class ReturnScript : MonoBehaviour
         }
         else /// Resto de comprobaciones en el update
         {
-            if (!PlayerMovement.instance.slide && !PlayerMovement.instance.sprinting)
-            {
-                // La cámara vuelve a su posición original
-                if (Vector3.Distance(Camera.main.transform.position, PlayerMovement.instance.camera_original_position) > 0.05f)
-                {
-                    //Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, transform.position + PlayerMovement.instance.camera_original_position, Time.deltaTime * 3);
-                }
-                /// Si el jugador se está deslizando no se fijará la posición de la cámara
-                else if (Camera.main.transform.position != PlayerMovement.instance.camera_original_position)
-                {
-                    //Camera.main.transform.position = PlayerMovement.instance.camera_original_position;
-                }
-            }
-
             if (cooldown) // Cuenta atrás del cooldown
             {
                 if (cooldown_timer == 0) ClearReturnLists(); /// Vacía la lista de posiciones
@@ -205,9 +192,10 @@ public class ReturnScript : MonoBehaviour
                 dir += d;
                 coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f));
                 coll.GetComponent<EnemyLife>().Damage(damage_amount);
-                if (!healed)
+                if (can_heal && !healed)
                 {
-                    playerLife.Damage(-1);
+                    playerLife.Damage((int)(-damage * 0.15f));
+                    healed = true;
                 }
             }
         }

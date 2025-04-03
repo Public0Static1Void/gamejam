@@ -74,9 +74,7 @@ public class PlayerLife : MonoBehaviour
         if ((ReturnScript.instance.returning && value > 0) || PlayerMovement.instance.slide)
             return;
 
-        Debug.Log("Before: " + hp);
         hp -= value;
-        Debug.Log("After: " + hp);
         if (hp > max_hp)
         {
             hp = max_hp;

@@ -14,6 +14,7 @@ public class CameraRotation : MonoBehaviour
     [SerializeField] private Transform player;
     [Header("Speed")]
     public float cameraSpeed;
+    public float camera_breath_force;
     [HideInInspector]
     public float cameraSpeed_slide;
     public float x, y;

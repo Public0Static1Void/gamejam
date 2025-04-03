@@ -13317,7 +13317,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 100}
+  m_SizeDelta: {x: 600, y: 302.764}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &574072335
 MonoBehaviour:
@@ -13328,7 +13328,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 574072333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -13336,15 +13336,13 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_ChildAlignment: 7
+  m_StartCorner: 2
+  m_StartAxis: 0
+  m_CellSize: {x: 100, y: 100}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 0
+  m_ConstraintCount: 2
 --- !u!1001 &574241116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37511,12 +37509,42 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1836626148}
+        m_TargetAssemblyTypeName: sc_Abilities, Assembly-CSharp
+        m_MethodName: HitNByeBye
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1836626148}
+        m_TargetAssemblyTypeName: sc_Abilities, Assembly-CSharp
+        m_MethodName: BloodThirsty
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   sprite_levitate: {fileID: 21300000, guid: a7113af17439c75428a03d7a0327be1a, type: 3}
   sprite_explodepath: {fileID: 21300000, guid: f30e172021665db4f898f96e4bc02865, type: 3}
   sprite_group: {fileID: 21300000, guid: 5d171dbf84860a349a35e08e1f4432b4, type: 3}
   sprite_mine: {fileID: 21300000, guid: 6daa2dde5d8f366459163b4f1225b786, type: 3}
   sprite_hook: {fileID: 21300000, guid: 10d7294b5bb2fca4b8928d4da0a875f8, type: 3}
   sprite_stomp: {fileID: 21300000, guid: 12d211f76c5b0af4c84adb6ae971a1b9, type: 3}
+  sprite_byebye: {fileID: 21300000, guid: 52ba33d67adfab74da0511b0bdf42959, type: 3}
+  sprite_bloodthirsty: {fileID: 21300000, guid: 9c9b5bf3b07ab4840b8e3ddbd8c279a8, type: 3}
 --- !u!1 &1723227726
 GameObject:
   m_ObjectHideFlags: 0
@@ -40342,6 +40370,7 @@ MonoBehaviour:
   explosion_range: 5
   damage: 6
   cooldown_time: 5
+  can_heal: 0
   enemyMask:
     serializedVersion: 2
     m_Bits: 64

@@ -6,7 +6,10 @@ using UnityEngine.InputSystem;
 
 public class sc_Abilities : MonoBehaviour
 {
-    private bool active_levitate = false, active_group = false;
+    // Booleanos que detectan colisiones
+    private bool active_levitate = false, active_group = false, active_byebye = false;
+
+
     [HideInInspector]
     public bool active_hook = false;
     private bool check_collisions = false;
@@ -228,6 +231,73 @@ public class sc_Abilities : MonoBehaviour
     }
     #endregion
 
+    #region HitNByebye
+    // Byebye ability
+    public void HitNByeBye()
+    {
+        if (active_byebye && enemies_mov.Count > 0 && enemies_mov[enemies_mov.Count - 1] != null)
+        {
+            StartCoroutine(ByeByeRoutine(enemies_mov[enemies_mov.Count - 1], enemies_mov.Count - 1));
+        }
+        else
+            active_byebye = true;
+    }
+
+    /// <summary>
+    /// Empujará a los enemigos que se encuentre e_fl mientras este no sea kinematic
+    /// </summary>
+    private IEnumerator ByeByeRoutine(EnemyFollow e_fl, int enemy_id)
+    {
+        if (e_fl != null)
+        {
+            Vector3 d = (e_fl.transform.position - transform.position).normalized;
+            e_fl.agent.enabled = false;
+            e_fl.rb.isKinematic = false;
+            e_fl.AddForceToEnemy(d * (ReturnScript.instance.damage * 0.5f));
+
+            EnemyFollow ef = e_fl;
+            while (ef != null && !ef.rb.isKinematic)
+            {
+                Collider[] colls = Physics.OverlapSphere(ef.transform.position, 1.25f, layer_enemy);
+                if (colls.Length > 0)
+                {
+                    foreach (Collider coll in colls)
+                    {
+                        if (coll.transform.parent.name == e_fl.transform.parent.name) continue;
+
+                        if (ef != null)
+                        {
+                            Vector3 dir = (coll.transform.position - ef.transform.position).normalized;
+                            ef.agent.enabled = false;
+                            ef.rb.isKinematic = false;
+                            Debug.Log(Mathf.Abs(ef.rb.velocity.x) + Mathf.Abs(ef.rb.velocity.z));
+                            coll.GetComponent<EnemyFollow>().AddForceToEnemy((dir + d) * ((ReturnScript.instance.damage * 0.25f) * (Mathf.Abs(ef.rb.velocity.x) + Mathf.Abs(ef.rb.velocity.z))));
+
+                            // Por cada choque se irá frenando
+                            ef.rb.velocity *= 0.5f;
+                        }
+                    }
+                }
+
+                ef.rb.velocity *= 0.99f;
+
+                yield return null;
+            }
+
+            if (!CheckActiveAbilities())
+                enemies_mov.RemoveAt(enemy_id);
+        }
+    }
+    #endregion
+
+    /// <summary>
+    /// El jugador empezará al curarse al dañar a los enemigos
+    /// </summary>
+    public void BloodThirsty()
+    {
+        ReturnScript.instance.can_heal = true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
@@ -238,6 +308,7 @@ public class sc_Abilities : MonoBehaviour
                 EnemyFollow e_fl = other.GetComponent<EnemyFollow>();
                 e_fl.agent.enabled = false;
                 e_fl.rb.useGravity = false;
+
                 /// Si la habilidad de levitar está activa añade una fuerza vertical
                 if (active_levitate)
                     e_fl.AddForceToEnemy(new Vector3(e_fl.rb.velocity.x, ReturnScript.instance.damage * 0.05f, e_fl.rb.velocity.z));
@@ -249,6 +320,26 @@ public class sc_Abilities : MonoBehaviour
                 // Se añade el enemigo a la lista de los que se harán mover después
                 enemies_mov.Add(e_fl);
                 enemy_targets.Add(other.gameObject);
+            }
+
+            if (!ReturnScript.instance.returning && !PlayerMovement.instance.slide && active_byebye)
+            {
+                // Cada vez que golpeen al jugador tiene una posibilidad de empujarlos
+                int rand = 0;
+                if (rand == 0)
+                {
+                    Vector3 dir = (other.transform.position - transform.position).normalized;
+
+                    EnemyFollow e_fl = other.GetComponent<EnemyFollow>();
+
+                    if (e_fl != null && !enemies_mov.Contains(e_fl))
+                    {
+                        enemies_mov.Add(other.GetComponent<EnemyFollow>());
+                        enemy_targets.Add(other.gameObject);
+
+                        HitNByeBye();
+                    }
+                }
             }
         }
     }

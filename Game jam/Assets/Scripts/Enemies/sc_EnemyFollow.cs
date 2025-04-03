@@ -84,6 +84,6 @@ public class EnemyFollow : MonoBehaviour
             }
         }
         if (agent.isOnNavMesh && !rb.isKinematic)
-            rb.velocity *= 0.75f;
+            rb.velocity *= 0.6f;
     }
 }
