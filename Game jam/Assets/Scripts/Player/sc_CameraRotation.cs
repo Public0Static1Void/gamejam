@@ -25,10 +25,14 @@ public class CameraRotation : MonoBehaviour
     public TMP_Text ui_sensivity_value;
     public Image ui_sensivity_value_image;
     public RectTransform ui_sensivity_handle;
+    public sc_bate bate;
 
     Vector2 inp;
 
     public bool shake = false;
+
+    private Vector3 original_position;
+    private bool up = true;
 
     private void Awake()
     {
@@ -61,11 +65,44 @@ public class CameraRotation : MonoBehaviour
         Color col = ui_sensivity_value_image.color;
         ui_sensivity_value_image.color = new Color(col.r, col.g, col.b, 0);
         ui_sensivity_value.text = "";
+
+        original_position = transform.localPosition;
     }
 
     void Update()
     {
-        if (!PlayerMovement.instance.canMove) return;
+        // Efecto de respiración en la cámara
+        if (!PlayerMovement.instance.slide && bate != null && !bate.isSwinging)
+        {
+            float move_force = PlayerMovement.instance.moving ? 3 : 1;
+            if ((up && move_force < 0) || (!up && move_force > 0))
+                move_force *= -1;
+
+            Vector3 new_pos = new Vector3(original_position.x, original_position.y + 0.07f * Mathf.Sign(move_force), transform.localPosition.z);
+
+            if (up)
+            {
+                if (Vector3.Distance(transform.localPosition, new_pos) < 0.05f)
+                {
+                    up = false;
+                }
+            }
+            else
+            {
+                if (Vector3.Distance(transform.localPosition, new_pos) < 0.05f)
+                {
+                    up = true;
+                }
+            }
+
+            transform.localPosition = Vector3.Lerp(transform.localPosition, new_pos, Time.deltaTime * ((Mathf.Abs(move_force) * 0.5f)+ (Vector3.Distance(transform.localPosition, new_pos) * 5)));
+            // Si x o y de local position son casi 0 pasan a ser 0
+            transform.localPosition = new Vector3(transform.localPosition.x < 0.05f ? original_position.x : transform.localPosition.x,
+                                                  transform.localPosition.y,
+                                                  transform.localPosition.z < 0.05f ? original_position.z : transform.localPosition.z);
+        }
+
+        if (!PlayerMovement.instance.canMove) return; // No hará más cálculos si el jugador no se puede mover
 
         if (inp.x > 1 || inp.x < -1)
         {
@@ -118,8 +155,6 @@ public class CameraRotation : MonoBehaviour
         while (timer < duration)
         {
             if (!PlayerMovement.instance.canMove) break;
-
-            original_position = transform.localPosition;
 
             timer += Time.deltaTime;
 

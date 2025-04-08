@@ -179,7 +179,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (Camera.main.transform.position != camera_original_position)
         {
-            Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, camera_original_position, Time.deltaTime * 10);
+            //Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, camera_original_position, Time.deltaTime * 10);
         }
         #endregion
 

@@ -10,7 +10,7 @@ public class sc_bate : MonoBehaviour
     public float swingSpeed = 5000;  // Velocidad del swing
     public float maxSwingAngle = 90f; // Ángulo máximo de swing
 
-    private bool isSwinging = false;
+    public bool isSwinging = false;
     private float currentRotation = 0f;
 
     public Animator anim;

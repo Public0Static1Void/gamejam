@@ -113,7 +113,7 @@ public class sc_Abilities : MonoBehaviour
         {
             for (int i = 0; i < enemy_targets.Count; i++)
             {
-                if (enemy_targets[i] == null) continue;
+                if (enemy_targets[i] == null || enemies_mov[i] == null) continue;
 
                 Vector3 dir = ReturnScript.instance.transform.position - enemy_targets[i].transform.position;
                 dir = new Vector3(dir.x, dir.y + enemies_mov[i].rb.velocity.y, dir.z);
@@ -284,7 +284,7 @@ public class sc_Abilities : MonoBehaviour
                 yield return null;
             }
 
-            if (!CheckActiveAbilities())
+            if (!CheckActiveAbilities() && enemy_id < enemies_mov.Count)
                 enemies_mov.RemoveAt(enemy_id);
         }
     }
