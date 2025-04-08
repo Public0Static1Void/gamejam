@@ -10,6 +10,7 @@ public class PlayerLife : MonoBehaviour
     public int hp;
     [Header("References")]
     public Image life_amount;
+    private Image bg_life_amount;
 
     private bool damaged;
     private float timer = 0;
@@ -30,6 +31,8 @@ public class PlayerLife : MonoBehaviour
 
         cameraRotation = Camera.main.GetComponent<CameraRotation>();
         m = GetComponent<MeshRenderer>().material;
+
+        bg_life_amount = life_amount.transform.parent.GetComponent<Image>();
 
         curr_color = m.color;
 
@@ -74,6 +77,8 @@ public class PlayerLife : MonoBehaviour
         if ((ReturnScript.instance.returning && value > 0) || PlayerMovement.instance.slide)
             return;
 
+        bg_life_amount.fillAmount = life_amount.fillAmount;
+
         hp -= value;
         if (hp > max_hp)
         {
@@ -83,6 +88,7 @@ public class PlayerLife : MonoBehaviour
 
         /// Barra de vida
         life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
+        StartCoroutine(ChangeBackgroundLife(life_amount.fillAmount));
 
         // Guarda estadísticas de daño
         if (value < 0)
@@ -115,6 +121,16 @@ public class PlayerLife : MonoBehaviour
         {
             Damage(2);
             damaged = true;
+        }
+    }
+
+    private IEnumerator ChangeBackgroundLife(float new_value)
+    {
+        yield return new WaitForSeconds(0.25f);
+        while (bg_life_amount.fillAmount > new_value)
+        {
+            bg_life_amount.fillAmount -= Time.deltaTime * 0.15f;
+            yield return null;
         }
     }
 }

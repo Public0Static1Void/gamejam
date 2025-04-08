@@ -140,7 +140,7 @@ public class ScoreManager : MonoBehaviour
         // Se cambia el número del score poniéndolo en un formato de 0000000000
         int number_length = (int)Mathf.Floor(Mathf.Log10(score)) + 1; /// Consigue los dígitos del número
         string number_to_show = "";
-        for (int i = 0; i < 9 - number_length; i++)
+        for (int i = 0; i < 10 - number_length; i++)
         {
             number_to_show += "0";
         }
@@ -154,8 +154,6 @@ public class ScoreManager : MonoBehaviour
             current_text++;
         else
             current_text = 0;
-
-        
     }
 
     public IEnumerator ShowTextOnPosition(string phrase, Vector3 position, Vector3 face_direction, float duration)
@@ -240,6 +238,7 @@ public class ScoreManager : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+        ui_score_text.color = color_base_score;
     }
 
     public void BuyDoor(InputAction.CallbackContext con)
