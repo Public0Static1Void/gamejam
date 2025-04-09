@@ -11,6 +11,7 @@ public class PlayerLife : MonoBehaviour
     [Header("References")]
     public Image life_amount;
     private Image bg_life_amount;
+    public AudioSource hearth_beat_as;
 
     private bool damaged;
     private float timer = 0;
@@ -38,6 +39,7 @@ public class PlayerLife : MonoBehaviour
 
         damaged = false;
 
+        hearth_beat_as.loop = true;
 
         // Carga los datos guardados
         PlayerData pd = GameManager.gm.saveManager.LoadSaveData();
@@ -89,6 +91,17 @@ public class PlayerLife : MonoBehaviour
         /// Barra de vida
         life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
         StartCoroutine(ChangeBackgroundLife(life_amount.fillAmount));
+
+        /// Sonido de latido, se acelera más cada cuánto menos vida tienes
+        if (hp <= max_hp * 0.85f)
+        {
+            hearth_beat_as.Play();
+        }
+        else
+        {
+            hearth_beat_as.Stop();
+        }
+        hearth_beat_as.pitch = 1 + (1 - ((float)hp / (float)max_hp));
 
         // Guarda estadísticas de daño
         if (value < 0)

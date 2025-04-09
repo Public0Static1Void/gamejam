@@ -37,10 +37,14 @@ public class sc_bate : MonoBehaviour
 
     public void OnSwing(InputAction.CallbackContext con)
     {
-        if (con.performed && !isSwinging)
+        if (con.performed && !isSwinging && PlayerMovement.instance.current_stamina - PlayerMovement.instance.max_stamina * 0.1f > 0)
         {
             isSwinging = true;
             anim.SetBool("swing", true);
+
+            PlayerMovement.instance.current_stamina -= PlayerMovement.instance.max_stamina * 0.1f;
+            if (PlayerMovement.instance.current_stamina < 0)
+                PlayerMovement.instance.current_stamina = 0;
 
             SoundManager.instance.InstantiateSound(clip_swing, transform.position);
         }
