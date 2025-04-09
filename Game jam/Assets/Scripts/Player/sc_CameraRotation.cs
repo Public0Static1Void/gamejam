@@ -72,7 +72,7 @@ public class CameraRotation : MonoBehaviour
     void Update()
     {
         // Efecto de respiración en la cámara
-        if (!PlayerMovement.instance.slide && bate != null && !bate.isSwinging)
+        if (!PlayerMovement.instance.slide && bate != null && !bate.isSwinging && PlayerMovement.instance.current_speed > PlayerMovement.instance.speed * 0.25f)
         {
             float move_force = PlayerMovement.instance.moving ? 3 : 1;
             if ((up && move_force < 0) || (!up && move_force > 0))

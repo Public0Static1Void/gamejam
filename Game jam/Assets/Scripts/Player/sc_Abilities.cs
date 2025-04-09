@@ -111,7 +111,7 @@ public class sc_Abilities : MonoBehaviour
 
         while (ReturnScript.instance.returning)
         {
-            for (int i = 0; i < enemy_targets.Count; i++)
+            for (int i = 0; i < enemy_targets.Count && i < enemies_mov.Count; i++)
             {
                 if (enemy_targets[i] == null || enemies_mov[i] == null) continue;
 
@@ -196,6 +196,10 @@ public class sc_Abilities : MonoBehaviour
 
         Rigidbody rb = PlayerMovement.instance.rb;
 
+        float past_target_speed = PlayerMovement.instance.target_speed;
+        PlayerMovement.instance.target_speed = PlayerMovement.instance.speed * 0.25f;
+        PlayerMovement.instance.current_speed = PlayerMovement.instance.target_speed;
+
         if (PlayerMovement.instance.onGround)
         {
             PlayerMovement.instance.rb.velocity = Vector3.up * force;
@@ -217,6 +221,9 @@ public class sc_Abilities : MonoBehaviour
         // Espera a que el jugador toque el suelo
         while (!PlayerMovement.instance.onGround)
             yield return null;
+
+        PlayerMovement.instance.target_speed = past_target_speed;
+        PlayerMovement.instance.current_speed = PlayerMovement.instance.target_speed;
 
         rb.velocity *= 0.5f;
         SoundManager.instance.InstantiateSound(stomp_on_ground, transform.position);

@@ -13,7 +13,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Stats")]
     public float speed;
     public float current_speed;
-    private float target_speed = 0;
+    [HideInInspector]
+    public float target_speed = 0;
     public float max_stamina;
     public float current_stamina;
     public float fov;
@@ -323,7 +324,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (dir.y < 0)
         {
-            current_speed = speed * 0.5f;
+            current_speed = speed * 0.45f;
             //fov_change = target_fov * 0.45f;
         }
         else 

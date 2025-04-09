@@ -75,10 +75,10 @@ public class Rounds : MonoBehaviour
 
         AbilitiesSystem.instance.GetRandomAbilities();
 
-        float wait_time = 12.5f - round * 0.1f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
+        float wait_time = 12.5f - round * 0.25f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
         if (wait_time < 3) wait_time = 3;
 
-        yield return new WaitForSeconds(0);
+        yield return new WaitForSeconds(wait_time);
 
         // Muestra en texto por que ronda vas y suena un sonido para indicar la nueva ronda
         txt_round.text = (round + 1).ToString();
