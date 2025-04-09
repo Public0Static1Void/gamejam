@@ -192,6 +192,7 @@ public class ReturnScript : MonoBehaviour
                 dir += d;
                 coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f));
                 coll.GetComponent<EnemyLife>().Damage(damage_amount);
+
                 if (can_heal && !healed)
                 {
                     playerLife.Damage((int)(-damage * 0.15f));

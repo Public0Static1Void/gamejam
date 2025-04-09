@@ -26,7 +26,7 @@ public class sc_bate : MonoBehaviour
         {
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
-            // Check if animation is done (normalizedTime >= 1)
+            // Mira si la animación ha terminado
             if (stateInfo.IsName("Swing") && stateInfo.normalizedTime >= 0.8f)
             {
                 anim.SetBool("swing", false);
@@ -41,6 +41,9 @@ public class sc_bate : MonoBehaviour
         {
             isSwinging = true;
             anim.SetBool("swing", true);
+
+            Color col = PlayerMovement.instance.stamina_image.color;
+            PlayerMovement.instance.stamina_image.color = new Color(col.r, col.g, col.b, 1);
 
             PlayerMovement.instance.current_stamina -= PlayerMovement.instance.max_stamina * 0.1f;
             if (PlayerMovement.instance.current_stamina < 0)

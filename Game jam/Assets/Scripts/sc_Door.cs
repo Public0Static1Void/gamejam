@@ -15,6 +15,7 @@ public class sc_Door : MonoBehaviour
     private bool text_shown = false;
 
     PlayerInput pInput;
+    public List<Spawner> canSpawn;
 
     private void Start()
     {

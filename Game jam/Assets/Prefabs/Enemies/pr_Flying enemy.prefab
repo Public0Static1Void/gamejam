@@ -449,8 +449,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4de57628d4d29c04388a3934af1585d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 11
-  max_hp: 11
+  hp: 300
+  max_hp: 300
   clip_damaged:
   - {fileID: 8300000, guid: f7d4f167e32e1f4478db3ab34c009f69, type: 3}
   - {fileID: 8300000, guid: 7116a89881f67c1469accd5e7e7aafab, type: 3}

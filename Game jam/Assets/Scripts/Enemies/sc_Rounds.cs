@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 public class Rounds : MonoBehaviour
@@ -18,6 +19,7 @@ public class Rounds : MonoBehaviour
     private int round = 0;
 
     float enemy_hp = 10;
+    float enemy_speed = 3.5f;
 
     private float timer = 0;
 
@@ -66,6 +68,7 @@ public class Rounds : MonoBehaviour
     {
         onRound = true;
         enemyRound *= 1.5f;
+        enemy_speed *= 1.05f;
         StartCoroutine(SpawnLine());
     }
 
@@ -114,6 +117,8 @@ public class Rounds : MonoBehaviour
             {
                 enemy_hp = enemy_life.max_hp * 1.25f;
             }
+
+            enemy_inst.transform.GetChild(0).GetComponent<NavMeshAgent>().speed = enemy_speed;
 
             enemy_life.max_hp = (int)enemy_hp;
 
