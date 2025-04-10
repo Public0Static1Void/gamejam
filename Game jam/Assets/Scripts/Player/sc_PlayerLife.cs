@@ -13,6 +13,12 @@ public class PlayerLife : MonoBehaviour
     private Image bg_life_amount;
     public AudioSource hearth_beat_as;
 
+    public Transform main_canvas;
+    public List<Sprite> blood_splashes;
+
+    private List<Image> blood_images = new List<Image>();
+    private int curr_blood = 0;
+
     private bool damaged;
     private float timer = 0;
 
@@ -54,6 +60,24 @@ public class PlayerLife : MonoBehaviour
         }
 
         hp = max_hp;
+
+        // Genera las imágenes de blood
+        for (int i = 0; i < blood_splashes.Count; i++)
+        {
+            GameObject ob = new GameObject();
+            ob.name = "Blood splash " + i.ToString();
+
+            RectTransform rect = ob.AddComponent<RectTransform>();
+            Image im = ob.AddComponent<Image>();
+            im.sprite = blood_splashes[Random.Range(0, blood_splashes.Count)];
+
+            rect.localScale = Vector3.one * 8;
+
+            ob.transform.SetParent(main_canvas);
+            ob.SetActive(false);
+
+            blood_images.Add(im);
+        }
     }
 
     void Update()
@@ -81,7 +105,7 @@ public class PlayerLife : MonoBehaviour
 
         bg_life_amount.fillAmount = life_amount.fillAmount;
 
-        hp -= value;
+        //hp -= value;
         if (hp > max_hp)
         {
             hp = max_hp;
@@ -91,6 +115,8 @@ public class PlayerLife : MonoBehaviour
         /// Barra de vida
         life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
         StartCoroutine(ChangeBackgroundLife(life_amount.fillAmount));
+
+        SplashBloodOnScreen();
 
         /// Sonido de latido, se acelera más cada cuánto menos vida tienes
         if (hp <= max_hp * 0.85f)
@@ -126,6 +152,49 @@ public class PlayerLife : MonoBehaviour
         {
             GameManager.gm.EndGame();
         }
+    }
+
+    public void SplashBloodOnScreen()
+    {
+        StartCoroutine(SplashBlood());
+    }
+    private IEnumerator SplashBlood()
+    {
+        Image curr_image = blood_images[curr_blood]; // Guarda la referencia a la imagen actual
+        
+        /// Consigue un tamaño aleatorio
+        int rs = Random.Range(3, 8);
+        Vector2 rand_size = new Vector2(rs, rs);
+        curr_image.rectTransform.localScale = rand_size;
+
+        /// Consigue una posición y rotación aleatorias
+        Vector2 rand_pos = new Vector2(Random.Range(0, Screen.currentResolution.width / 2 - (curr_image.rectTransform.rect.width * rs)),
+                                       Random.Range(0, Screen.currentResolution.height / 2 - (curr_image.rectTransform.rect.height * rs)));
+        Quaternion rand_rotation = Quaternion.Euler(Random.Range(-45, 45), 0, Random.Range(-45, 45));
+
+        curr_image.rectTransform.anchoredPosition = rand_pos;
+        curr_image.rectTransform.rotation = rand_rotation;
+
+        curr_image.gameObject.SetActive(true);
+
+        float alpha = 1;
+        Color col = curr_image.color;
+
+        while (curr_image.color.a > 0)
+        {
+            alpha -= Time.deltaTime;
+
+            curr_image.color = new Color(col.r, col.g, col.b, alpha);
+
+            yield return null;
+        }
+
+        curr_image.gameObject.SetActive(false);
+        curr_image.color = col;
+
+        curr_blood++;
+        if (curr_blood >= blood_images.Count)
+            curr_blood = 0;
     }
 
     private void OnTriggerEnter(Collider coll)

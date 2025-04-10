@@ -97,25 +97,22 @@ public class EnemyFollow : MonoBehaviour
     {
         if (relocating)
         {
+            Vector3 directionAwayFromPlayer = PlayerMovement.instance.transform.position - transform.position;
+            Vector3 new_dir = (PlayerMovement.instance.transform.right * -Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer)
+                               + directionAwayFromPlayer);
+            transform.Translate(new_dir.normalized * Time.deltaTime * 5);
+
             relocate_timer += Time.deltaTime;
-            if (relocate_timer > 1)
+            if (relocate_timer > 0.5f)
             {
                 relocate_timer = 0;
                 relocating = false;
             }
             return;
         }
-        if (Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 2)
+        else if (PlayerMovement.instance.moving && Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 2)
         {
-            Vector3 directionAwayFromPlayer = transform.position - PlayerMovement.instance.transform.position;
-            Vector3 newDestination = transform.position + directionAwayFromPlayer.normalized * 50;
-
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(newDestination, out hit, 20, NavMesh.AllAreas))
-            {
-                relocating = true;
-                agent.SetDestination(hit.position);
-            }
+            relocating = true;
         }
     }
 }

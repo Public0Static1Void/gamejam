@@ -172,8 +172,6 @@ public class PlayerMovement : MonoBehaviour
                 player_agent.enabled = true;
                 transform.position = pos;
 
-                DisableRigidbody();
-
                 current_speed = target_speed;
                 slide = false;
             }
@@ -201,15 +199,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void EnableRigidbody()
-    {
-        player_agent.updatePosition = false;
-        player_agent.updateRotation = false;
-    }
-    public void DisableRigidbody()
-    {
-
-    }
 
     private void Update()
     {
@@ -282,8 +271,6 @@ public class PlayerMovement : MonoBehaviour
 
                 particle_slide.Play();
 
-                EnableRigidbody();
-
                 if (!sprinting)
                     current_speed = target_speed * slide_walking_multiplier;
                 else
@@ -305,8 +292,6 @@ public class PlayerMovement : MonoBehaviour
             Vector3 pos = transform.position;
             player_agent.enabled = true;
             transform.position = pos;
-
-            DisableRigidbody();
 
             current_speed = target_speed;
             slide = false;

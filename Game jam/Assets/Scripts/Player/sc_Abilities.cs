@@ -191,8 +191,6 @@ public class sc_Abilities : MonoBehaviour
     }
     private IEnumerator StompRoutine()
     {
-        PlayerMovement.instance.EnableRigidbody();
-
         /// Cantidad de fuerza que se aplicará
         int force = 10;
 
@@ -239,9 +237,6 @@ public class sc_Abilities : MonoBehaviour
             coll.GetComponent<EnemyFollow>().AddForceToEnemy(Vector3.up * ((force + hit.distance * 1.5f) * 0.5f));
             coll.GetComponent<EnemyLife>().Damage((int)((hit.distance) * 0.25f));
         }
-
-
-        PlayerMovement.instance.DisableRigidbody();
     }
     #endregion
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -41238,6 +41238,23 @@ MonoBehaviour:
   hp: 0
   life_amount: {fileID: 1689241854}
   hearth_beat_as: {fileID: 1396297744}
+  main_canvas: {fileID: 698889104}
+  blood_splashes:
+  - {fileID: 584467153, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -1780255494, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -772764452, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -961958155, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -1466246523, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: 2125058946, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -874077006, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -1368689468, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: 1952636803, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: 1476119585, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -377399258, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -147033447, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -1988126249, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: -470789574, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
+  - {fileID: 1371249077, guid: 2b608c59545301d4681ed02ae557ff57, type: 3}
   shakeAmount: 0.5
   damage_clips:
   - {fileID: 8300000, guid: 99bb3605d43eefc4994ca25b19b1604e, type: 3}
