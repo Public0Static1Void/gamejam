@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(SaveManager))]
 public class GameManager : MonoBehaviour
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     public List<TMP_Text> screen_texts;
 
-    public Button btn_resume, btn_continue;
+    public UnityEngine.UI.Button btn_resume, btn_continue;
 
     public GameObject stats_resume_holder;
 
@@ -40,6 +41,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text txt_damage_healed;
     public TMP_Text txt_total_score_points;
     public TMP_Text txt_converted_score_points;
+
+    public GameObject ob_shpere;
 
     [Header("Stats")]
     public int enemies_killed = 0;
@@ -95,6 +98,69 @@ public class GameManager : MonoBehaviour
             message_text.color = new Color(col.r, col.g, col.b, alpha);
         }
     }
+    /// <summary>
+    /// Instancia una esfera con el rango y el color pasados, si grow se marca como true crecerá de 0 hasta radius
+    /// </summary>
+    public void SpawnShpereRadius(Vector3 position, float radius, Color col, bool grow, float grow_speed = 100)
+    {
+        if (grow)
+        {
+            StartCoroutine(GrowSphere(position, radius, col, grow_speed));
+        }
+        else
+        {
+            GameObject ob = Instantiate(ob_shpere, position, Quaternion.identity);
+            Renderer renderer = ob.GetComponent<Renderer>();
+            renderer.material.SetColor("_BaseColor", col);
+            ob.transform.localScale *= radius;
+
+            StartCoroutine(HideShaderObject(renderer));
+        }
+    }
+    private IEnumerator GrowSphere(Vector3 position, float radius, Color col, float grow_speed)
+    {
+        // Instancia el objetp
+        GameObject ob = Instantiate(ob_shpere, position, Quaternion.identity);
+        // Cambia el color del shader
+        Renderer renderer = ob.GetComponent<Renderer>();
+        renderer.material.SetColor("_BaseColor", col);
+        // Cambia su tamaño a 0
+        ob.transform.localScale = Vector3.zero;
+
+        // Hace crecer el objeto hasta el radio
+        float curr_radius = 0;
+        while (curr_radius < radius)
+        {
+            curr_radius += Time.deltaTime * grow_speed;
+            ob.transform.localScale = Vector3.one * curr_radius;
+
+            yield return null;
+        }
+
+        // Esconde el objeto
+        StartCoroutine(HideShaderObject(renderer));
+    }
+
+    private IEnumerator HideShaderObject(Renderer renderer)
+    {
+        float alpha = renderer.material.GetFloat("_Alpha");
+
+        while (alpha > 0)
+        {
+            alpha -= Time.deltaTime;
+            renderer.material.SetFloat("_Alpha", alpha);
+
+            yield return null;
+        }
+
+        renderer.enabled = false;
+
+        yield return new WaitForSeconds(0.5f);
+
+        Destroy(renderer.gameObject);
+    }
+
+
 
     public string GetCurrentControllerName()
     {
@@ -108,6 +174,12 @@ public class GameManager : MonoBehaviour
         }
 
         return name;
+    }
+    public bool IsPlayerOnKeyboard()
+    {
+        if (GetCurrentControllerName() == "Keyboard")
+            return true;
+        return false;
     }
 
     public void ShakeController(float time, float low_frequency, float high_frequency)
@@ -134,8 +206,8 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = previous_lockmode == CursorLockMode.None ? 0 : 1;
 
-        Cursor.lockState = previous_lockmode;
-        Cursor.visible = previous_lockmode == CursorLockMode.None ? true : false;
+        UnityEngine.Cursor.lockState = previous_lockmode;
+        UnityEngine.Cursor.visible = previous_lockmode == CursorLockMode.None ? true : false;
 
         pause_menu.SetActive(false);
         SoundManager.instance.SetHighPassEffect(10);
@@ -143,7 +215,7 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         if (!pause_menu.activeSelf)
-            previous_lockmode = Cursor.lockState;
+            previous_lockmode = UnityEngine.Cursor.lockState;
 
         btn_resume.Select();
 
@@ -151,8 +223,8 @@ public class GameManager : MonoBehaviour
         ShakeController(0, 0, 0);
         Time.timeScale = 0;
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
 
         PlayerMovement.instance.GetComponent<PlayerInput>().SwitchCurrentActionMap("UI");
         StartCoroutine(InterpolateHighPass(1000));
@@ -179,8 +251,7 @@ public class GameManager : MonoBehaviour
     {
         ob.SetActive(!ob.gameObject.activeSelf);
     }
-
-    public void SelectUIButton(Button button)
+    public void SelectUIButton(UnityEngine.UI.Button button)
     {
         button.Select();
     }
@@ -310,8 +381,8 @@ public class GameManager : MonoBehaviour
 
         SelectUIButton(btn_continue);
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
 
         ShakeController(0, 0, 0);
 

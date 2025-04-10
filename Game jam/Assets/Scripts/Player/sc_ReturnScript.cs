@@ -110,6 +110,9 @@ public class ReturnScript : MonoBehaviour
                     Camera.main.transform.position = transform.position;
                     Camera.main.transform.SetParent(transform);
 
+                    /// Instancia una esfera para indicar el rango de la explosión
+                    GameManager.gm.SpawnShpereRadius(transform.position, explosion_range * 2, Color.red, true);
+
                     cooldown_image.fillAmount = 0;
                     #region DamageToEnemy
                     if (SoundManager.instance.funnySounds) /// Sonidos de explosión
@@ -399,6 +402,7 @@ public class ReturnScript : MonoBehaviour
                 /// Instancia las partículas
                 Instantiate(explosionParticle, positions[explosion_num], explosionParticle.transform.rotation);
 
+                GameManager.gm.SpawnShpereRadius(positions[explosion_num], range * 2, Color.cyan, true, 50);
 
                 /// Aplica el daño a los enemigos
                 DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), range, Vector3.up * (2 + (damage * 0.1f)));
@@ -422,9 +426,13 @@ public class ReturnScript : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        Gizmos.color = Color.white;
         for (int i = 0; i < past_positions.Count; i++)
         {
             Gizmos.DrawWireSphere(past_positions[i], 1);
         }
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosion_range);
     }
 }

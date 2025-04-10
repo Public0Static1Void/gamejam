@@ -54,13 +54,13 @@ public class sc_shop : MonoBehaviour
             shop_object.SetActive(!shop_object.activeSelf);
             if (shop_object.activeSelf)
             {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                UnityEngine.Cursor.lockState = CursorLockMode.None;
+                UnityEngine.Cursor.visible = true;
             }
             else
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+                UnityEngine.Cursor.visible = false;
             }
         }
     }

@@ -43,8 +43,8 @@ public class CameraRotation : MonoBehaviour
     }
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
 
         ui_sensivity_slider.value = cameraSpeed;
 

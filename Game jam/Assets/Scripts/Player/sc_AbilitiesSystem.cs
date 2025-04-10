@@ -373,8 +373,8 @@ public class AbilitiesSystem : MonoBehaviour
         }
 
         ob_gamblingparent.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
     }
 
     IEnumerator MoveDescriptionUIToCursor(int ab_num)
@@ -416,8 +416,8 @@ public class AbilitiesSystem : MonoBehaviour
         txt_description.gameObject.SetActive(false);
         im_description.gameObject.SetActive(false);
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
         Time.timeScale = 1;
     }
 }
