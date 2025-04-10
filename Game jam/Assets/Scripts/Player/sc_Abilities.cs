@@ -191,6 +191,8 @@ public class sc_Abilities : MonoBehaviour
     }
     private IEnumerator StompRoutine()
     {
+        PlayerMovement.instance.EnableRigidbody();
+
         /// Cantidad de fuerza que se aplicará
         int force = 10;
 
@@ -218,9 +220,11 @@ public class sc_Abilities : MonoBehaviour
         // Hace que el jugador caiga rápidamente al suelo
         rb.AddForce(Vector3.down * (force * 2), ForceMode.VelocityChange);
 
+
         // Espera a que el jugador toque el suelo
         while (!PlayerMovement.instance.onGround)
             yield return null;
+
 
         PlayerMovement.instance.target_speed = past_target_speed;
         PlayerMovement.instance.current_speed = PlayerMovement.instance.target_speed;
@@ -235,6 +239,9 @@ public class sc_Abilities : MonoBehaviour
             coll.GetComponent<EnemyFollow>().AddForceToEnemy(Vector3.up * ((force + hit.distance * 1.5f) * 0.5f));
             coll.GetComponent<EnemyLife>().Damage((int)((hit.distance) * 0.25f));
         }
+
+
+        PlayerMovement.instance.DisableRigidbody();
     }
     #endregion
 

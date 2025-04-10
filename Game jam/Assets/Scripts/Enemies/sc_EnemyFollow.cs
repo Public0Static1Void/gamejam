@@ -19,7 +19,11 @@ public class EnemyFollow : MonoBehaviour
 
     private Vector3 original_position;
 
+    private bool relocating = false;
+
     private float timer = 0;
+
+    float relocate_timer = 0;
 
     [HideInInspector]
     public AudioSource audioSource;
@@ -48,6 +52,8 @@ public class EnemyFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (relocating) return;
+
         if (rb.velocity.magnitude > -0.05f && rb.velocity.magnitude < 0.05f)
         {
             if (Physics.Raycast(transform.position, Vector2.down, transform.localScale.y + 0.1f))
@@ -85,5 +91,31 @@ public class EnemyFollow : MonoBehaviour
         }
         if (agent.isOnNavMesh && !rb.isKinematic)
             rb.velocity *= 0.6f;
+    }
+
+    private void Update()
+    {
+        if (relocating)
+        {
+            relocate_timer += Time.deltaTime;
+            if (relocate_timer > 1)
+            {
+                relocate_timer = 0;
+                relocating = false;
+            }
+            return;
+        }
+        if (Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 2)
+        {
+            Vector3 directionAwayFromPlayer = transform.position - PlayerMovement.instance.transform.position;
+            Vector3 newDestination = transform.position + directionAwayFromPlayer.normalized * 50;
+
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(newDestination, out hit, 20, NavMesh.AllAreas))
+            {
+                relocating = true;
+                agent.SetDestination(hit.position);
+            }
+        }
     }
 }

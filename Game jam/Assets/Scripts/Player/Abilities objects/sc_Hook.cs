@@ -125,9 +125,10 @@ public class Hook : MonoBehaviour
                         added_force_to_player = true;
                     }
 
-                    if (PlayerMovement.instance.rb.velocity.y < -0.25f)
+                    if (PlayerMovement.instance.rb.velocity.y < -0.25f && PlayerMovement.instance.onGround)
                     {
                         HideHook();
+                        PlayerMovement.instance.DisableRigidbody();
                     }
                 }
                 else
@@ -183,6 +184,7 @@ public class Hook : MonoBehaviour
     {
         if (timer < 0.75f && enemy_hooked)
         {
+            PlayerMovement.instance.EnableRigidbody();
             launch_player = true;
         }
     }

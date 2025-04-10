@@ -42,7 +42,8 @@ public class PlayerMovement : MonoBehaviour
     public ParticleSystem particle_slide;
     public LayerMask layer_ground;
 
-    private NavMeshAgent player_agent;
+    [HideInInspector]
+    public NavMeshAgent player_agent;
     
     public Rigidbody rb;
 
@@ -130,7 +131,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else /// Esconde el círculo de stamina cuando ya no hagan falta más cálculos
         {
-            if (stamina_image.color.a > 0)
+            if (stamina_image.color.a > 0.25f)
             {
                 Color col = new Color(stamina_image.color.r, stamina_image.color.g, stamina_image.color.b, stamina_image.color.a - Time.deltaTime);
                 stamina_image.color = col;
@@ -171,6 +172,8 @@ public class PlayerMovement : MonoBehaviour
                 player_agent.enabled = true;
                 transform.position = pos;
 
+                DisableRigidbody();
+
                 current_speed = target_speed;
                 slide = false;
             }
@@ -196,6 +199,16 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x * 0.9f, rb.velocity.y, rb.velocity.z * 0.9f);
             if (sprinting) sprinting = false;
         }
+    }
+
+    public void EnableRigidbody()
+    {
+        player_agent.updatePosition = false;
+        player_agent.updateRotation = false;
+    }
+    public void DisableRigidbody()
+    {
+
     }
 
     private void Update()
@@ -269,6 +282,8 @@ public class PlayerMovement : MonoBehaviour
 
                 particle_slide.Play();
 
+                EnableRigidbody();
+
                 if (!sprinting)
                     current_speed = target_speed * slide_walking_multiplier;
                 else
@@ -290,6 +305,8 @@ public class PlayerMovement : MonoBehaviour
             Vector3 pos = transform.position;
             player_agent.enabled = true;
             transform.position = pos;
+
+            DisableRigidbody();
 
             current_speed = target_speed;
             slide = false;

@@ -161,6 +161,25 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void ChangeImageSize(UnityEngine.UI.Image image, Vector3 new_size, float speed)
+    {
+        StartCoroutine(ChangeImageSizeRoutine(image, new_size, speed));
+    }
+    private IEnumerator ChangeImageSizeRoutine(UnityEngine.UI.Image image, Vector3 new_size, float speed)
+    {
+        Vector3 start_size = image.rectTransform.localScale;
+
+        while (Vector3.Distance(image.rectTransform.localScale, new_size) > 0.1f)
+        {
+            image.rectTransform.localScale = Vector3.Lerp(image.rectTransform.localScale, new_size, speed * Time.deltaTime);
+            yield return null;
+        }
+        while (Vector3.Distance(image.rectTransform.localScale, start_size) > 0.1f)
+        {
+            image.rectTransform.localScale = Vector3.Lerp(image.rectTransform.localScale, start_size, speed * Time.deltaTime);
+            yield return null;
+        }
+    }
 
     public string GetCurrentControllerName()
     {

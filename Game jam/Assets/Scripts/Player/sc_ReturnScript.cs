@@ -232,7 +232,11 @@ public class ReturnScript : MonoBehaviour
                 current_point = 0;
             }
             if (cooldown)
+            {
                 SoundManager.instance.PlaySound(cooldown_not_ready_clip);
+                Debug.Log(cooldown_image.transform.parent.name);
+                GameManager.gm.ChangeImageSize(cooldown_image.transform.parent.GetComponent<Image>(), cooldown_image.rectTransform.localScale * 2, 100);
+            }
         }
     }
 
