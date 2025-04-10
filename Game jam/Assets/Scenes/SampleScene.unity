@@ -41122,6 +41122,7 @@ MonoBehaviour:
   layer_ground:
     serializedVersion: 2
     m_Bits: 128
+  player_agent: {fileID: 0}
   rb: {fileID: 0}
   dir: {x: 0, y: 0}
 --- !u!82 &1836626145
