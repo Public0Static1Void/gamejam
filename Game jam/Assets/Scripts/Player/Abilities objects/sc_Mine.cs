@@ -44,6 +44,9 @@ public class sc_Mine : MonoBehaviour
                 CameraRotation.instance.ShakeCamera(0.5f, Mathf.Clamp(damage * 0.05f, 0.1f, 1.5f));
                 GameManager.gm.ShakeController(0.5f, 0.01f, Mathf.Clamp(damage * 0.05f, 0.5f, 1.5f));
             }
+
+            GameManager.gm.SpawnShpereRadius(transform.position, explosion_range * 2, Color.red, true, 50);
+
             // Instancia las partículas
             ParticleSystem.ShapeModule shape = explosion_particle.shape;
             shape.radius = explosion_range;

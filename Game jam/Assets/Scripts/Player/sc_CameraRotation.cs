@@ -74,11 +74,11 @@ public class CameraRotation : MonoBehaviour
         // Efecto de respiración en la cámara
         if (!PlayerMovement.instance.slide && bate != null && !bate.isSwinging && PlayerMovement.instance.current_speed > PlayerMovement.instance.speed * 0.25f)
         {
-            float move_force = PlayerMovement.instance.moving ? 3 : 1;
+            float move_force = PlayerMovement.instance.moving ? 3 : 0.5f;
             if ((up && move_force < 0) || (!up && move_force > 0))
                 move_force *= -1;
 
-            Vector3 new_pos = new Vector3(original_position.x, original_position.y + 0.07f * Mathf.Sign(move_force), transform.localPosition.z);
+            Vector3 new_pos = new Vector3(original_position.x, original_position.y +    0.07f * Mathf.Sign(move_force), transform.localPosition.z);
 
             if (up)
             {
