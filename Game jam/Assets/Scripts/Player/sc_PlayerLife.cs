@@ -13,7 +13,7 @@ public class PlayerLife : MonoBehaviour
     private Image bg_life_amount;
     public AudioSource hearth_beat_as;
 
-    public Transform main_canvas;
+    public RectTransform main_canvas;
     public List<Sprite> blood_splashes;
 
     private List<Image> blood_images = new List<Image>();
@@ -32,6 +32,10 @@ public class PlayerLife : MonoBehaviour
     private CameraRotation cameraRotation;
 
     [SerializeField] private List<AudioClip> damage_clips;
+
+
+    private bool god_mode = false;
+
     void Start()
     {
         if (damage_clips.Count <= 0) Debug.LogWarning("Remember to add the damage sounds to the player!!");
@@ -73,7 +77,7 @@ public class PlayerLife : MonoBehaviour
 
             rect.localScale = Vector3.one * 8;
 
-            ob.transform.SetParent(main_canvas);
+            ob.transform.SetParent(main_canvas.transform);
             ob.SetActive(false);
 
             blood_images.Add(im);
@@ -91,6 +95,19 @@ public class PlayerLife : MonoBehaviour
                 timer = 0;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            god_mode = !god_mode;
+            if (god_mode)
+            {
+                GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "God mode: ON", 2);
+            }
+            else
+            {
+                GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "God mode: OFF", -1);
+            }
+        }
     }
 
     public void Invulnerable()
@@ -105,7 +122,8 @@ public class PlayerLife : MonoBehaviour
 
         bg_life_amount.fillAmount = life_amount.fillAmount;
 
-        //hp -= value;
+        if (!god_mode)
+            hp -= value;
         if (hp > max_hp)
         {
             hp = max_hp;
@@ -115,8 +133,6 @@ public class PlayerLife : MonoBehaviour
         /// Barra de vida
         life_amount.fillAmount = 1 - (1 - ((float)hp / (float)max_hp));
         StartCoroutine(ChangeBackgroundLife(life_amount.fillAmount));
-
-        SplashBloodOnScreen();
 
         /// Sonido de latido, se acelera más cada cuánto menos vida tienes
         if (hp <= max_hp * 0.85f)
@@ -154,11 +170,11 @@ public class PlayerLife : MonoBehaviour
         }
     }
 
-    public void SplashBloodOnScreen()
+    public void SplashBloodOnScreen(bool hit_from_right)
     {
-        StartCoroutine(SplashBlood());
+        StartCoroutine(SplashBlood(hit_from_right));
     }
-    private IEnumerator SplashBlood()
+    private IEnumerator SplashBlood(bool hit_from_right)
     {
         Image curr_image = blood_images[curr_blood]; // Guarda la referencia a la imagen actual
         
@@ -168,8 +184,18 @@ public class PlayerLife : MonoBehaviour
         curr_image.rectTransform.localScale = rand_size;
 
         /// Consigue una posición y rotación aleatorias
-        Vector2 rand_pos = new Vector2(Random.Range(0, Screen.currentResolution.width / 2 - (curr_image.rectTransform.rect.width * rs)),
-                                       Random.Range(0, Screen.currentResolution.height / 2 - (curr_image.rectTransform.rect.height * rs)));
+        Vector2 rand_pos;
+        if (hit_from_right)
+        {
+            rand_pos = new Vector2(Random.Range(curr_image.rectTransform.rect.width * rs, main_canvas.rect.width / 2),
+                                   Random.Range(-main_canvas.rect.height / 2 + curr_image.rectTransform.rect.height, main_canvas.rect.height - curr_image.rectTransform.rect.height * rs));
+        }
+        else
+        {
+            rand_pos = new Vector2(Random.Range(-main_canvas.rect.width / 2, -curr_image.rectTransform.rect.width * rs),
+                                   Random.Range(-main_canvas.rect.height / 2 + curr_image.rectTransform.rect.height, main_canvas.rect.height - curr_image.rectTransform.rect.height * rs));
+        }
+
         Quaternion rand_rotation = Quaternion.Euler(Random.Range(-45, 45), 0, Random.Range(-45, 45));
 
         curr_image.rectTransform.anchoredPosition = rand_pos;
@@ -197,10 +223,15 @@ public class PlayerLife : MonoBehaviour
             curr_blood = 0;
     }
 
+
+
     private void OnTriggerEnter(Collider coll)
     {
         if (coll.transform.tag == "Enemy" && !damaged)
         {
+            Vector3 dir = (transform.position - coll.transform.position).normalized;
+            Debug.Log(!(Vector3.Dot(transform.right, dir) > 0));
+            SplashBloodOnScreen(!(Vector3.Dot(transform.right, dir) > 0));
             Damage(2);
             damaged = true;
         }
