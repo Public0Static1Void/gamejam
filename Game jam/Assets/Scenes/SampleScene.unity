@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -159,7 +159,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 24.666, y: 1.658, z: -10.691}
   m_AnchorMin: {x: 0.5, y: 0.09120426}
   m_AnchorMax: {x: 0.95500004, y: 0.17081705}
-  m_AnchoredPosition: {x: -3.5, y: 11.5}
+  m_AnchoredPosition: {x: -3.5, y: 0}
   m_SizeDelta: {x: 6, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &565345
@@ -27947,6 +27947,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   message_text: {fileID: 54365890}
   pause_menu: {fileID: 456120471}
+  main_canvas: {fileID: 698889104}
   screen_texts:
   - {fileID: 54365890}
   - {fileID: 1065824585}
@@ -27960,6 +27961,7 @@ MonoBehaviour:
   txt_total_score_points: {fileID: 39028772}
   txt_converted_score_points: {fileID: 377432515}
   ob_shpere: {fileID: 951447432250635709, guid: 7abd8d752d41fba4081c4642c522ebf2, type: 3}
+  cirle_sprite: {fileID: 21300000, guid: 149084dddd848454587900ba0544afa5, type: 3}
   enemies_killed: 0
   damage_done: 0
   damage_recieved: 0
@@ -33400,7 +33402,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -11.691}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 17, y: 81}
+  m_AnchoredPosition: {x: 17, y: 74}
   m_SizeDelta: {x: 281, y: 83}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1521420112
@@ -41287,6 +41289,7 @@ MonoBehaviour:
   cooldown_image: {fileID: 911460968}
   water_explosion_particle: {fileID: 884547721288784740, guid: 1795b562a90319149b0e051845c2ec24, type: 3}
   explosion_particle: {fileID: 4982277033034756837, guid: 9bb1651a046ee994fb34e201a5dd52fc, type: 3}
+  huge_water_explosion_particle: {fileID: 1987862644109936140, guid: 2b6542d6af6e9134db4b7d30741dd944, type: 3}
   return_clip: {fileID: 8300000, guid: 71dff78d00e82c045a2751c706202012, type: 3}
   explosion_clip: {fileID: 8300000, guid: 0edd2431d56b5c5478751db762fb5952, type: 3}
   funny_explosion_clip: {fileID: 8300000, guid: 01fb40017319b9c42ab26d5eb663302f, type: 3}
@@ -41324,6 +41327,7 @@ MonoBehaviour:
   layer_enemy:
     serializedVersion: 2
     m_Bits: 64
+  pr_HitNByeParticles: {fileID: 3185012236459843223, guid: c3b1e61b3b91b0a45bd85d8cbb2d6b04, type: 3}
 --- !u!195 &1836626149
 NavMeshAgent:
   m_ObjectHideFlags: 0

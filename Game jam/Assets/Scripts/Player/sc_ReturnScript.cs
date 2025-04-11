@@ -26,6 +26,7 @@ public class ReturnScript : MonoBehaviour
     public Image cooldown_image;
     public GameObject water_explosion_particle;
     public ParticleSystem explosion_particle;
+    public ParticleSystem huge_water_explosion_particle;
 
     [Header("Sonidos")]
     public AudioClip return_clip;
@@ -151,8 +152,12 @@ public class ReturnScript : MonoBehaviour
                 cooldown_timer += Time.deltaTime;
                 cooldown_image.fillAmount += Time.deltaTime / cooldown_time; /// Suma la cantidad de fill a la imágen del cooldown
                 cooldown_image.color = Color.Lerp(cooldown_image.color, color_on_cooldown, Time.deltaTime * 1.75f); /// Cambia el color de la imágen al de cooldown
+
+                // El cooldown ha terminado
                 if (cooldown_timer > cooldown_time)
                 {
+                    GameManager.gm.SpawnUICircle(cooldown_image.rectTransform, 200, Color.red, true);
+
                     SoundManager.instance.PlaySound(cooldown_ready_clip);
                     cooldown = false;
                     cooldown_timer = 0;
@@ -198,6 +203,7 @@ public class ReturnScript : MonoBehaviour
 
                 if (can_heal && !healed)
                 {
+                    // Cura del jugador
                     playerLife.Damage((int)(-damage * 0.15f));
                     healed = true;
                 }
@@ -235,7 +241,8 @@ public class ReturnScript : MonoBehaviour
             {
                 SoundManager.instance.PlaySound(cooldown_not_ready_clip);
                 Debug.Log(cooldown_image.transform.parent.name);
-                GameManager.gm.ChangeImageSize(cooldown_image.transform.parent.GetComponent<Image>(), cooldown_image.rectTransform.localScale * 2, 100);
+
+                GameManager.gm.ShakeUIElement(cooldown_image.transform.parent.GetComponent<RectTransform>(), 0.25f, 100);
             }
         }
     }
@@ -389,28 +396,45 @@ public class ReturnScript : MonoBehaviour
         List<Vector3> positions = new List<Vector3>(past_positions);
         int explosion_num = positions.Count - 1;
         float explosion_timer = 0;
-        while (explosion_num > 0)
+
+
+        // Cambia el radio de las partículas por el radio de la explosión
+        float range = 3 + (damage * 0.2f);
+        if (water_explosion_particle.transform.childCount > 0)
+        {
+            ParticleSystem ground_explosion = explosionParticle.transform.GetChild(0).GetComponent<ParticleSystem>();
+            ParticleSystem.ShapeModule shape_module = ground_explosion.shape;
+            shape_module.radius = range;
+        }
+
+        List<GameObject> pre_explosion_particles = new List<GameObject>();
+        for (int i = 0; i < positions.Count; i++)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(positions[i], Vector3.down, out hit))
+            {
+                positions[i] = hit.point;
+            }
+            pre_explosion_particles.Add(Instantiate(water_explosion_particle, positions[i], water_explosion_particle.transform.rotation));
+        }
+
+        while (explosion_num >= 0)
         {
             explosion_timer += Time.deltaTime;
             if (explosion_timer > 0.75f)
             {
-                // Cambia el radio de las partículas por el radio de la explosión
 
-                float range = 3 + (damage * 0.2f);
-                if (water_explosion_particle.transform.childCount > 0)
-                {
-                    ParticleSystem ground_explosion = explosionParticle.transform.GetChild(0).GetComponent<ParticleSystem>();
-                    ParticleSystem.ShapeModule shape_module = ground_explosion.shape;
-                    shape_module.radius = range;
-                }
                 /// Instancia las partículas
-                Instantiate(explosionParticle, positions[explosion_num], explosionParticle.transform.rotation);
+                Destroy(pre_explosion_particles[explosion_num]);
 
                 GameManager.gm.SpawnShpereRadius(positions[explosion_num], range * 2, Color.cyan, true, 50);
 
                 /// Aplica el daño a los enemigos
                 DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), range, Vector3.up * (2 + (damage * 0.1f)));
 
+                
+
+                Destroy(Instantiate(huge_water_explosion_particle, positions[explosion_num], huge_water_explosion_particle.transform.rotation), 2);
 
                 float dist = Vector3.Distance(positions[explosion_num], transform.position);
                 if (dist < 15) /// Si el jugador está cerca hará vibrár el mando

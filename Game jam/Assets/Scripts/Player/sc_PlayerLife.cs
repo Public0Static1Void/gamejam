@@ -8,6 +8,7 @@ public class PlayerLife : MonoBehaviour
     public int max_hp;
     public float invunerable_time;
     public int hp;
+
     [Header("References")]
     public Image life_amount;
     private Image bg_life_amount;
@@ -78,6 +79,8 @@ public class PlayerLife : MonoBehaviour
             rect.localScale = Vector3.one * 8;
 
             ob.transform.SetParent(main_canvas.transform);
+            ob.transform.SetAsFirstSibling();
+
             ob.SetActive(false);
 
             blood_images.Add(im);

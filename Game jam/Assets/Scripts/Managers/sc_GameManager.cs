@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public enum TextPositions { CENTER, CENTER_LOWER, LAST_NO_USE }
 
     [Header("References")]
+    public Transform main_canvas;
     public List<TMP_Text> screen_texts;
 
     public UnityEngine.UI.Button btn_resume, btn_continue;
@@ -43,6 +44,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text txt_converted_score_points;
 
     public GameObject ob_shpere;
+
+    public Sprite cirle_sprite;
 
     [Header("Stats")]
     public int enemies_killed = 0;
@@ -98,6 +101,54 @@ public class GameManager : MonoBehaviour
             message_text.color = new Color(col.r, col.g, col.b, alpha);
         }
     }
+
+
+    public void SpawnUICircle(RectTransform rectTransform, float radius, Color color, bool grow, float grow_speed = 1)
+    {
+        if (grow)
+        {
+            StartCoroutine(SpawnUICircleRoutine(rectTransform, radius, color, grow, grow_speed));
+        }
+    }
+    private IEnumerator SpawnUICircleRoutine(RectTransform rt, float radius, Color color, bool grow, float grow_speed)
+    {
+        RectTransform rectTransform = new GameObject("Circle").AddComponent<RectTransform>();
+
+        Transform new_parent = rt.parent == null ? main_canvas.transform : rt.parent.transform;
+        rectTransform.gameObject.transform.SetParent(new_parent);
+
+        rectTransform.anchoredPosition = rt.anchoredPosition;
+        rectTransform.position = rt.position;
+        rectTransform.localPosition = rt.localPosition;
+
+
+        UnityEngine.UI.Image im = rectTransform.gameObject.AddComponent<UnityEngine.UI.Image>();
+        im.sprite = cirle_sprite;
+        im.color = color;
+
+        rectTransform.localScale = Vector3.zero;
+
+        Color col = im.color;
+        float alpha = 1;
+
+        float current_radius = 0;
+        while (current_radius <= radius || alpha >= 0)
+        {
+            current_radius += Time.deltaTime * grow_speed;
+            rectTransform.localScale = Vector2.one * current_radius;
+
+            if (alpha >= 0)
+            {
+                alpha -= Time.deltaTime * 0.5f;
+                im.color = new Color(col.r, col.g, col.b, alpha);
+            }
+
+            yield return null;
+        }
+
+        Destroy(rectTransform.gameObject);
+    }
+
     /// <summary>
     /// Instancia una esfera con el rango y el color pasados, si grow se marca como true crecerá de 0 hasta radius
     /// </summary>
@@ -160,6 +211,30 @@ public class GameManager : MonoBehaviour
         Destroy(renderer.gameObject);
     }
 
+    public void ShakeUIElement(RectTransform rectTransform, float duration, float force)
+    {
+        StartCoroutine(ShakeUIElementRoutine(rectTransform, duration, force));
+    }
+    private IEnumerator ShakeUIElementRoutine(RectTransform rectTransform, float duration, float force)
+    {
+        Vector3 original_position = rectTransform.anchoredPosition;
+        float timer = 0;
+        while (timer < duration)
+        {
+            if (!PlayerMovement.instance.canMove) break;
+
+            timer += Time.deltaTime;
+
+            float x = Random.Range(-1, 1) * force;
+            float y = Random.Range(-1, 1) * force;
+
+            rectTransform.anchoredPosition = Vector3.Lerp(original_position, original_position + new Vector3(x, y, 0), Time.deltaTime);
+
+            yield return null;
+        }
+
+        rectTransform.anchoredPosition = original_position;
+    }
 
     public void ChangeImageSize(UnityEngine.UI.Image image, Vector3 new_size, float speed)
     {

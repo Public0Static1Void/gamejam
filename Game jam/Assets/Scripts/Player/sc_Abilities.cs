@@ -29,6 +29,8 @@ public class sc_Abilities : MonoBehaviour
     public AudioClip clip_plant_mine;
     public LayerMask layer_enemy;
 
+    public GameObject pr_HitNByeParticles;
+
     Vector3 centroid;
 
     //Hook
@@ -338,6 +340,8 @@ public class sc_Abilities : MonoBehaviour
                 if (rand == 0)
                 {
                     Vector3 dir = (other.transform.position - transform.position).normalized;
+
+                    Destroy(Instantiate(pr_HitNByeParticles, transform.position + dir * transform.localScale.x, Quaternion.LookRotation(dir, Vector3.up)), 1);
 
                     EnemyFollow e_fl = other.GetComponent<EnemyFollow>();
 

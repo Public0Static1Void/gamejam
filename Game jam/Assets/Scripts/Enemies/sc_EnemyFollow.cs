@@ -100,8 +100,8 @@ public class EnemyFollow : MonoBehaviour
         {
             Debug.Log(Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer) > 0);
             Vector3 new_dir = (PlayerMovement.instance.transform.right * -Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer)
-                               + directionAwayFromPlayer * 2);
-            transform.Translate(new_dir.normalized * Time.deltaTime * 10);
+                               + directionAwayFromPlayer * 5);
+            transform.Translate(new_dir.normalized * Time.deltaTime * 12.5f);
 
             relocate_timer += Time.deltaTime;
             if (relocate_timer > 0.25f)
@@ -111,7 +111,7 @@ public class EnemyFollow : MonoBehaviour
             }
             return;
         }
-        else if (PlayerMovement.instance.moving && Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 2)
+        else if (PlayerMovement.instance.moving && Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 1.5f)
         {
             directionAwayFromPlayer = (-transform.position + PlayerMovement.instance.transform.position).normalized;
             relocating = true;
