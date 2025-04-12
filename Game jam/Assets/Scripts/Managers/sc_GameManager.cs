@@ -138,8 +138,16 @@ public class GameManager : MonoBehaviour
         float current_radius = 0;
         while (current_radius <= radius || alpha >= 0)
         {
-            current_radius += Time.deltaTime * grow_speed;
+            if (current_radius <= radius)
+            {
+                current_radius += Time.deltaTime * grow_speed;
+            }
+            else
+            {
+                current_radius += Time.deltaTime * grow_speed * 0.5f;
+            }
             rectTransform.localScale = Vector2.one * current_radius;
+
 
             if (alpha >= 0)
             {
