@@ -156,7 +156,8 @@ public class ReturnScript : MonoBehaviour
                 // El cooldown ha terminado
                 if (cooldown_timer > cooldown_time)
                 {
-                    GameManager.gm.SpawnUICircle(cooldown_image.rectTransform, 200, Color.red, true);
+                    // Muestra un círculo en el icono de cooldown para mostrar que ya está el cooldown
+                    GameManager.gm.SpawnUICircle(cooldown_image.rectTransform, 15, Color.gray, true, 5);
 
                     SoundManager.instance.PlaySound(cooldown_ready_clip);
                     cooldown = false;

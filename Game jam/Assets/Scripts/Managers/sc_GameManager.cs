@@ -107,19 +107,23 @@ public class GameManager : MonoBehaviour
     {
         if (grow)
         {
-            StartCoroutine(SpawnUICircleRoutine(rectTransform, radius, color, grow, grow_speed));
+            StartCoroutine(SpawnUICircleRoutine(rectTransform, radius, color, grow_speed));
         }
     }
-    private IEnumerator SpawnUICircleRoutine(RectTransform rt, float radius, Color color, bool grow, float grow_speed)
+    private IEnumerator SpawnUICircleRoutine(RectTransform rt, float radius, Color color, float grow_speed)
     {
         RectTransform rectTransform = new GameObject("Circle").AddComponent<RectTransform>();
 
         Transform new_parent = rt.parent == null ? main_canvas.transform : rt.parent.transform;
-        rectTransform.gameObject.transform.SetParent(new_parent);
+        rectTransform.gameObject.transform.SetParent(new_parent, false);
+
+        // Pone la posición como el recttransform pasado
+        rectTransform.anchorMin = rt.anchorMin;
+        rectTransform.anchorMax = rt.anchorMax;
+        rectTransform.pivot = rt.pivot;
 
         rectTransform.anchoredPosition = rt.anchoredPosition;
-        rectTransform.position = rt.position;
-        rectTransform.localPosition = rt.localPosition;
+        rectTransform.sizeDelta = rt.sizeDelta;
 
 
         UnityEngine.UI.Image im = rectTransform.gameObject.AddComponent<UnityEngine.UI.Image>();
@@ -139,7 +143,7 @@ public class GameManager : MonoBehaviour
 
             if (alpha >= 0)
             {
-                alpha -= Time.deltaTime * 0.5f;
+                alpha -= Time.deltaTime * grow_speed * 0.25f;
                 im.color = new Color(col.r, col.g, col.b, alpha);
             }
 
