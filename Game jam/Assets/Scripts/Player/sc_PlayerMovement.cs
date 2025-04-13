@@ -222,7 +222,8 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (slide || slide_timer > 0)
+        if (slide || slide_timer > 0
+            || (!can_slide && !slide && onGround))
         {
             slide_timer += Time.deltaTime;
             if (slide_timer > 0.75f)

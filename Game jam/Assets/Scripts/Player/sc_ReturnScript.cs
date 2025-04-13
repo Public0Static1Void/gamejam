@@ -319,29 +319,6 @@ public class ReturnScript : MonoBehaviour
                 ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, rotations[curr_pos], Time.deltaTime * return_speed);
 
 
-                // Comprobación de choque
-                Collider[] colls = Physics.OverlapSphere(ob_AfterImage.transform.position, 2, enemyMask);
-                if (colls.Length > 0)
-                {
-                    for (int i = 0; i < colls.Length; i++)
-                    {
-                        if (names_hit.Contains(colls[i].transform.parent.name)) continue;
-
-                        // Envia el enemigo a volar y después le aplica el daño
-                        Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
-                        colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
-                        colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
-
-                        // hace un sonido de choque eléctrico
-                        SoundManager.instance.InstantiateSound(electric_spark, colls[i].transform.position, 0.75f);
-
-                        GameManager.gm.SpawnShpereRadius(colls[i].transform.position, 3, Color.green, true, 200);
-
-                        names_hit.Add(colls[i].transform.parent.name);
-                    }
-                }
-
-
                 // Si toca al jugador acaba la habilidad
                 if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) <= 1f)
                     curr_pos = -1;
@@ -360,6 +337,28 @@ public class ReturnScript : MonoBehaviour
                 ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, transform.position, Time.deltaTime * (return_speed * 2));
                 if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) <= 1f)
                     break;
+            }
+
+            // Comprobación de choque
+            Collider[] colls = Physics.OverlapSphere(ob_AfterImage.transform.position, 2, enemyMask);
+            if (colls.Length > 0)
+            {
+                for (int i = 0; i < colls.Length; i++)
+                {
+                    if (names_hit.Contains(colls[i].transform.parent.name)) continue;
+
+                    // Envia el enemigo a volar y después le aplica el daño
+                    Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
+                    colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
+                    colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
+
+                    // hace un sonido de choque eléctrico
+                    SoundManager.instance.InstantiateSound(electric_spark, colls[i].transform.position, 0.75f);
+
+                    GameManager.gm.SpawnShpereRadius(colls[i].transform.position, 3, Color.green, true, 200);
+
+                    names_hit.Add(colls[i].transform.parent.name);
+                }
             }
 
             yield return null;
