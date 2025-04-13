@@ -35,7 +35,7 @@ public class PlayerLife : MonoBehaviour
     [SerializeField] private List<AudioClip> damage_clips;
 
 
-    private bool god_mode = false;
+    public bool god_mode = false;
 
     void Start()
     {

@@ -293,7 +293,7 @@ public class ReturnScript : MonoBehaviour
         int curr_pos = positions.Count - 1;
 
         // Cuánta más distancia recorra la imagen más daño hará
-        float scaled_damage = (Vector3.Distance(positions[curr_pos], positions[0]) * 0.1f) * (damage * 0.075f);
+        float scaled_damage = (Vector3.Distance(positions[curr_pos], positions[0]) * 0.1f) * (damage * 0.2f);
 
         ob_AfterImage.transform.position = transform.position;
         ob_AfterImage.transform.rotation = transform.rotation;
@@ -345,7 +345,7 @@ public class ReturnScript : MonoBehaviour
             {
                 for (int i = 0; i < colls.Length; i++)
                 {
-                    if (names_hit.Contains(colls[i].transform.parent.name)) continue;
+                    if (colls[i] != null && names_hit.Contains(colls[i].transform.parent.name)) continue;
 
                     // Envia el enemigo a volar y después le aplica el daño
                     Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;

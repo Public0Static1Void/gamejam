@@ -42,7 +42,7 @@ public class AttackSystem : MonoBehaviour
                 j++;
             }
         }
-        Debug.Log("Ab 0: " + abilities_order[0].name);
+
         // Cambia los sprites de los slots según la habilidad que se pueda usar
         for (int i = 0; i <  abilities_order.Length; i++)
         {

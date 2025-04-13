@@ -18,7 +18,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     public bool gambling_open = false;
 
-    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, HOLOGRAM_BODY, LAST_NO_USE }
     public enum AbilityType { BASIC, ULTIMATE, PASSIVE, LAST_NO_USE }
 
     [Header("References")]
@@ -49,6 +49,8 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_stomp;
     public Sprite sprite_byebye;
     public Sprite sprite_bloodthirsty;
+    public Sprite sprite_hologram;
+    
     void Awake()
     {
         if (instance == null)
@@ -139,6 +141,16 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = $"[PASSIVE]\nWhen dealing damage, heal for 15% ({(ReturnScript.instance.damage * 0.15f).ToString("F2")}) of your damage";
         ab.icon = sprite_bloodthirsty;
         ab.rarity = AbilityType.PASSIVE;
+
+        abilities.Add(ab);
+        
+        // Hologram body
+        ab = new Ability();
+
+        ab.name = "Hologram body";
+        ab.description = $"Press the attack button to become an intangible hologram for 3 seconds, augmenting your base speed";
+        ab.icon = sprite_hologram;
+        ab.rarity = AbilityType.BASIC;
 
         abilities.Add(ab);
 
