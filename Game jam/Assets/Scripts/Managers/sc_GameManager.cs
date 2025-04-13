@@ -164,11 +164,11 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Instancia una esfera con el rango y el color pasados, si grow se marca como true crecerá de 0 hasta radius
     /// </summary>
-    public void SpawnShpereRadius(Vector3 position, float radius, Color col, bool grow, float grow_speed = 100)
+    public void SpawnShpereRadius(Vector3 position, float radius, Color col, bool grow, float grow_speed = 100, Material material = null)
     {
         if (grow)
         {
-            StartCoroutine(GrowSphere(position, radius, col, grow_speed));
+            StartCoroutine(GrowSphere(position, radius, col, grow_speed, material));
         }
         else
         {
@@ -180,12 +180,16 @@ public class GameManager : MonoBehaviour
             StartCoroutine(HideShaderObject(renderer));
         }
     }
-    private IEnumerator GrowSphere(Vector3 position, float radius, Color col, float grow_speed)
+    private IEnumerator GrowSphere(Vector3 position, float radius, Color col, float grow_speed, Material material)
     {
         // Instancia el objetp
         GameObject ob = Instantiate(ob_shpere, position, Quaternion.identity);
         // Cambia el color del shader
         Renderer renderer = ob.GetComponent<Renderer>();
+        if (material != null)
+        {
+            renderer.material = material;
+        }
         renderer.material.SetColor("_BaseColor", col);
         // Cambia su tamaño a 0
         ob.transform.localScale = Vector3.zero;

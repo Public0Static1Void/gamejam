@@ -27,11 +27,14 @@ public class ReturnScript : MonoBehaviour
     public GameObject water_explosion_particle;
     public ParticleSystem explosion_particle;
     public ParticleSystem huge_water_explosion_particle;
+    public GameObject ob_AfterImage;
 
     [Header("Sonidos")]
     public AudioClip return_clip;
     public AudioClip explosion_clip, funny_explosion_clip, tictac_clip, nautilus_explosion;
     public AudioClip cooldown_ready_clip, cooldown_not_ready_clip;
+    public List<AudioClip> clips_electric_move;
+    public AudioClip electric_spark;
 
     [Header("Positions record")]
     public List<Vector3> past_positions;
@@ -81,11 +84,11 @@ public class ReturnScript : MonoBehaviour
         {
             // La posición de la cámara se pasa al punto donde volverás en el tiempo para dar una vista aérea
             Camera.main.transform.parent = null;
-            //Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition,  new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z) - transform.forward * 2, Time.deltaTime * 3);
             Camera.main.transform.localPosition = new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z);
 
             // Calcula la distancia hasta el último punto en un rango de 1 a 0
             cooldown_image.fillAmount = 1 - (1 - (Vector3.Distance(transform.position, past_positions[0]) / Vector3.Distance(past_positions[0], past_positions[past_positions.Count - 1])));
+
 
             if (Vector3.Distance(transform.position, past_positions[current_point]) > 1f)
             {
@@ -111,11 +114,10 @@ public class ReturnScript : MonoBehaviour
                     Camera.main.transform.position = transform.position;
                     Camera.main.transform.SetParent(transform);
 
-                    /// Instancia una esfera para indicar el rango de la explosión
-                    GameManager.gm.SpawnShpereRadius(transform.position, explosion_range * 2, Color.red, true);
-
                     cooldown_image.fillAmount = 0;
+
                     #region DamageToEnemy
+                    /*
                     if (SoundManager.instance.funnySounds) /// Sonidos de explosión
                     {
                         SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position);
@@ -126,6 +128,7 @@ public class ReturnScript : MonoBehaviour
                     }
                     GameManager.gm.ShakeController(1, 0.25f, 1);
                     DamageToEnemies(transform.position, damage, explosion_range, Vector3.zero);
+                    */
                     #endregion
 
                     playerLife.Invulnerable(); /// Hace que el jugador sea invulnerable cuando acaba de llegar
@@ -232,6 +235,8 @@ public class ReturnScript : MonoBehaviour
                 {
                     ability.Invoke();
                 }
+
+                StartCoroutine(AfterImageAttack());
             }
             else /// El jugador ha terminado la habilidad antes
             {
@@ -274,6 +279,80 @@ public class ReturnScript : MonoBehaviour
         q_rotations.Add(transform.rotation);
     }
 
+
+    private IEnumerator AfterImageAttack()
+    {
+        List<Vector3> positions = new List<Vector3>(past_positions);
+        List<Quaternion> rotations = new List<Quaternion>(q_rotations);
+
+        int curr_pos = positions.Count - 1;
+
+        // Cuánta más distancia recorra la imagen más daño hará
+        float scaled_damage = (Vector3.Distance(positions[curr_pos], positions[0]) * 0.1f) * (damage * 0.075f);
+
+        ob_AfterImage.transform.position = transform.position;
+        ob_AfterImage.transform.rotation = transform.rotation;
+        ob_AfterImage.SetActive(true);
+
+        // Espera a que el jugador haya terminado de volver
+        while (returning)
+            yield return null;
+
+        // Hace un sonido de movimiento eléctrico
+        SoundManager.instance.InstantiateSound(clips_electric_move[Random.Range(0, clips_electric_move.Count)], ob_AfterImage.transform.position, 0.25f);
+
+
+        List<string> names_hit = new List<string>();
+
+
+        while (curr_pos >= 0)
+        {
+            // Movimiento del objeto
+            ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, positions[curr_pos], Time.deltaTime * (return_speed * 2));
+            ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, rotations[curr_pos], Time.deltaTime * return_speed);
+
+
+            // Comprobación de choque
+            Collider[] colls = Physics.OverlapSphere(ob_AfterImage.transform.position, 2, enemyMask);
+            if (colls.Length > 0)
+            {
+                for (int i = 0; i < colls.Length; i++)
+                {
+                    if (names_hit.Contains(colls[i].transform.parent.name)) continue;
+
+                    // Envia el enemigo a volar y después le aplica el daño
+                    Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
+                    colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
+                    colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
+
+                    // hace un sonido de choque eléctrico
+                    SoundManager.instance.InstantiateSound(electric_spark, colls[i].transform.position, 0.75f);
+
+                    GameManager.gm.SpawnShpereRadius(colls[i].transform.position, 3, Color.green, true);
+
+                    names_hit.Add(colls[i].transform.parent.name);
+                }
+            }
+
+
+            // Si toca al jugador acaba la habilidad
+            if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) <= 1f)
+                break;
+            else if (Vector3.Distance(ob_AfterImage.transform.position, positions[curr_pos]) <= 0.15f)
+            {
+                curr_pos--;
+                
+                yield return new WaitForSeconds(0.1f);
+
+                // Hace un sonido de movimiento eléctrico
+                SoundManager.instance.InstantiateSound(clips_electric_move[Random.Range(0, clips_electric_move.Count)], ob_AfterImage.transform.position, 0.25f);
+            }
+
+            yield return null;
+        }
+
+        ob_AfterImage.SetActive(false);
+    }
 
     private IEnumerator HideObjectsOnView()
     {
