@@ -138,7 +138,7 @@ public class PlayerLife : MonoBehaviour
         StartCoroutine(ChangeBackgroundLife(life_amount.fillAmount));
 
         /// Sonido de latido, se acelera más cada cuánto menos vida tienes
-        if (hp <= max_hp * 0.85f)
+        if (hp <= max_hp * 0.65f)
         {
             hearth_beat_as.Play();
         }

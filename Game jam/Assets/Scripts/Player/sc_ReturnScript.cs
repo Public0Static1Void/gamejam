@@ -24,6 +24,7 @@ public class ReturnScript : MonoBehaviour
     public LayerMask enemyMask;
     public UnityEvent ability;
     public Image cooldown_image;
+    public Image returning_effect_image;
     public GameObject water_explosion_particle;
     public ParticleSystem explosion_particle;
     public ParticleSystem huge_water_explosion_particle;
@@ -86,8 +87,10 @@ public class ReturnScript : MonoBehaviour
             Camera.main.transform.parent = null;
             Camera.main.transform.localPosition = new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z);
 
-            // Calcula la distancia hasta el último punto en un rango de 1 a 0
+            /// Calcula la distancia hasta el último punto en un rango de 1 a 0
             cooldown_image.fillAmount = 1 - (1 - (Vector3.Distance(transform.position, past_positions[0]) / Vector3.Distance(past_positions[0], past_positions[past_positions.Count - 1])));
+            /// Cambia la transparencia del efecto de volver en el tiempo
+            returning_effect_image.color = new Color(returning_effect_image.color.r, returning_effect_image.color.g, returning_effect_image.color.b,  1 - cooldown_image.fillAmount * 1.15f);
 
 
             if (Vector3.Distance(transform.position, past_positions[current_point]) > 1f)
@@ -140,6 +143,8 @@ public class ReturnScript : MonoBehaviour
                     ParticleSystem.ShapeModule shape = explosion_particle.shape;
                     shape.radius = explosion_range;
                     Instantiate(explosion_particle, transform.position, explosion_particle.transform.rotation);
+
+                    StartCoroutine(GameManager.gm.HideImage(2, returning_effect_image, null, false));
 
                     returning = false;
                     cooldown = true;
@@ -305,47 +310,56 @@ public class ReturnScript : MonoBehaviour
         List<string> names_hit = new List<string>();
 
 
-        while (curr_pos >= 0)
+        while (curr_pos >= -1)
         {
-            // Movimiento del objeto
-            ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, positions[curr_pos], Time.deltaTime * (return_speed * 2));
-            ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, rotations[curr_pos], Time.deltaTime * return_speed);
-
-
-            // Comprobación de choque
-            Collider[] colls = Physics.OverlapSphere(ob_AfterImage.transform.position, 2, enemyMask);
-            if (colls.Length > 0)
+            if (curr_pos >= 0)
             {
-                for (int i = 0; i < colls.Length; i++)
+                // Movimiento del objeto
+                ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, positions[curr_pos], Time.deltaTime * (return_speed * 2));
+                ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, rotations[curr_pos], Time.deltaTime * return_speed);
+
+
+                // Comprobación de choque
+                Collider[] colls = Physics.OverlapSphere(ob_AfterImage.transform.position, 2, enemyMask);
+                if (colls.Length > 0)
                 {
-                    if (names_hit.Contains(colls[i].transform.parent.name)) continue;
+                    for (int i = 0; i < colls.Length; i++)
+                    {
+                        if (names_hit.Contains(colls[i].transform.parent.name)) continue;
 
-                    // Envia el enemigo a volar y después le aplica el daño
-                    Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
-                    colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
-                    colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
+                        // Envia el enemigo a volar y después le aplica el daño
+                        Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
+                        colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
+                        colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
 
-                    // hace un sonido de choque eléctrico
-                    SoundManager.instance.InstantiateSound(electric_spark, colls[i].transform.position, 0.75f);
+                        // hace un sonido de choque eléctrico
+                        SoundManager.instance.InstantiateSound(electric_spark, colls[i].transform.position, 0.75f);
 
-                    GameManager.gm.SpawnShpereRadius(colls[i].transform.position, 3, Color.green, true);
+                        GameManager.gm.SpawnShpereRadius(colls[i].transform.position, 3, Color.green, true, 200);
 
-                    names_hit.Add(colls[i].transform.parent.name);
+                        names_hit.Add(colls[i].transform.parent.name);
+                    }
+                }
+
+
+                // Si toca al jugador acaba la habilidad
+                if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) <= 1f)
+                    curr_pos = -1;
+                else if (Vector3.Distance(ob_AfterImage.transform.position, positions[curr_pos]) <= 0.15f)
+                {
+                    curr_pos--;
+
+                    yield return new WaitForSeconds(0.1f);
+
+                    // Hace un sonido de movimiento eléctrico
+                    SoundManager.instance.InstantiateSound(clips_electric_move[Random.Range(0, clips_electric_move.Count)], ob_AfterImage.transform.position, 0.25f);
                 }
             }
-
-
-            // Si toca al jugador acaba la habilidad
-            if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) <= 1f)
-                break;
-            else if (Vector3.Distance(ob_AfterImage.transform.position, positions[curr_pos]) <= 0.15f)
+            else
             {
-                curr_pos--;
-                
-                yield return new WaitForSeconds(0.1f);
-
-                // Hace un sonido de movimiento eléctrico
-                SoundManager.instance.InstantiateSound(clips_electric_move[Random.Range(0, clips_electric_move.Count)], ob_AfterImage.transform.position, 0.25f);
+                ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, transform.position, Time.deltaTime * (return_speed * 2));
+                if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) <= 1f)
+                    break;
             }
 
             yield return null;

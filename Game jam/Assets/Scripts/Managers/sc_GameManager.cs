@@ -429,7 +429,7 @@ public class GameManager : MonoBehaviour
         Application.Quit();
     }
 
-    public IEnumerator HideImage(float hide_speed, UnityEngine.UI.Image image_to_hide, TMP_Text text_to_hide = null)
+    public IEnumerator HideImage(float hide_speed, UnityEngine.UI.Image image_to_hide, TMP_Text text_to_hide = null, bool relocate = true)
     {
         Color col = image_to_hide.color;
         while (image_to_hide.color.a > 0)
@@ -441,12 +441,15 @@ public class GameManager : MonoBehaviour
             }
             yield return null;
         }
-        image_to_hide.rectTransform.anchoredPosition = Vector2.zero;
-        image_to_hide.rectTransform.position = Vector2.zero;
-        if (text_to_hide != null)
+        if (relocate)
         {
-            text_to_hide.rectTransform.anchoredPosition = Vector2.zero;
-            text_to_hide.rectTransform.position = Vector2.zero;
+            image_to_hide.rectTransform.anchoredPosition = Vector2.zero;
+            image_to_hide.rectTransform.position = Vector2.zero;
+            if (text_to_hide != null)
+            {
+                text_to_hide.rectTransform.anchoredPosition = Vector2.zero;
+                text_to_hide.rectTransform.position = Vector2.zero;
+            }
         }
     }
 
