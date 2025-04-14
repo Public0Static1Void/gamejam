@@ -7,11 +7,14 @@ using UnityEngine.UIElements;
 public class AttackSystem : MonoBehaviour
 {
     public static AttackSystem instance { get; private set; }
+
     public List<Ability> equipped_attacks = new List<Ability>();
 
     private int current_attack = 0;
 
     public List<UnityEngine.UI.Image> slots_abilities;
+    public List<UnityEngine.UI.Image> slots_cooldowns;
+
     private Ability[] abilities_order;
     void Awake()
     {
@@ -53,6 +56,14 @@ public class AttackSystem : MonoBehaviour
             slots_abilities[i].color = new Color(col.r, col.g, col.b, 1);
         }
 
+        // Pone el cooldown actual de cada slot
+        for (int i = 0; i < slots_cooldowns.Count && i < abilities_order.Length; i++)
+        {
+            if (abilities_order[i] == null) continue;
+
+            StartCooldown(slots_cooldowns[i], abilities_order[i].cooldown, abilities_order[i].current_cooldown);
+        }
+
         // Esconde todos los slots que no tengan una habilidad
         for (int i = 0; i < slots_abilities.Count; i++)
         {
@@ -78,12 +89,35 @@ public class AttackSystem : MonoBehaviour
         }
     }
 
+    public void StartCooldown(UnityEngine.UI.Image im, float cooldown, float current_cooldown)
+    {
+        StartCoroutine(AbilityCooldown(im, cooldown, current_cooldown));
+    }
+    private IEnumerator AbilityCooldown(UnityEngine.UI.Image im, float cooldown, float current_cooldown)
+    {
+        im.color = new Color(im.color.r, im.color.g, im.color.b, 1);
+
+        while (current_cooldown < cooldown)
+        {
+            current_cooldown += Time.deltaTime;
+            im.fillAmount = current_cooldown;
+            yield return null;
+        }
+
+        current_cooldown = 0;
+
+        im.fillAmount = 1;
+        im.color = new Color(im.color.r, im.color.g, im.color.b, 0);
+    }
+
     public void Attack(InputAction.CallbackContext con)
     {
         if (con.performed && equipped_attacks.Count > 0)
         {
             if (current_attack < equipped_attacks.Count)
+            {
                 equipped_attacks[current_attack].ability_event.Invoke();
+            }
 
             ChangeAttack();
         }

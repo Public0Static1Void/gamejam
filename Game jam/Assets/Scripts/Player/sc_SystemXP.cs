@@ -14,6 +14,8 @@ public class Ability
     public System.Action effect;
     public AbilitiesSystem.Abilities type;
     public AbilitiesSystem.AbilityType rarity;
+    public float cooldown = 0;
+    public float current_cooldown = 0;
 
     public bool onExecution = false;
 }

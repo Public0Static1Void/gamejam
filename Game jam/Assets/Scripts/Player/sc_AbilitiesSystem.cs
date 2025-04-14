@@ -110,6 +110,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = "Launch a hook forward and catch the first enemy hit, pulling it towards you after a short delay. If you press the ability again, you jump to the enemy instead.";
         ab.icon = sprite_hook;
         ab.rarity = AbilityType.BASIC;
+        ab.cooldown = 1;
 
         abilities.Add(ab);
 
@@ -121,6 +122,7 @@ public class AbilitiesSystem : MonoBehaviour
                          "[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
         ab.icon = sprite_stomp;
         ab.rarity = AbilityType.BASIC;
+        ab.cooldown = 0.5f;
 
         abilities.Add(ab);
         
@@ -151,6 +153,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = $"Press the attack button to become an intangible hologram for 3 seconds, augmenting your base speed";
         ab.icon = sprite_hologram;
         ab.rarity = AbilityType.BASIC;
+        ab.cooldown = 3;
 
         abilities.Add(ab);
 

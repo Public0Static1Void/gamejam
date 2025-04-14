@@ -328,6 +328,9 @@ public class sc_Abilities : MonoBehaviour
     {
         active_hologram = true;
 
+        float original_y = transform.position.y;
+        float new_y = transform.position.y + 1;
+
         // Empieza el audio
         AudioSource curr_audiosource = SoundManager.instance.InstantiateSound(hologram_sound, transform.position);
         curr_audiosource.loop = true;
@@ -379,6 +382,7 @@ public class sc_Abilities : MonoBehaviour
         /// Animación
         anim_left_hand.SetBool("Hologram", true);
 
+
         while (timer < max_time)
         {
             timer += Time.deltaTime;
@@ -387,6 +391,8 @@ public class sc_Abilities : MonoBehaviour
 
             yield return null;
         }
+
+
         /// Invulnerabilidad off
         playerLife.god_mode = false;
 
