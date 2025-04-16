@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -29,6 +30,7 @@ public class AttackSystem : MonoBehaviour
         abilities_order = new Ability[slots_abilities.Count];
     }
 
+
     public Ability GetCurrentAbility()
     {
         return equipped_attacks[current_attack];
@@ -56,14 +58,6 @@ public class AttackSystem : MonoBehaviour
             slots_abilities[i].color = new Color(col.r, col.g, col.b, 1);
         }
 
-        // Pone el cooldown actual de cada slot
-        for (int i = 0; i < slots_cooldowns.Count && i < abilities_order.Length; i++)
-        {
-            if (abilities_order[i] == null) continue;
-
-            StartCooldown(slots_cooldowns[i], abilities_order[i].cooldown, abilities_order[i].current_cooldown);
-        }
-
         // Esconde todos los slots que no tengan una habilidad
         for (int i = 0; i < slots_abilities.Count; i++)
         {
@@ -78,6 +72,7 @@ public class AttackSystem : MonoBehaviour
 
     public void ChangeAttack()
     {
+        // La habilidad no está ejecutándose
         if (!equipped_attacks[current_attack].onExecution)
         {
             // Cambia de ataque
@@ -89,32 +84,45 @@ public class AttackSystem : MonoBehaviour
         }
     }
 
-    public void StartCooldown(UnityEngine.UI.Image im, float cooldown, float current_cooldown)
+
+
+    public void StartCooldowns()
     {
-        StartCoroutine(AbilityCooldown(im, cooldown, current_cooldown));
+        // Pone el cooldown actual de cada slot
+        for (int i = 0; i < slots_cooldowns.Count && i < abilities_order.Length; i++)
+        {
+            if (abilities_order[i] == null) continue;
+
+            StartCoroutine(AbilityCooldown(slots_cooldowns[i], abilities_order[i]));
+        }
     }
-    private IEnumerator AbilityCooldown(UnityEngine.UI.Image im, float cooldown, float current_cooldown)
+    private IEnumerator AbilityCooldown(UnityEngine.UI.Image im, Ability ab)
     {
         im.color = new Color(im.color.r, im.color.g, im.color.b, 1);
 
-        while (current_cooldown < cooldown)
+        ab.onCooldown = true;
+
+
+        while (ab.current_cooldown < ab.cooldown)
         {
-            current_cooldown += Time.deltaTime;
-            im.fillAmount = current_cooldown;
+            ab.current_cooldown += Time.deltaTime;
+
+            im.fillAmount = ab.current_cooldown / ab.cooldown;
             yield return null;
         }
 
-        current_cooldown = 0;
+        ab.onCooldown = false;
+        ab.onExecution = false;
 
         im.fillAmount = 1;
-        im.color = new Color(im.color.r, im.color.g, im.color.b, 0);
     }
+
 
     public void Attack(InputAction.CallbackContext con)
     {
         if (con.performed && equipped_attacks.Count > 0)
         {
-            if (current_attack < equipped_attacks.Count)
+            if (current_attack < equipped_attacks.Count && !equipped_attacks[current_attack].onCooldown)
             {
                 equipped_attacks[current_attack].ability_event.Invoke();
             }
@@ -125,7 +133,7 @@ public class AttackSystem : MonoBehaviour
 
     public void AddAttack(Ability ability)
     {
-        // A partir de 2 habilidades añadidas,
+        // A partir de 2 habilidades añadidas se cambiará la primera por la nueva
         if (equipped_attacks.Count < 2)
         {
             equipped_attacks.Add(ability);

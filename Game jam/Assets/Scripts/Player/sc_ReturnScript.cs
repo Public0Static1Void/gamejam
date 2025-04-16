@@ -309,6 +309,8 @@ public class ReturnScript : MonoBehaviour
 
         List<string> names_hit = new List<string>();
 
+        /// Hace vibrar el mando
+        GameManager.gm.ShakeController(10, 0, 0.006f);
 
         while (curr_pos >= -1)
         {
@@ -345,24 +347,33 @@ public class ReturnScript : MonoBehaviour
             {
                 for (int i = 0; i < colls.Length; i++)
                 {
-                    if (colls[i] != null && names_hit.Contains(colls[i].transform.parent.name)) continue;
+                    try
+                    {
+                        if (colls[i] != null && names_hit.Contains(colls[i].transform.parent.name)) continue;
 
-                    // Envia el enemigo a volar y después le aplica el daño
-                    Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
-                    colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
-                    colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
+                        // Envia el enemigo a volar y después le aplica el daño
+                        Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
+                        colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
+                        colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
 
-                    // hace un sonido de choque eléctrico
-                    SoundManager.instance.InstantiateSound(electric_spark, colls[i].transform.position, 0.75f);
+                        // hace un sonido de choque eléctrico
+                        SoundManager.instance.InstantiateSound(electric_spark, colls[i].transform.position, 0.75f);
 
-                    GameManager.gm.SpawnShpereRadius(colls[i].transform.position, 3, Color.green, true, 200);
+                        GameManager.gm.SpawnShpereRadius(colls[i].transform.position, 3, Color.green, true, 200);
 
-                    names_hit.Add(colls[i].transform.parent.name);
+                        names_hit.Add(colls[i].transform.parent.name);
+                    }
+                    catch
+                    {
+                        Debug.Log("Enemy was destroyed and ReturnScript 366 is trying to access it");
+                    }
                 }
             }
 
             yield return null;
         }
+
+        GameManager.gm.ShakeController(0, 0, 0);
 
         ob_AfterImage.SetActive(false);
     }
@@ -534,7 +545,9 @@ public class ReturnScript : MonoBehaviour
                 {   
                     if (nautilus_explosion != null) /// Sonido de explosión
                         SoundManager.instance.InstantiateSound(nautilus_explosion, positions[explosion_num]);
-                    GameManager.gm.ShakeController(0.05f + (1 - (dist / 10)), 0.05f, (1 + (1 - (dist / 15))));
+                    
+                    /// Vibración del mando
+                    GameManager.gm.ShakeController(0.005f + (1 - (dist / 10)), (0.01f + (1 - (dist / 15))), 0);
                 }
                 explosion_num--;
                 explosion_timer = 0;

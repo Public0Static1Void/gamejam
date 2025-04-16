@@ -32,6 +32,9 @@ public class sc_Abilities : MonoBehaviour
     public AudioClip clip_plant_mine;
     public LayerMask layer_enemy;
 
+    public Light environment_light;
+
+
     public Animator anim_left_hand;
 
     public GameObject pr_HitNByeParticles;
@@ -46,6 +49,8 @@ public class sc_Abilities : MonoBehaviour
     void Start()
     {
         spawned_hook = Instantiate(prefab_hook).GetComponent<Hook>();
+        /// Pone el cooldown al script del hook
+        spawned_hook.cooldown = AbilitiesSystem.instance.abilities[(int)AbilitiesSystem.Abilities.HOOK].cooldown;
 
         playerLife = PlayerMovement.instance.GetComponent<PlayerLife>();
     }
@@ -55,6 +60,17 @@ public class sc_Abilities : MonoBehaviour
         if (active_group || active_levitate)
             return true;
         return false;
+    }
+
+    private IEnumerator AbilityCooldown(Ability ab)
+    {
+        while (ab.current_cooldown < ab.cooldown)
+        {
+            ab.current_cooldown += Time.deltaTime;
+            yield return null;
+        }
+
+        ab.onExecution = false;
     }
 
     #region Levitate
@@ -186,7 +202,6 @@ public class sc_Abilities : MonoBehaviour
         if (!active_hook)
         {
             spawned_hook.Launch();
-            active_hook = true;
         }
         else
         {
@@ -204,6 +219,10 @@ public class sc_Abilities : MonoBehaviour
     {
         /// Cantidad de fuerza que se aplicará
         int force = 10;
+
+        Ability stomp_ab = AttackSystem.instance.GetCurrentAbility();
+        stomp_ab.onExecution = true;
+        stomp_ab.current_cooldown = 0;
 
         Rigidbody rb = PlayerMovement.instance.rb;
 
@@ -248,6 +267,12 @@ public class sc_Abilities : MonoBehaviour
             coll.GetComponent<EnemyFollow>().AddForceToEnemy(Vector3.up * ((force + hit.distance * 1.5f) * 0.5f));
             coll.GetComponent<EnemyLife>().Damage((int)((hit.distance) * 0.25f));
         }
+
+
+        // Cooldown
+        AttackSystem.instance.StartCooldowns();
+        stomp_ab.onExecution = false;
+        AttackSystem.instance.ChangeAttack();
     }
     #endregion
 
@@ -310,6 +335,7 @@ public class sc_Abilities : MonoBehaviour
     }
     #endregion
 
+    #region BloodThirsty
     /// <summary>
     /// El jugador empezará al curarse al dañar a los enemigos
     /// </summary>
@@ -317,7 +343,9 @@ public class sc_Abilities : MonoBehaviour
     {
         ReturnScript.instance.can_heal = true;
     }
+    #endregion
 
+    #region Hologram body
     public void HologramBody(Material material)
     {
         if (active_hologram) return;
@@ -328,98 +356,103 @@ public class sc_Abilities : MonoBehaviour
     {
         active_hologram = true;
 
-        float original_y = transform.position.y;
-        float new_y = transform.position.y + 1;
+        Ability holo_ab = AttackSystem.instance.GetCurrentAbility();
 
-        // Empieza el audio
-        AudioSource curr_audiosource = SoundManager.instance.InstantiateSound(hologram_sound, transform.position);
-        curr_audiosource.loop = true;
-
-        float max_time = 3;
-        float timer = 0;
-
-        Transform player = PlayerMovement.instance.transform;
-
-        List<Material> previous_material = new List<Material>();
-        List<MeshRenderer> renderers = new List<MeshRenderer>();
-        MeshRenderer player_rend = player.GetComponent<MeshRenderer>();
-
-        previous_material.Add(player_rend.material);
-
-        renderers.Add(player_rend);
-
-        player_rend.material = material;
-
-        // Asignación del material de hologramas
-        for (int i = 0; i < player.childCount; i++)
+        if (!holo_ab.onExecution)
         {
-            if (player.GetChild(i).childCount > 0)
+            holo_ab.onExecution = true;
+            holo_ab.current_cooldown = 0;
+
+            // Empieza el audio
+            AudioSource curr_audiosource = SoundManager.instance.InstantiateSound(hologram_sound, transform.position);
+            curr_audiosource.loop = true;
+
+            float max_time = 3;
+            float timer = 0;
+
+            Transform player = PlayerMovement.instance.transform;
+
+            List<Material> previous_material = new List<Material>();
+            List<MeshRenderer> renderers = new List<MeshRenderer>();
+            MeshRenderer player_rend = player.GetComponent<MeshRenderer>();
+
+            previous_material.Add(player_rend.material);
+
+            renderers.Add(player_rend);
+
+            player_rend.material = material;
+
+            // Asignación del material de hologramas
+            for (int i = 0; i < player.childCount; i++)
             {
-                for (int j = 0; j < player.GetChild(i).childCount; j++)
+                if (player.GetChild(i).childCount > 0)
                 {
-                    if (player.GetChild(i).GetChild(j).TryGetComponent<MeshRenderer>(out MeshRenderer r))
+                    for (int j = 0; j < player.GetChild(i).childCount; j++)
                     {
-                        previous_material.Add(r.material);
-                        renderers.Add(r);
-                        r.material = material;
+                        if (player.GetChild(i).GetChild(j).TryGetComponent<MeshRenderer>(out MeshRenderer r))
+                        {
+                            previous_material.Add(r.material);
+                            renderers.Add(r);
+                            r.material = material;
+                        }
                     }
                 }
+                if (player.GetChild(i).TryGetComponent<MeshRenderer>(out MeshRenderer rend))
+                {
+                    previous_material.Add(rend.material);
+                    renderers.Add(rend);
+                    rend.material = material;
+                }
             }
-            if (player.GetChild(i).TryGetComponent<MeshRenderer>(out MeshRenderer rend))
+
+            /// Invulnerabilidad on
+            playerLife.god_mode = true;
+
+            PlayerMovement.instance.target_speed = PlayerMovement.instance.speed * 2;
+            PlayerMovement.instance.current_speed = PlayerMovement.instance.target_speed;
+
+            /// Animación
+            anim_left_hand.SetBool("Hologram", true);
+
+
+            while (timer < max_time)
             {
-                previous_material.Add(rend.material);
-                renderers.Add(rend);
-                rend.material = material;
+                timer += Time.deltaTime;
+
+                curr_audiosource.transform.position = transform.position;
+
+                yield return null;
             }
+
+
+            /// Invulnerabilidad off
+            playerLife.god_mode = false;
+
+            PlayerMovement.instance.target_speed = PlayerMovement.instance.speed;
+            PlayerMovement.instance.current_speed = PlayerMovement.instance.target_speed;
+
+            /// Animación
+            anim_left_hand.SetBool("Hologram", false);
+            /// Para el sonido
+            curr_audiosource.Stop();
+
+            // Cambio a los materiales antriores
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                renderers[i].material = previous_material[i];
+            }
+
+
+            // Cooldown
+            AttackSystem.instance.StartCooldowns();
+            holo_ab.onExecution = false;
+            AttackSystem.instance.ChangeAttack();
         }
 
-        /// Invulnerabilidad on
-        playerLife.god_mode = true;
 
-        PlayerMovement.instance.target_speed = PlayerMovement.instance.speed * 2;
-        PlayerMovement.instance.current_speed = PlayerMovement.instance.target_speed;
-
-        /// Animación
-        anim_left_hand.SetBool("Hologram", true);
-
-
-        while (timer < max_time)
-        {
-            timer += Time.deltaTime;
-
-            curr_audiosource.transform.position = transform.position;
-
-            yield return null;
-        }
-
-
-        /// Invulnerabilidad off
-        playerLife.god_mode = false;
-
-        PlayerMovement.instance.target_speed = PlayerMovement.instance.speed;
-        PlayerMovement.instance.current_speed = PlayerMovement.instance.target_speed;
-
-        /// Animación
-        anim_left_hand.SetBool("Hologram", false);
-        /// Para el sonido
-        curr_audiosource.Stop();
-
-        // Cambio a los materiales antriores
-        for (int i = 0; i < renderers.Count; i++)
-        {
-            renderers[i].material = previous_material[i];
-        }
-
-        // Cooldown
-        timer = 0;
-        max_time = 3;
-        while (timer < max_time)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }
         active_hologram = false;
     }
+    #endregion
 
     private void OnTriggerEnter(Collider other)
     {

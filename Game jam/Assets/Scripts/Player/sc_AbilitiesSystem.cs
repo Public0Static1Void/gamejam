@@ -12,7 +12,7 @@ public class AbilitiesSystem : MonoBehaviour
 {
     public static AbilitiesSystem instance {  get; private set; }
 
-    protected List<Ability> abilities = new List<Ability>();
+    public List<Ability> abilities = new List<Ability>();
     private List<Ability> abilities_equipped = new List<Ability>();
     List<int> rand_abilities_index = new List<int>();
 
@@ -110,7 +110,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = "Launch a hook forward and catch the first enemy hit, pulling it towards you after a short delay. If you press the ability again, you jump to the enemy instead.";
         ab.icon = sprite_hook;
         ab.rarity = AbilityType.BASIC;
-        ab.cooldown = 1;
+        ab.cooldown = 5;
 
         abilities.Add(ab);
 
@@ -122,7 +122,7 @@ public class AbilitiesSystem : MonoBehaviour
                          "[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
         ab.icon = sprite_stomp;
         ab.rarity = AbilityType.BASIC;
-        ab.cooldown = 0.5f;
+        ab.cooldown = 5;
 
         abilities.Add(ab);
         
@@ -153,19 +153,22 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = $"Press the attack button to become an intangible hologram for 3 seconds, augmenting your base speed";
         ab.icon = sprite_hologram;
         ab.rarity = AbilityType.BASIC;
-        ab.cooldown = 3;
+        ab.cooldown = 10;
 
         abilities.Add(ab);
 
+        // Asigna la información loopeable
         for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
         {
             abilities[i].id = i;
             abilities[i].ability_event = methods_abilities[i];
             abilities[i].type = (Abilities)i;
+            abilities[i].current_cooldown = abilities[i].cooldown;
         }
 
         if (abilities.Count != (int)Abilities.LAST_NO_USE)
             Debug.LogWarning("Las habilidades del enum no coinciden con las añadidas en el void Start");
+
 
 
         // Referencias de los slots de habilidades

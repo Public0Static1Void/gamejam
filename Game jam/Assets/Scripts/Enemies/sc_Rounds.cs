@@ -118,6 +118,8 @@ public class Rounds : MonoBehaviour
                 enemy_hp = enemy_life.max_hp * 1.25f;
             }
 
+            Debug.Log("Enemy hp: " + enemy_hp);
+
             enemy_inst.transform.GetChild(0).GetComponent<NavMeshAgent>().speed = enemy_speed;
 
             enemy_life.max_hp = (int)enemy_hp;

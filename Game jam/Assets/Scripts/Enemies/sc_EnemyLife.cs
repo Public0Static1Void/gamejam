@@ -37,9 +37,12 @@ public class EnemyLife : MonoBehaviour
         GameManager.gm.damage_done += amount;
 
         // El enemigo hace un sonido de dañado
-        enemyFollow.audioSource.clip = clip_damaged[Random.Range(0, clip_damaged.Count - 1)];
-        enemyFollow.audioSource.loop = false;
-        enemyFollow.audioSource.Play();
+        if (enemyFollow.audioSource != null)
+        {
+            enemyFollow.audioSource.clip = clip_damaged[Random.Range(0, clip_damaged.Count - 1)];
+            enemyFollow.audioSource.loop = false;
+            enemyFollow.audioSource.Play();
+        }
         if (hp <= 0)
         {
             GameManager.gm.enemies_killed++;

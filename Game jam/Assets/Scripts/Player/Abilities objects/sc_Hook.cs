@@ -7,6 +7,7 @@ public class Hook : MonoBehaviour
     [Header("Stats")]
     public float speed;
     public float detection_range;
+    public float cooldown;
 
 
     [Header("References")]
@@ -24,7 +25,7 @@ public class Hook : MonoBehaviour
 
     private float timer = 0;
 
-    private bool launched = false;
+    private bool launched = false, can_launch = true;
     public bool launch_player = false;
     private bool added_force_to_player = false;
 
@@ -44,11 +45,13 @@ public class Hook : MonoBehaviour
     private void Start()
     {
         player = ReturnScript.instance.gameObject;
+
         abs = ReturnScript.instance.GetComponent<sc_Abilities>();
+
         ob_renderer = transform.GetChild(0).GetComponent<MeshRenderer>();
         ob_renderer.enabled = false;
 
-        Debug.Log("Remember to put the left hand of the player as the second child");
+        Debug.Log("[sc_Hook.cs] Remember to put the left hand of the player as the second child");
         anim = ReturnScript.instance.transform.GetChild(1).GetComponent<Animator>();
 
         playerLife = ReturnScript.instance.gameObject.GetComponent<PlayerLife>();
@@ -57,6 +60,10 @@ public class Hook : MonoBehaviour
     // Se configuran las variables del hook para posteriormente lanzarse
     public void Launch()
     {
+        if (!can_launch || (ab_hook != null && ab_hook.onExecution)) return;
+
+        abs.active_hook = true;
+
         transform.parent = null;
 
         transform.position = player.transform.position - player.transform.right;
@@ -67,29 +74,41 @@ public class Hook : MonoBehaviour
 
         launch_point = transform.position;
 
-        ob_renderer.enabled = true;
 
         timer = 0;
         gravity_timer = 0;
 
-        enemy_hooked = false;
-        added_force_to_player = false;
-        launched = true;
 
         ab_hook = AttackSystem.instance.GetCurrentAbility();
         if (ab_hook.type != AbilitiesSystem.Abilities.HOOK)
             Debug.LogWarning("The ability type on sc_hook dosen't coincide!!");
         
         ab_hook.onExecution = true;
+        ab_hook.current_cooldown = 0;
 
         audioSource = SoundManager.instance.InstantiateSound(clip_chainmoving, transform.position);
         audioSource.loop = true;
 
         anim.SetBool("Launch", true);
+
+        ob_renderer.enabled = true;
+        enemy_hooked = false;
+        added_force_to_player = false;
+
+        launched = true;
     }
 
     void Update()
     {
+        // Cooldown de la abilidad
+        if (!can_launch)
+        {
+            if (ab_hook.current_cooldown < cooldown)
+                ab_hook.current_cooldown += Time.deltaTime;
+            else
+                can_launch = true;
+        }
+
         if (!launched) return;
 
         audioSource.transform.position = player.transform.position;
@@ -181,6 +200,8 @@ public class Hook : MonoBehaviour
     /// </summary>
     public void LaunchPlayer()
     {
+        if (!launched) return;
+
         if (timer < 0.75f && enemy_hooked)
         {
             launch_player = true;
@@ -221,9 +242,13 @@ public class Hook : MonoBehaviour
         }
 
         launch_player = false;
-        ab_hook.onExecution = false;
         audioSource.Stop();
 
+        timer = 0;
+        can_launch = false;
+
+        AttackSystem.instance.StartCooldowns();
+        ab_hook.onExecution = false;
         AttackSystem.instance.ChangeAttack();
     }
 

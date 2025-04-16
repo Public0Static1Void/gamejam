@@ -17,6 +17,7 @@ public class Ability
     public float cooldown = 0;
     public float current_cooldown = 0;
 
+    public bool onCooldown = false;
     public bool onExecution = false;
 }
 
