@@ -17,6 +17,11 @@ public class AttackSystem : MonoBehaviour
     public List<UnityEngine.UI.Image> slots_cooldowns;
 
     private Ability[] abilities_order;
+
+
+    private bool moving_ui = false;
+
+
     void Awake()
     {
         if (instance == null)
@@ -34,6 +39,65 @@ public class AttackSystem : MonoBehaviour
     public Ability GetCurrentAbility()
     {
         return equipped_attacks[current_attack];
+    }
+
+    private IEnumerator MoveUIElements()
+    {
+        moving_ui = true;
+
+        List<Vector2> start_positons = new List<Vector2>();
+        for (int i = 0; i < slots_abilities.Count; i++)
+        {
+            start_positons.Add(slots_abilities[i].rectTransform.anchoredPosition);
+        }
+        List<Vector2> start_sizes = new List<Vector2>();
+        for (int i = 0; i < slots_abilities.Count; i++)
+        {
+            start_sizes.Add(slots_abilities[i].rectTransform.localScale);
+        }
+
+        while (true)
+        {
+            for (int i = 0; i < abilities_order.Length; i++)
+            {
+                int new_pos = i + 1;
+                if (new_pos >= abilities_order.Length)
+                {
+                    new_pos = 0;
+                }
+
+                // Cambia la posición lentamente
+                slots_abilities[i].rectTransform.anchoredPosition = Vector2.Lerp(slots_abilities[i].rectTransform.anchoredPosition,
+                                                                                 start_positons[new_pos],
+                                                                                 Time.deltaTime);
+                // Cambia el tamaño
+                slots_abilities[i].rectTransform.localScale = Vector2.Lerp(slots_abilities[i].rectTransform.localScale,
+                                                                           start_sizes[new_pos],
+                                                                           Time.deltaTime);
+            }
+
+            Debug.Log(Vector2.Distance(start_positons[0], slots_abilities[slots_abilities.Count - 1].rectTransform.anchoredPosition));
+            if (Vector2.Distance(start_positons[0], slots_abilities[slots_abilities.Count - 1].rectTransform.anchoredPosition) < 0.05f)
+            {
+                break;
+            }
+
+            yield return null;
+        }
+
+        // Vuelve a ordenar la lista
+        List<UnityEngine.UI.Image> backup_list = new List<UnityEngine.UI.Image>(slots_abilities);
+        List<UnityEngine.UI.Image> backup_cooldowns = new List<UnityEngine.UI.Image>(slots_cooldowns);
+        for (int i = 0; i < backup_list.Count; i++)
+        {
+            int new_i = i + 1;
+            if (new_i >= backup_list.Count)
+                new_i = 0;
+            slots_abilities[i] = backup_list[new_i];
+            slots_cooldowns[i] = backup_cooldowns[new_i];
+        }
+
+        moving_ui = false;
     }
 
     public void UpdateUI()
@@ -68,6 +132,9 @@ public class AttackSystem : MonoBehaviour
                 slots_abilities[i].color = new Color(col.r, col.g, col.b, 0);
             }
         }
+
+        if (equipped_attacks.Count > 1 && !moving_ui)
+            StartCoroutine(MoveUIElements());
     }
 
     public void ChangeAttack()

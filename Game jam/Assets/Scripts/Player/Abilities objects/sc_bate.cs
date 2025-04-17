@@ -6,12 +6,9 @@ using UnityEngine.InputSystem;
 public class sc_bate : MonoBehaviour
 {
 
-    public Transform player; // Referencia al jugador
-    public float swingSpeed = 5000;  // Velocidad del swing
-    public float maxSwingAngle = 90f; // Ángulo máximo de swing
+    public Transform player;
 
     public bool isSwinging = false;
-    private float currentRotation = 0f;
 
     public Animator anim;
 
@@ -59,7 +56,10 @@ public class sc_bate : MonoBehaviour
         {
             Vector3 dir = (other.transform.position - player.position).normalized;
             Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
+
             other.GetComponent<EnemyFollow>().AddForceToEnemy(forceDir * 10f);
+            other.GetComponent<EnemyLife>().Damage((int)(ReturnScript.instance.damage * 0.1f));
+
             if (audioSource == null)
             {
                 audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
