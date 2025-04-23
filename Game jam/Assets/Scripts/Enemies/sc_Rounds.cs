@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class Rounds : MonoBehaviour
 {
-    public Transform[] SpawnPoint;
+    public List<Transform> SpawnPoint;
     public GameObject enemy;
     public static Rounds instance { get; private set; }
 
@@ -94,10 +94,10 @@ public class Rounds : MonoBehaviour
 
         for (int i = 0; i < enemyRound; i++)
         {
-            int randSpawn = Random.Range(0, SpawnPoint.Length); /// No aparecerán enemigos en la cara del player
+            int randSpawn = Random.Range(0, SpawnPoint.Count); /// No aparecerán enemigos en la cara del player
             while (Vector3.Distance(PlayerMovement.instance.transform.position, SpawnPoint[randSpawn].position) < 10)
             {
-                randSpawn = Random.Range(0, SpawnPoint.Length);
+                randSpawn = Random.Range(0, SpawnPoint.Count);
             }
 
             int rand_enemy = Random.Range(0, enemy_list.Count);

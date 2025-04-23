@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44168356, g: 0.4905833, b: 0.5705704, a: 1}
+  m_IndirectSpecularColor: {r: 0.44168407, g: 0.49058396, b: 0.5705713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -524,7 +524,13 @@ MonoBehaviour:
   player: {fileID: 1836626140}
   range_interaction: 3
   door_cost: 500
-  Spawner: []
+  Spawner:
+  - {fileID: 1755038010}
+  - {fileID: 192245363}
+  - {fileID: 142510175}
+  - {fileID: 1379616228}
+  - {fileID: 676855490}
+  - {fileID: 760150201}
 --- !u!208 &4107759
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -8328,7 +8334,13 @@ MonoBehaviour:
   player: {fileID: 1836626140}
   range_interaction: 3
   door_cost: 2000
-  Spawner: []
+  Spawner:
+  - {fileID: 1755038010}
+  - {fileID: 192245363}
+  - {fileID: 142510175}
+  - {fileID: 1379616228}
+  - {fileID: 676855490}
+  - {fileID: 760150201}
 --- !u!65 &294054022
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18879,14 +18891,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnPoint:
-  - {fileID: 1755038010}
-  - {fileID: 192245363}
   - {fileID: 1944202367}
-  - {fileID: 142510175}
-  - {fileID: 1379616228}
-  - {fileID: 676855490}
-  - {fileID: 760150201}
   - {fileID: 1864685821}
+  - {fileID: 1367760432}
   enemy: {fileID: 828969336895915344, guid: dbb3449e24e4de64c9ef52a578ddd69d, type: 3}
   enemies: []
   enemy_list:
@@ -33594,7 +33601,13 @@ MonoBehaviour:
   player: {fileID: 1836626140}
   range_interaction: 3
   door_cost: 500
-  Spawner: []
+  Spawner:
+  - {fileID: 1755038010}
+  - {fileID: 192245363}
+  - {fileID: 142510175}
+  - {fileID: 1379616228}
+  - {fileID: 676855490}
+  - {fileID: 760150201}
 --- !u!65 &1519479796
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -43836,7 +43849,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944202366}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -38.69}
+  m_LocalPosition: {x: 0, y: 0, z: -43.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

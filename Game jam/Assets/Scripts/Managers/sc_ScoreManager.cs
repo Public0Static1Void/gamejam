@@ -248,6 +248,9 @@ public class ScoreManager : MonoBehaviour
             if (score >= door_cost)
             {
                 ChangeScore(-door_cost, transform.position, true);
+                // Desbloquea los spawners asignados a la puerta
+                Rounds.instance.SpawnPoint.AddRange(current_door.GetComponent<sc_Door>().Spawner);
+
                 StartCoroutine(OpenDoor(current_door.gameObject));
             }
             

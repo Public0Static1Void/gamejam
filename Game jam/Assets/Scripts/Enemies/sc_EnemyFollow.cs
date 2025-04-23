@@ -96,7 +96,7 @@ public class EnemyFollow : MonoBehaviour
 
     private void Update()
     {
-        if (relocating && !rb.isKinematic)
+        if (relocating)
         {
             Debug.Log(Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer) > 0);
             Vector3 new_dir = (PlayerMovement.instance.transform.right * -Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer)
