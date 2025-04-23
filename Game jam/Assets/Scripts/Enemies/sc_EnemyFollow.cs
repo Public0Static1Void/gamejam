@@ -91,12 +91,12 @@ public class EnemyFollow : MonoBehaviour
             }
         }
         if (agent.isOnNavMesh && !rb.isKinematic)
-            rb.velocity *= 0.6f;
+            rb.velocity *= 0.75f;
     }
 
     private void Update()
     {
-        if (relocating)
+        if (relocating && !rb.isKinematic)
         {
             Debug.Log(Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer) > 0);
             Vector3 new_dir = (PlayerMovement.instance.transform.right * -Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer)

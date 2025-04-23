@@ -45,15 +45,25 @@ public class AttackSystem : MonoBehaviour
     {
         moving_ui = true;
 
+        List<Sprite> sprites = new List<Sprite>();
+
         List<Vector2> start_positons = new List<Vector2>();
-        for (int i = 0; i < slots_abilities.Count; i++)
+        for (int i = 0; i < slots_cooldowns.Count; i++)
         {
-            start_positons.Add(slots_abilities[i].rectTransform.anchoredPosition);
+            start_positons.Add(slots_cooldowns[i].rectTransform.anchoredPosition);
+
+            sprites.Add(slots_abilities[i].sprite);
         }
         List<Vector2> start_sizes = new List<Vector2>();
-        for (int i = 0; i < slots_abilities.Count; i++)
+        for (int i = 0, j = slots_abilities.Count - 1; i < slots_cooldowns.Count && j >= 0; i++, j--)
         {
-            start_sizes.Add(slots_abilities[i].rectTransform.localScale);
+            start_sizes.Add(slots_cooldowns[i].rectTransform.localScale);
+
+            Debug.Log(i);
+            int new_i = i + 1;
+            if (new_i >= sprites.Count)
+                new_i = 0;
+            slots_abilities[new_i].sprite = sprites[i];
         }
 
         while (true)
@@ -67,17 +77,17 @@ public class AttackSystem : MonoBehaviour
                 }
 
                 // Cambia la posición lentamente
-                slots_abilities[i].rectTransform.anchoredPosition = Vector2.Lerp(slots_abilities[i].rectTransform.anchoredPosition,
+                slots_cooldowns[i].rectTransform.anchoredPosition = Vector2.Lerp(slots_cooldowns[i].rectTransform.anchoredPosition,
                                                                                  start_positons[new_pos],
                                                                                  Time.deltaTime);
                 // Cambia el tamaño
-                slots_abilities[i].rectTransform.localScale = Vector2.Lerp(slots_abilities[i].rectTransform.localScale,
+                slots_cooldowns[i].rectTransform.localScale = Vector2.Lerp(slots_cooldowns[i].rectTransform.localScale,
                                                                            start_sizes[new_pos],
                                                                            Time.deltaTime);
             }
 
-            Debug.Log(Vector2.Distance(start_positons[0], slots_abilities[slots_abilities.Count - 1].rectTransform.anchoredPosition));
-            if (Vector2.Distance(start_positons[0], slots_abilities[slots_abilities.Count - 1].rectTransform.anchoredPosition) < 0.05f)
+            Debug.Log(Vector2.Distance(start_positons[0], slots_cooldowns[slots_cooldowns.Count - 1].rectTransform.anchoredPosition));
+            if (Vector2.Distance(start_positons[0], slots_cooldowns[slots_cooldowns.Count - 1].rectTransform.anchoredPosition) < 0.05f)
             {
                 break;
             }
@@ -132,9 +142,6 @@ public class AttackSystem : MonoBehaviour
                 slots_abilities[i].color = new Color(col.r, col.g, col.b, 0);
             }
         }
-
-        if (equipped_attacks.Count > 1 && !moving_ui)
-            StartCoroutine(MoveUIElements());
     }
 
     public void ChangeAttack()
@@ -147,7 +154,7 @@ public class AttackSystem : MonoBehaviour
             if (current_attack >= equipped_attacks.Count)
                 current_attack = 0;
 
-            UpdateUI();
+            StartCoroutine(MoveUIElements());
         }
     }
 
@@ -162,6 +169,10 @@ public class AttackSystem : MonoBehaviour
 
             StartCoroutine(AbilityCooldown(slots_cooldowns[i], abilities_order[i]));
         }
+
+
+        if (equipped_attacks.Count > 1 && !moving_ui)
+            StartCoroutine(MoveUIElements());
     }
     private IEnumerator AbilityCooldown(UnityEngine.UI.Image im, Ability ab)
     {

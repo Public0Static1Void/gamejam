@@ -10,19 +10,23 @@ using UnityEngine.UI;
 public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement instance { get; private set; }
+
     [Header("Stats")]
     public float speed;
     public float current_speed;
     [HideInInspector]
     public float target_speed = 0;
+    
     public float max_stamina;
     public float current_stamina;
+    
     public float fov;
     public float fov_change;
 
     public bool canMove = true;
     public bool sprinting = false;
     public bool moving = false;
+
 
     // Slide variables
     public bool slide = false;
@@ -128,15 +132,13 @@ public class PlayerMovement : MonoBehaviour
         {
             current_stamina += Time.fixedDeltaTime;
             stamina_image.fillAmount = (current_stamina / max_stamina);
-        }
-        else /// Esconde el círculo de stamina cuando ya no hagan falta más cálculos
-        {
-            if (stamina_image.color.a > 0.25f)
+            if (current_stamina >= max_stamina)
             {
-                Color col = new Color(stamina_image.color.r, stamina_image.color.g, stamina_image.color.b, stamina_image.color.a - Time.deltaTime);
-                stamina_image.color = col;
+                GameManager.gm.ColorPulse(stamina_image, Color.white, 4);
+                GameManager.gm.ChangeImageSize(stamina_image, stamina_image.rectTransform.localScale * 1.06f, 4);
             }
         }
+
         #endregion
 
         #region Slide

@@ -391,6 +391,31 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(ShowTextCoroutine(screen_texts[(int)text_position], text,  showspeed));
     }
+
+    public void ColorPulse(UnityEngine.UI.Image im, Color pulse_color, float pulse_speed)
+    {
+        StartCoroutine(ColorPulseRoutine(im, pulse_color, pulse_speed));
+    }
+    private IEnumerator ColorPulseRoutine(UnityEngine.UI.Image im, Color pulse_color, float pulse_speed)
+    {
+        Color col = im.color;
+
+        float timer = 0;
+        while (timer < 1)
+        {
+            im.color = Color.Lerp(im.color, pulse_color, Time.deltaTime * pulse_speed);
+            timer += Time.deltaTime * pulse_speed;
+            yield return null;
+        }
+
+        timer = 0;
+        while (timer < 2)
+        {
+            im.color = Color.Lerp(im.color, col, Time.deltaTime * pulse_speed * 2);
+            timer += Time.deltaTime * pulse_speed;
+            yield return null;
+        }
+    }
     
     private IEnumerator ShowTextCoroutine(TMP_Text text_reference, string text, float show_speed)
     {
