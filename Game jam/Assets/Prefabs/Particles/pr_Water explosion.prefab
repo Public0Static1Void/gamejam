@@ -4861,7 +4861,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2653404952180675221, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
       propertyPath: ShapeModule.radius.value
-      value: 5
+      value: 4.2
       objectReference: {fileID: 0}
     - target: {fileID: 4233285187500450553, guid: 3d0e01c6db056cd439e010fd45a7d76e, type: 3}
       propertyPath: m_Name

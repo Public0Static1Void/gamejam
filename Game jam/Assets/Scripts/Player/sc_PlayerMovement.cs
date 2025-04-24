@@ -115,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
                     stamina_image.color = col;
                 }
                 stamina_image.fillAmount = 1 - (1 - (current_stamina / max_stamina));
-                stamina_image_bg.fillAmount = stamina_image.fillAmount + 0.1f;
+                StartCoroutine(ChangeStaminaBg());
 
                 // Resta de stamina mientras corres
                 current_stamina -= Time.fixedDeltaTime;
@@ -138,6 +138,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (current_stamina >= max_stamina)
             {
+                stamina_image_bg.fillAmount = 1;
                 GameManager.gm.ColorPulse(stamina_image, Color.white, 4);
                 GameManager.gm.ChangeImageSize(stamina_image, stamina_image.rectTransform.localScale * 1.06f, 4);
             }
@@ -238,6 +239,26 @@ public class PlayerMovement : MonoBehaviour
                 slide_timer = 0;
             }
         }
+    }
+
+
+    public void ChangeStaminaValue(float new_stamina)
+    {
+        current_stamina = new_stamina;
+        stamina_image.fillAmount = (new_stamina / max_stamina);
+        StartCoroutine(ChangeStaminaBg());
+    }
+
+    private IEnumerator ChangeStaminaBg()
+    {
+        yield return new WaitForSeconds(1);
+        while (stamina_image_bg.fillAmount > stamina_image.fillAmount)
+        {
+            Debug.Log("BG: " + stamina_image_bg.fillAmount);
+            stamina_image_bg.fillAmount -= Time.deltaTime;
+            yield return null;
+        }
+        Debug.Log("Fin");
     }
 
     public void Sprint(InputAction.CallbackContext con)

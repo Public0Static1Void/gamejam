@@ -42,7 +42,8 @@ public class sc_bate : MonoBehaviour
             Color col = PlayerMovement.instance.stamina_image.color;
             PlayerMovement.instance.stamina_image.color = new Color(col.r, col.g, col.b, 1);
 
-            PlayerMovement.instance.current_stamina -= PlayerMovement.instance.max_stamina * 0.1f;
+
+            PlayerMovement.instance.ChangeStaminaValue(PlayerMovement.instance.current_stamina - PlayerMovement.instance.max_stamina * 0.1f);
             if (PlayerMovement.instance.current_stamina < 0)
                 PlayerMovement.instance.current_stamina = 0;
 

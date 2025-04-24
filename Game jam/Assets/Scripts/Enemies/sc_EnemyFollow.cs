@@ -96,7 +96,7 @@ public class EnemyFollow : MonoBehaviour
 
     private void Update()
     {
-        if (relocating)
+        if (relocating && rb.velocity.magnitude < 0.01f && rb.velocity.magnitude > -0.01f)
         {
             Debug.Log(Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer) > 0);
             Vector3 new_dir = (PlayerMovement.instance.transform.right * -Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer)

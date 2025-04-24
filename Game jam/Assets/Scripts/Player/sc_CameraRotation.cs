@@ -20,6 +20,7 @@ public class CameraRotation : MonoBehaviour
     public float x, y;
 
     [Header("References")]
+    public float player_turn_speed;
     public List<RectTransform> UIElements_to_move;
     public Slider ui_sensivity_slider;
     public TMP_Text ui_sensivity_value;
@@ -124,7 +125,7 @@ public class CameraRotation : MonoBehaviour
         y = Mathf.Clamp(y, -40, 60);
 
         /// Rotación del jugador y la cámara
-        player.rotation = Quaternion.Euler(0, x, 0);
+        player.rotation = Quaternion.Lerp(player.rotation, Quaternion.Euler(0, x, 0), Time.deltaTime * player_turn_speed);
         transform.rotation = Quaternion.Euler(-y, x, 0);
 
         /// Movimiento de los elementos de la UI con la cámara

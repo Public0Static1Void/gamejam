@@ -18,8 +18,12 @@ public class AttackSystem : MonoBehaviour
 
     private Ability[] abilities_order;
 
+    private List<Vector2> ui_positions = new List<Vector2>();
 
     private bool moving_ui = false;
+
+
+    Vector2[] dir;
 
 
     void Awake()
@@ -28,11 +32,29 @@ public class AttackSystem : MonoBehaviour
             instance = this;
         else
             Destroy(this.gameObject);
+
+        
     }
 
     void Start()
     {
         abilities_order = new Ability[slots_abilities.Count];
+
+        dir = new Vector2[slots_cooldowns.Count];
+
+        for (int i = 0; i < slots_cooldowns.Count; i++)
+        {
+            ui_positions.Add(slots_cooldowns[i].rectTransform.anchorMax);
+        }
+
+        for (int i = 0; i < dir.Length; i++)
+        {
+            int target = i + 1;
+            if (target >= dir.Length)
+                target = 0;
+
+            dir[i] = (ui_positions[target] - ui_positions[i]).normalized;
+        }
     }
 
 
@@ -45,49 +67,28 @@ public class AttackSystem : MonoBehaviour
     {
         moving_ui = true;
 
-        List<Sprite> sprites = new List<Sprite>();
+        Vector2[] sizes = new Vector2[slots_cooldowns.Count];
 
-        List<Vector2> start_positons = new List<Vector2>();
-        for (int i = 0; i < slots_cooldowns.Count; i++)
+        for (int i = 0; i < sizes.Length; i++)
         {
-            start_positons.Add(slots_cooldowns[i].rectTransform.anchoredPosition);
-
-            sprites.Add(slots_abilities[i].sprite);
-        }
-        List<Vector2> start_sizes = new List<Vector2>();
-        for (int i = 0, j = slots_abilities.Count - 1; i < slots_cooldowns.Count && j >= 0; i++, j--)
-        {
-            start_sizes.Add(slots_cooldowns[i].rectTransform.localScale);
-
-            Debug.Log(i);
-            int new_i = i + 1;
-            if (new_i >= sprites.Count)
-                new_i = 0;
-            slots_abilities[new_i].sprite = sprites[i];
+            sizes[i] = slots_cooldowns[i].rectTransform.localScale;
         }
 
+        float timer = 0;
         while (true)
         {
-            for (int i = 0; i < abilities_order.Length; i++)
+            for (int i = 0; i < slots_cooldowns.Count; i++)
             {
-                int new_pos = i + 1;
-                if (new_pos >= abilities_order.Length)
-                {
-                    new_pos = 0;
-                }
+                int target = i + 1;
+                if (target >= dir.Length)
+                    target = 0;
+                slots_cooldowns[i].rectTransform.localScale = Vector2.Lerp(slots_cooldowns[i].rectTransform.localScale, sizes[target], Time.deltaTime);
 
-                // Cambia la posición lentamente
-                slots_cooldowns[i].rectTransform.anchoredPosition = Vector2.Lerp(slots_cooldowns[i].rectTransform.anchoredPosition,
-                                                                                 start_positons[new_pos],
-                                                                                 Time.deltaTime);
-                // Cambia el tamaño
-                slots_cooldowns[i].rectTransform.localScale = Vector2.Lerp(slots_cooldowns[i].rectTransform.localScale,
-                                                                           start_sizes[new_pos],
-                                                                           Time.deltaTime);
+                slots_cooldowns[i].rectTransform.anchoredPosition += dir[i] * Time.deltaTime * 50;
             }
 
-            Debug.Log(Vector2.Distance(start_positons[0], slots_cooldowns[slots_cooldowns.Count - 1].rectTransform.anchoredPosition));
-            if (Vector2.Distance(start_positons[0], slots_cooldowns[slots_cooldowns.Count - 1].rectTransform.anchoredPosition) < 0.05f)
+            timer += Time.deltaTime;
+            if (timer > 1)
             {
                 break;
             }
@@ -95,16 +96,17 @@ public class AttackSystem : MonoBehaviour
             yield return null;
         }
 
-        // Vuelve a ordenar la lista
-        List<UnityEngine.UI.Image> backup_list = new List<UnityEngine.UI.Image>(slots_abilities);
-        List<UnityEngine.UI.Image> backup_cooldowns = new List<UnityEngine.UI.Image>(slots_cooldowns);
-        for (int i = 0; i < backup_list.Count; i++)
+        Vector2[] copy = new Vector2[dir.Length];
+        for (int i = 0; i < dir.Length; i++)
         {
-            int new_i = i + 1;
-            if (new_i >= backup_list.Count)
-                new_i = 0;
-            slots_abilities[i] = backup_list[new_i];
-            slots_cooldowns[i] = backup_cooldowns[new_i];
+            copy[i] = dir[i];
+        }
+        for (int i = 0; i < dir.Length; i++)
+        {
+            int t = i + 1;
+            if (t >= dir.Length)
+                t = 0;
+            dir[i] = copy[t];
         }
 
         moving_ui = false;
