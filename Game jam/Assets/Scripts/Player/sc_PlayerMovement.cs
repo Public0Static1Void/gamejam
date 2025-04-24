@@ -42,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("References")]
     public Image stamina_image;
+    public Image stamina_image_bg;
     public AudioSource audio_source;
     public ParticleSystem particle_slide;
     public LayerMask layer_ground;
@@ -114,7 +115,9 @@ public class PlayerMovement : MonoBehaviour
                     stamina_image.color = col;
                 }
                 stamina_image.fillAmount = 1 - (1 - (current_stamina / max_stamina));
-                /// Resta de stamina mientras corres
+                stamina_image_bg.fillAmount = stamina_image.fillAmount + 0.1f;
+
+                // Resta de stamina mientras corres
                 current_stamina -= Time.fixedDeltaTime;
 
                 // Suma de velocidad
@@ -132,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
         {
             current_stamina += Time.fixedDeltaTime;
             stamina_image.fillAmount = (current_stamina / max_stamina);
+
             if (current_stamina >= max_stamina)
             {
                 GameManager.gm.ColorPulse(stamina_image, Color.white, 4);

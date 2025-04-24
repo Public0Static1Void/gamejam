@@ -55,7 +55,7 @@ public class PlayerLife : MonoBehaviour
         // Carga los datos guardados
         PlayerData pd = GameManager.gm.saveManager.LoadSaveData();
 
-        if (pd != null )
+        if (pd != null)
         {
             max_hp = pd.hp;
             ReturnScript.instance.damage = pd.damage;
