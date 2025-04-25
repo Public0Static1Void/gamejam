@@ -115,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
                     stamina_image.color = col;
                 }
                 stamina_image.fillAmount = 1 - (1 - (current_stamina / max_stamina));
-                StartCoroutine(ChangeStaminaBg());
+                stamina_image_bg.fillAmount = stamina_image.fillAmount + 0.05f;
 
                 // Resta de stamina mientras corres
                 current_stamina -= Time.fixedDeltaTime;
@@ -128,6 +128,8 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (current_speed > target_speed + 0.05f || Camera.main.fieldOfView > fov + 0.05f) /// baja la velocidad y el fov progresivamente
         {
+            stamina_image_bg.fillAmount = stamina_image.fillAmount;
+
             current_speed = Mathf.Lerp(current_speed, target_speed, (speed * 0.05f) * Time.deltaTime);
             Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, fov, Time.deltaTime * 6);
         }
@@ -245,20 +247,22 @@ public class PlayerMovement : MonoBehaviour
     public void ChangeStaminaValue(float new_stamina)
     {
         current_stamina = new_stamina;
+
+        stamina_image_bg.fillAmount = stamina_image.fillAmount;
         stamina_image.fillAmount = (new_stamina / max_stamina);
+
+        StopCoroutine("ChangeStaminaBg");
         StartCoroutine(ChangeStaminaBg());
     }
 
     private IEnumerator ChangeStaminaBg()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.25f);
         while (stamina_image_bg.fillAmount > stamina_image.fillAmount)
         {
-            Debug.Log("BG: " + stamina_image_bg.fillAmount);
             stamina_image_bg.fillAmount -= Time.deltaTime;
             yield return null;
         }
-        Debug.Log("Fin");
     }
 
     public void Sprint(InputAction.CallbackContext con)

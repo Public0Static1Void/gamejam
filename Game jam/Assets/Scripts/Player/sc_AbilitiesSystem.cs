@@ -36,6 +36,10 @@ public class AbilitiesSystem : MonoBehaviour
     public Image im_description;
     public TMP_Text txt_description;
 
+    public Transform attack_ab_chooser;
+    private List<Button> attack_abilities_btn;
+    private List<Image> attack_abilities_im;
+
     [Header("Abilities Methods")]
     public List<UnityEvent> methods_abilities;
     public List<UnityAction> actions;
@@ -188,6 +192,16 @@ public class AbilitiesSystem : MonoBehaviour
         slots_texts.Add(ability1_slot.transform.GetChild(1).GetComponent<TMP_Text>());
         slots_texts.Add(ability2_slot.transform.GetChild(1).GetComponent<TMP_Text>());
         slots_texts.Add(ability3_slot.transform.GetChild(1).GetComponent<TMP_Text>());
+
+
+        // Referencias de los slots
+        attack_abilities_btn = new List<Button>();
+        attack_abilities_im = new List<Image>();
+        for (int i = 0; i < attack_ab_chooser.childCount; i++)
+        {
+            attack_abilities_btn.Add(attack_ab_chooser.GetChild(i).GetComponent<Button>());
+            attack_abilities_im.Add(attack_ab_chooser.GetChild(i).GetComponent<Image>());
+        }
     }
 
     private void Update()
@@ -259,12 +273,12 @@ public class AbilitiesSystem : MonoBehaviour
             }
         }
 
-        // Assign the selected abilities to UI elements
+        // Asigna las habilidades seleccionadas a la UI
         for (int i = 0; i < ability_count; i++)
         {
             if (abilities_to_show[i] != null)
             {
-                int ab_num = i; // Necessary for lambda closure capture
+                int ab_num = i;
 
                 slots_buttons[i].onClick.RemoveAllListeners();
                 slots_buttons[i].onClick.AddListener(() =>
@@ -279,7 +293,30 @@ public class AbilitiesSystem : MonoBehaviour
 
 
                         case AbilityType.BASIC: // habilidades melee
-                            AttackSystem.instance.AddAttack(abilities_to_show[ab_num]);
+                            if (AttackSystem.instance.equipped_attacks.Count >= 2)
+                            {
+                                attack_ab_chooser.gameObject.SetActive(true);
+
+                                // Inicializa la UI
+                                for (int j = 0; j < attack_ab_chooser.childCount; j++)
+                                {
+                                    attack_abilities_im[j].sprite = AttackSystem.instance.equipped_attacks[j].icon;
+                                    int ab_id = j;
+                                    attack_abilities_btn[j].onClick.AddListener(() =>
+                                    {
+                                        // Quita la habilidad seleccionada y pone la nueva
+                                        AttackSystem.instance.equipped_attacks.RemoveAt(ab_id);
+                                        AttackSystem.instance.AddAttack(abilities_to_show[ab_num]);
+
+                                        attack_ab_chooser.gameObject.SetActive(false);
+                                        CloseGamblingMenu();
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                AttackSystem.instance.AddAttack(abilities_to_show[ab_num]);
+                            }
                             break;
 
                         case AbilityType.PASSIVE:
@@ -298,6 +335,7 @@ public class AbilitiesSystem : MonoBehaviour
                     abilities.Remove(abilities_to_show[ab_num]);
 
                     CloseGamblingMenu();
+
                     slots_buttons[ab_num].onClick.RemoveAllListeners();
                 });
 
