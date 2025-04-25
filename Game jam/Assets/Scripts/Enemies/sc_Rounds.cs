@@ -129,7 +129,7 @@ public class Rounds : MonoBehaviour
             enemy_life.max_hp = (int)enemy_hp;
 
             enemies.Add(enemy_inst);
-            enemies_follow.Add(enemy_inst.GetComponent<EnemyFollow>());
+            enemies_follow.Add(enemy_inst.GetComponentInChildren<EnemyFollow>());
             yield return new WaitForSeconds(0.5f);
         }
 

@@ -96,6 +96,11 @@ public class EnemyFollow : MonoBehaviour
 
     private void Update()
     {
+        if (Vector3.Distance(transform.position, target.transform.position) <= 3)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(((target.position - Vector3.up / 2) - transform.position).normalized), Time.deltaTime);
+        }
+
         if (relocating && rb.velocity.magnitude < 0.01f && rb.velocity.magnitude > -0.01f)
         {
             Debug.Log(Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer) > 0);

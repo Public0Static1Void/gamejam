@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Instancia una esfera con el rango y el color pasados, si grow se marca como true crecerá de 0 hasta radius
     /// </summary>
-    public void SpawnShpereRadius(Vector3 position, float radius, Color col, bool grow, float grow_speed = 100, Material material = null)
+    public void SpawnShpereRadius(Vector3 position, float radius, Color col, bool grow, float grow_speed = 50, Material material = null)
     {
         if (grow)
         {
@@ -194,6 +194,9 @@ public class GameManager : MonoBehaviour
         // Cambia su tamaño a 0
         ob.transform.localScale = Vector3.zero;
 
+        // Esconde el objeto
+        StartCoroutine(HideShaderObject(renderer));
+
         // Hace crecer el objeto hasta el radio
         float curr_radius = 0;
         while (curr_radius < radius)
@@ -204,8 +207,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        // Esconde el objeto
-        StartCoroutine(HideShaderObject(renderer));
+        
     }
 
     private IEnumerator HideShaderObject(Renderer renderer)

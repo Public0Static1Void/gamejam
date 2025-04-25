@@ -39154,6 +39154,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1836626148}
+        m_TargetAssemblyTypeName: sc_Abilities, Assembly-CSharp
+        m_MethodName: MonkeyBait
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   sprite_levitate: {fileID: 21300000, guid: a7113af17439c75428a03d7a0327be1a, type: 3}
   sprite_explodepath: {fileID: 21300000, guid: f30e172021665db4f898f96e4bc02865, type: 3}
   sprite_group: {fileID: 21300000, guid: 5d171dbf84860a349a35e08e1f4432b4, type: 3}
@@ -39163,6 +39177,7 @@ MonoBehaviour:
   sprite_byebye: {fileID: 21300000, guid: 52ba33d67adfab74da0511b0bdf42959, type: 3}
   sprite_bloodthirsty: {fileID: 21300000, guid: 9c9b5bf3b07ab4840b8e3ddbd8c279a8, type: 3}
   sprite_hologram: {fileID: 21300000, guid: 61d945c44f86b9841a0d0f9b9ded2587, type: 3}
+  sprite_monkey: {fileID: 21300000, guid: 0e2422905f7ae764292d898e188bd3af, type: 3}
 --- !u!1 &1723227726
 GameObject:
   m_ObjectHideFlags: 0

@@ -18,7 +18,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     public bool gambling_open = false;
 
-    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, HOLOGRAM_BODY, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, HOLOGRAM_BODY, MONKEY_BAIT, LAST_NO_USE }
     public enum AbilityType { BASIC, ULTIMATE, PASSIVE, LAST_NO_USE }
 
     [Header("References")]
@@ -37,7 +37,7 @@ public class AbilitiesSystem : MonoBehaviour
     public TMP_Text txt_description;
 
     public Transform attack_ab_chooser;
-    private List<Button> attack_abilities_btn;
+    public List<Button> attack_abilities_btn;
     private List<Image> attack_abilities_im;
 
     [Header("Abilities Methods")]
@@ -54,6 +54,7 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_byebye;
     public Sprite sprite_bloodthirsty;
     public Sprite sprite_hologram;
+    public Sprite sprite_monkey;
     
     void Awake()
     {
@@ -160,6 +161,17 @@ public class AbilitiesSystem : MonoBehaviour
         ab.cooldown = 10;
 
         abilities.Add(ab);
+        
+        // Monkey bait
+        ab = new Ability();
+
+        ab.name = "Monkey bait";
+        ab.description = $"Press the attack button to launch a Monkey that will attract the enemies for a few seconds";
+        ab.icon = sprite_monkey;
+        ab.rarity = AbilityType.BASIC;
+        ab.cooldown = 15;
+
+        abilities.Add(ab);
 
         // Asigna la información loopeable
         for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
@@ -173,6 +185,8 @@ public class AbilitiesSystem : MonoBehaviour
         if (abilities.Count != (int)Abilities.LAST_NO_USE)
             Debug.LogWarning("Las habilidades del enum no coinciden con las añadidas en el void Start");
 
+
+        /// ¡¡ Recuerda añadir la nueva habilidad al enum !! -------------------------------------------------------------
 
 
         // Referencias de los slots de habilidades
@@ -199,6 +213,8 @@ public class AbilitiesSystem : MonoBehaviour
         attack_abilities_im = new List<Image>();
         for (int i = 0; i < attack_ab_chooser.childCount; i++)
         {
+            if (attack_ab_chooser.GetChild(i).name.ToLower().Contains("title") || attack_ab_chooser.GetChild(i).name.ToLower().Contains("text")) continue;
+
             attack_abilities_btn.Add(attack_ab_chooser.GetChild(i).GetComponent<Button>());
             attack_abilities_im.Add(attack_ab_chooser.GetChild(i).GetComponent<Image>());
         }
@@ -300,7 +316,7 @@ public class AbilitiesSystem : MonoBehaviour
                                 attack_abilities_btn[0].Select();
 
                                 // Inicializa la UI
-                                for (int j = 0; j < attack_ab_chooser.childCount; j++)
+                                for (int j = 0; j < attack_ab_chooser.childCount && j < AttackSystem.instance.equipped_attacks.Count; j++)
                                 {
                                     attack_abilities_im[j].sprite = AttackSystem.instance.equipped_attacks[j].icon;
                                     int ab_id = j;
@@ -318,6 +334,7 @@ public class AbilitiesSystem : MonoBehaviour
                             else
                             {
                                 AttackSystem.instance.AddAttack(abilities_to_show[ab_num]);
+                                CloseGamblingMenu();
                             }
                             break;
 
@@ -343,15 +360,16 @@ public class AbilitiesSystem : MonoBehaviour
 
 
                 EventTrigger bt_events;
-
                 if (slots_buttons[i].gameObject.TryGetComponent<EventTrigger>(out bt_events))
                 {
                     // Todo ok
                 }
                 else
                 {
+                    // Añade el componente si no lo tiene
                     bt_events = slots_buttons[i].gameObject.AddComponent<EventTrigger>();
                 }
+
 
                 // Configura el tipo de evento para entrada del ratón
                 EventTrigger.Entry entry = new EventTrigger.Entry
@@ -359,10 +377,10 @@ public class AbilitiesSystem : MonoBehaviour
                     eventID = EventTriggerType.PointerEnter
                 };
 
+                // Muestra el texto de descripción
                 entry.callback.AddListener((data) =>
                 {
                     txt_description.text = abilities_to_show[ab_num].description;
-
                     StartCoroutine(MoveDescriptionUIToCursor(ab_num));
                 });
 
@@ -447,7 +465,6 @@ public class AbilitiesSystem : MonoBehaviour
 
             RectTransform rect = slots_buttons[ab_num].gameObject.GetComponent<RectTransform>();
 
-
             txt_description.rectTransform.anchoredPosition = rect.anchoredPosition;
             txt_description.rectTransform.sizeDelta = new Vector2(txt_description.rectTransform.sizeDelta.x, txt_description.preferredHeight);
 
@@ -460,7 +477,6 @@ public class AbilitiesSystem : MonoBehaviour
                                                                  Mathf.Clamp(txt_description.rectTransform.position.y, 0, resolution.y - (im_description.rectTransform.sizeDelta.y / 2)));
 
             im_description.rectTransform.anchoredPosition = txt_description.rectTransform.anchoredPosition;
-
             yield return null;
         }
     }

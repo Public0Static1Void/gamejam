@@ -84,7 +84,7 @@ public class AttackSystem : MonoBehaviour
                     target = 0;
                 slots_cooldowns[i].rectTransform.localScale = Vector2.Lerp(slots_cooldowns[i].rectTransform.localScale, sizes[target], Time.deltaTime);
 
-                slots_cooldowns[i].rectTransform.anchoredPosition += dir[i] * Time.deltaTime * 50;
+                slots_cooldowns[i].rectTransform.anchoredPosition += dir[i] * Time.deltaTime * 100;
             }
 
             timer += Time.deltaTime;
@@ -96,17 +96,18 @@ public class AttackSystem : MonoBehaviour
             yield return null;
         }
 
-        Vector2[] copy = new Vector2[dir.Length];
-        for (int i = 0; i < dir.Length; i++)
-        {
-            copy[i] = dir[i];
-        }
+        List<UnityEngine.UI.Image> copy = new List<UnityEngine.UI.Image>(slots_cooldowns);
         for (int i = 0; i < dir.Length; i++)
         {
             int t = i + 1;
             if (t >= dir.Length)
                 t = 0;
-            dir[i] = copy[t];
+            slots_cooldowns[i] = copy[t];
+        }
+
+        if (GetCurrentAbility().current_cooldown >= GetCurrentAbility().cooldown)
+        {
+            slots_cooldowns[0].fillAmount = 1;
         }
 
         moving_ui = false;
@@ -148,7 +149,6 @@ public class AttackSystem : MonoBehaviour
 
     public void ChangeAttack()
     {
-        // La habilidad no está ejecutándose
         if (!equipped_attacks[current_attack].onExecution)
         {
             // Cambia de ataque
@@ -156,7 +156,8 @@ public class AttackSystem : MonoBehaviour
             if (current_attack >= equipped_attacks.Count)
                 current_attack = 0;
 
-            StartCoroutine(MoveUIElements());
+            if (equipped_attacks.Count > 1 && !moving_ui)
+                StartCoroutine(MoveUIElements());
         }
     }
 

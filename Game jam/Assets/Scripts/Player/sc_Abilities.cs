@@ -84,6 +84,8 @@ public class sc_Abilities : MonoBehaviour
         {
             for (int i = 0; i <  colls.Length; i++)
             {
+                Vector3 dir = (colls[i].transform.position - position).normalized;
+                colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * damage);
                 colls[i].GetComponent<EnemyLife>().Damage(damage);
             }
         }
@@ -473,13 +475,21 @@ public class sc_Abilities : MonoBehaviour
     #region MonkeyBait
     public void MonkeyBait()
     {
+        if (AttackSystem.instance.GetCurrentAbility().onCooldown) return;
+
         StartCoroutine(MonkeyBaitRoutine());
     }
     // Hace que los enemigos pasen a targetear al mono por 5 segundos, después explota
     private IEnumerator MonkeyBaitRoutine()
     {
+        Ability monkey_ab = AttackSystem.instance.GetCurrentAbility();
+        monkey_ab.current_cooldown = 0;
+        AttackSystem.instance.StartCooldowns();
+
         GameObject monkey = Instantiate(prefab_monkey, transform.position, transform.rotation);
-        monkey.GetComponent<Rigidbody>().AddForce((transform.forward + Vector3.up) * 10, ForceMode.VelocityChange);
+        monkey.GetComponent<Rigidbody>().AddForce((transform.forward + Vector3.up * 0.5f) * 5, ForceMode.VelocityChange);
+
+        
 
         for (int i = 0; i < Rounds.instance.enemies_follow.Count; i++)
         {
@@ -493,7 +503,7 @@ public class sc_Abilities : MonoBehaviour
             Rounds.instance.enemies_follow[i].target = transform;
         }
 
-        CreateExplosion(monkey.transform.position, (int)(ReturnScript.instance.damage * 1.25f), ReturnScript.instance.explosion_range, Color.red);
+        CreateExplosion(monkey.transform.position, (int)(ReturnScript.instance.damage * 0.5f), ReturnScript.instance.explosion_range, Color.red);
 
         Destroy(monkey);
     }
