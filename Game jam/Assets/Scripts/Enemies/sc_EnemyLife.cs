@@ -68,6 +68,7 @@ public class EnemyLife : MonoBehaviour
             Destroy(transform.parent.gameObject);
 
         Rounds.instance.enemies.Remove(gameObject);
+        Rounds.instance.enemies_follow.Remove(enemyFollow);
     }
 
     private IEnumerator ActivateKinematic()

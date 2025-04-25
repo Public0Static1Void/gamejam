@@ -296,6 +296,8 @@ public class AbilitiesSystem : MonoBehaviour
                             if (AttackSystem.instance.equipped_attacks.Count >= 2)
                             {
                                 attack_ab_chooser.gameObject.SetActive(true);
+                                // Selecciona el primer botón (navegación por mando)
+                                attack_abilities_btn[0].Select();
 
                                 // Inicializa la UI
                                 for (int j = 0; j < attack_ab_chooser.childCount; j++)

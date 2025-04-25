@@ -12,6 +12,8 @@ public class Rounds : MonoBehaviour
     public static Rounds instance { get; private set; }
 
     public List<GameObject> enemies, enemy_list;
+    [HideInInspector]
+    public List<EnemyFollow> enemies_follow;
 
     public float enemyRound;
 
@@ -37,6 +39,8 @@ public class Rounds : MonoBehaviour
     {
         if (instance == null) instance = this;
         else Destroy(this);
+
+        enemies_follow = new List<EnemyFollow>();
     }
 
     void Update()
@@ -125,6 +129,7 @@ public class Rounds : MonoBehaviour
             enemy_life.max_hp = (int)enemy_hp;
 
             enemies.Add(enemy_inst);
+            enemies_follow.Add(enemy_inst.GetComponent<EnemyFollow>());
             yield return new WaitForSeconds(0.5f);
         }
 

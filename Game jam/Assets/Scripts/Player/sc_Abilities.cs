@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class sc_Abilities : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class sc_Abilities : MonoBehaviour
     [Header("References")]
     public GameObject prefab_mine;
     public GameObject prefab_hook;
+    public GameObject prefab_monkey;
+
     public AudioClip clip_plant_mine;
     public LayerMask layer_enemy;
 
@@ -71,6 +74,19 @@ public class sc_Abilities : MonoBehaviour
         }
 
         ab.onExecution = false;
+    }
+
+    private void CreateExplosion(Vector3 position, int damage, float range, Color color)
+    {
+        GameManager.gm.SpawnShpereRadius(position, range, color, true);
+        Collider[] colls = Physics.OverlapSphere(position, range, layer_enemy);
+        if (colls.Length > 0)
+        {
+            for (int i = 0; i <  colls.Length; i++)
+            {
+                colls[i].GetComponent<EnemyLife>().Damage(damage);
+            }
+        }
     }
 
     #region Levitate
@@ -451,6 +467,35 @@ public class sc_Abilities : MonoBehaviour
 
 
         active_hologram = false;
+    }
+    #endregion
+
+    #region MonkeyBait
+    public void MonkeyBait()
+    {
+        StartCoroutine(MonkeyBaitRoutine());
+    }
+    // Hace que los enemigos pasen a targetear al mono por 5 segundos, después explota
+    private IEnumerator MonkeyBaitRoutine()
+    {
+        GameObject monkey = Instantiate(prefab_monkey, transform.position, transform.rotation);
+        monkey.GetComponent<Rigidbody>().AddForce((transform.forward + Vector3.up) * 10, ForceMode.VelocityChange);
+
+        for (int i = 0; i < Rounds.instance.enemies_follow.Count; i++)
+        {
+            Rounds.instance.enemies_follow[i].target = monkey.transform;
+        }
+
+        yield return new WaitForSeconds(5);
+
+        for (int i = 0; i < Rounds.instance.enemies_follow.Count; i++)
+        {
+            Rounds.instance.enemies_follow[i].target = transform;
+        }
+
+        CreateExplosion(monkey.transform.position, (int)(ReturnScript.instance.damage * 1.25f), ReturnScript.instance.explosion_range, Color.red);
+
+        Destroy(monkey);
     }
     #endregion
 
