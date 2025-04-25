@@ -253,7 +253,6 @@ public class ScoreManager : MonoBehaviour
 
                 StartCoroutine(OpenDoor(current_door.gameObject));
             }
-            
         }
     }
     private IEnumerator OpenDoor(GameObject door)

@@ -334,7 +334,7 @@ public class AbilitiesSystem : MonoBehaviour
 
                     abilities.Remove(abilities_to_show[ab_num]);
 
-                    CloseGamblingMenu();
+                    CloseGamblingMenu(abilities_to_show[ab_num].rarity);
 
                     slots_buttons[ab_num].onClick.RemoveAllListeners();
                 });
@@ -463,8 +463,10 @@ public class AbilitiesSystem : MonoBehaviour
         }
     }
 
-    public void CloseGamblingMenu()
+    public void CloseGamblingMenu(AbilityType selected_type = AbilityType.LAST_NO_USE)
     {
+        if (selected_type == AbilityType.BASIC && AttackSystem.instance.equipped_attacks.Count >= 2) return;
+
         gambling_open = false;
 
         ob_gamblingparent.SetActive(false);
