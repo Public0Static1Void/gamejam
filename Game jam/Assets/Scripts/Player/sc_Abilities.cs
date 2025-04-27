@@ -26,6 +26,8 @@ public class sc_Abilities : MonoBehaviour
     public AudioClip ground_smash_from_air;
     public AudioClip stomp_on_ground;
     public AudioClip hologram_sound;
+    public AudioClip tictac_sound;
+    public AudioClip explosion_sound;
 
     [Header("References")]
     public GameObject prefab_mine;
@@ -78,7 +80,10 @@ public class sc_Abilities : MonoBehaviour
 
     private void CreateExplosion(Vector3 position, int damage, float range, Color color)
     {
+        SoundManager.instance.InstantiateSound(explosion_sound, position);
+
         GameManager.gm.SpawnShpereRadius(position, range, color, true);
+
         Collider[] colls = Physics.OverlapSphere(position, range, layer_enemy);
         if (colls.Length > 0)
         {
@@ -489,7 +494,7 @@ public class sc_Abilities : MonoBehaviour
         GameObject monkey = Instantiate(prefab_monkey, transform.position, transform.rotation);
         monkey.GetComponent<Rigidbody>().AddForce((transform.forward + Vector3.up * 0.5f) * 5, ForceMode.VelocityChange);
 
-        
+        monkey.GetComponent<AudioSource>().Play();
 
         for (int i = 0; i < Rounds.instance.enemies_follow.Count; i++)
         {

@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (Physics.Raycast(PlayerMovement.instance.transform.position, PlayerMovement.instance.transform.forward, out RaycastHit hit))
+            if (Physics.Raycast(PlayerMovement.instance.transform.position, Camera.main.transform.forward, out RaycastHit hit))
             {
                 plane_ob = hit.transform.gameObject;
                 Debug.Log($"Name: {hit.transform.name}");
@@ -135,6 +135,7 @@ public class GameManager : MonoBehaviour
             uv_pos.x += offset.x;
             uv_pos.y += offset.y;
 
+            //uv_pos = hit.textureCoord;
             Debug.Log($"UV Pos = {uv_pos}");
 
             StampTexture(mainTex, stamp, uv_pos, 6);
