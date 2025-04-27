@@ -4,6 +4,7 @@ using System.Resources;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.HighDefinition.Attributes;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -47,6 +48,11 @@ public class GameManager : MonoBehaviour
 
     public Sprite cirle_sprite;
 
+    public Texture2D plane, stamp;
+    public GameObject plane_ob;
+
+    public Material m_Stamp;
+
     [Header("Stats")]
     public int enemies_killed = 0;
     public int damage_done = 0;
@@ -74,11 +80,67 @@ public class GameManager : MonoBehaviour
         saveManager = GetComponent<SaveManager>();
     }
 
+
+    Texture2D ConvertToEditable(Texture2D source)
+    {
+        // Create a new Texture2D in a compatible format
+        Texture2D copy = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
+
+        // Copy pixels from source texture
+        RenderTexture tmpRT = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
+        Graphics.Blit(source, tmpRT);
+
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = tmpRT;
+
+        copy.ReadPixels(new Rect(0, 0, tmpRT.width, tmpRT.height), 0, 0);
+        copy.Apply();
+
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(tmpRT);
+
+        return copy;
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.F))
         {
-            PauseGame();
+            if (Physics.Raycast(PlayerMovement.instance.transform.position, PlayerMovement.instance.transform.forward, out RaycastHit hit))
+            {
+                plane_ob = hit.transform.gameObject;
+                Debug.Log($"Name: {hit.transform.name}");
+            }
+
+            stamp = ConvertToEditable(stamp);
+            Material mat = plane_ob.GetComponent<MeshRenderer>().material;
+            Vector2 tiling = mat.mainTextureScale;
+            Vector2 offset = mat.mainTextureOffset;
+
+            Texture2D mainTex = ConvertToEditable((Texture2D)mat.GetTexture("_DecalTexture"));
+            mat.SetTexture("_DecalTexture", mainTex);
+
+            Bounds bounds = plane_ob.GetComponent<MeshRenderer>().bounds;
+
+            Vector3 localPlayerPos = hit.point;
+
+            Vector2 uv_pos = new Vector2(
+                1 - (localPlayerPos.x - bounds.min.x) / bounds.size.x * tiling.x + offset.x,
+                1 - (localPlayerPos.z - bounds.min.z) / bounds.size.z * tiling.y + offset.y
+            );
+
+            uv_pos.x /= tiling.x;
+            uv_pos.y /= tiling.y;
+
+            uv_pos.x += offset.x;
+            uv_pos.y += offset.y;
+
+            Debug.Log($"UV Pos = {uv_pos}");
+
+            StampTexture(mainTex, stamp, uv_pos, 6);
+
+
+            //PauseGame();
         }
         // Fade del texto
         if (show_announce)
@@ -310,6 +372,31 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(time);
             pad.SetMotorSpeeds(0, 0);
         }
+    }
+
+    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int size)
+    {
+        int x = (int)(uv.x * main_texture.width) - size / 2;
+        int y = (int)(uv.y * main_texture.height) - size / 2;
+
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                int stampX = (int)((float)i / size * stamp_texture.width);
+                int stampY = (int)((float)j / size * stamp_texture.height);
+
+                if (x + i < 0 || x + i >= main_texture.width || y + j < 0 || y + j >= main_texture.height)
+                    continue;
+
+                Color stampColor = stamp_texture.GetPixel(stampX, stampY);
+                Color baseColor = main_texture.GetPixel(x + i, y + j);
+                Color blended = Color.Lerp(baseColor, stampColor, stampColor.a); // Alpha blending
+                main_texture.SetPixel(x + i, y + j, blended);
+            }
+        }
+
+        main_texture.Apply();
     }
 
     public void ResumeGame()
