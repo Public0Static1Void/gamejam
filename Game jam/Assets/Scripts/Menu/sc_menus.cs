@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using System;
+using Unity.VisualScripting;
 
 public class menus : MonoBehaviour
 {
@@ -181,7 +182,7 @@ public class menus : MonoBehaviour
                 im.sprite = ab_sprites[i];
                 txt.text = ab_l[i].name;
 
-                // Configura el evento de selección
+                // Configura el evento de selección -----------------------------------
                 EventTrigger event_tr = ob.GetComponentInChildren<EventTrigger>();
                 if (event_tr == null)
                 {
@@ -198,10 +199,49 @@ public class menus : MonoBehaviour
                 });
 
                 event_tr.triggers.Add(entry);
+
+                // Configura el evento al hacer click
+                btn.onClick.AddListener(() =>
+                {
+                    LayoutElement layout_el = btn.gameObject.GetComponent<LayoutElement>();
+                    layout_el.ignoreLayout = true;
+
+                    int child_num = GameManager.GetChildIndex(btn.transform);
+                    btn.transform.SetAsLastSibling();
+
+                    StartCoroutine(RelocateAbility(ob, im, btn, txt));
+                });
             }
         }
     }
 
+    private IEnumerator RelocateAbility(GameObject ob, UnityEngine.UI.Image icon, UnityEngine.UI.Button btn, TMP_Text title)
+    {
+        UnityEngine.UI.Image bg = ob.GetComponent<Image>();
+
+        Vector2 scaled_bg = bg.rectTransform.sizeDelta * 3;
+
+        Vector2 icon_previous_anchor = icon.rectTransform.anchorMax;
+        icon.rectTransform.anchorMax = new Vector2(0, 0.75f);
+        Vector2 icon_new_pos = new Vector2(icon.rectTransform.rect.xMax, 0.75f);
+
+        Vector2 txt_previous_anchor = title.rectTransform.anchorMax;
+        title.rectTransform.anchorMax = new Vector2(0, 0.5f);
+        Vector2 txt_new_pos = new Vector2(title.preferredWidth, 0.5f);
+
+
+        while (bg.gameObject.activeSelf)
+        {
+            bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime);
+
+            icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime);
+            title.rectTransform.anchoredPosition = Vector2.Lerp(title.rectTransform.anchoredPosition, txt_new_pos, Time.deltaTime);
+
+            yield return null;
+        }
+    }
+
+    // Recoloca el scroll de las habilidades
     private IEnumerator RelocateScroll(RectTransform rect)
     {
         RectTransform parent = rect.parent.parent.GetComponent<RectTransform>();

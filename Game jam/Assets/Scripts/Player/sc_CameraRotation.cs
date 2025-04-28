@@ -182,7 +182,7 @@ public class CameraRotation : MonoBehaviour
         // Cambia la posición del texto y la imagen
         float offset = 5;
         Vector2 pos = new Vector2(ui_sensivity_handle.anchorMax.x * ui_sensivity_handle.rect.width, ui_sensivity_handle.anchorMax.y + offset);
-        GameManager.gm.ChangeUIPosition(pos, ui_sensivity_value_image.rectTransform, ui_sensivity_value.rectTransform);
+        GameManager.ChangeUIPosition(pos, ui_sensivity_value_image.rectTransform, ui_sensivity_value.rectTransform);
 
         if (ui_sensivity_value_image.color.a < 1 || ui_sensivity_value.color.a < 1)
         {

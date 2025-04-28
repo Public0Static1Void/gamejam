@@ -323,16 +323,9 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator ChangeImageSizeRoutine(UnityEngine.UI.Image image, Vector3 new_size, float speed)
     {
-        Vector3 start_size = image.rectTransform.localScale;
-
-        while (Vector3.Distance(image.rectTransform.localScale, new_size) > 0.1f)
+        while (Vector3.Distance(image.rectTransform.sizeDelta, new_size) > 0.1f)
         {
-            image.rectTransform.localScale = Vector3.Lerp(image.rectTransform.localScale, new_size, speed * Time.deltaTime);
-            yield return null;
-        }
-        while (Vector3.Distance(image.rectTransform.localScale, start_size) > 0.1f)
-        {
-            image.rectTransform.localScale = Vector3.Lerp(image.rectTransform.localScale, start_size, speed * Time.deltaTime);
+            image.rectTransform.sizeDelta = Vector3.Lerp(image.rectTransform.sizeDelta, new_size, speed * Time.deltaTime);
             yield return null;
         }
     }
@@ -573,18 +566,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ChangeUIPosition(Vector2 position, RectTransform element1, RectTransform element2 = null)
-    {
-        element1.anchoredPosition = position;
-
-        Vector2 anch_pos = element1.anchoredPosition;
-        Vector2 pos = element1.position;
-        if (element2 != null)
-        {
-            element2.anchoredPosition = anch_pos;
-            element2.position = new Vector2(pos.x - element1.rect.width / 3, pos.y);
-        }
-    }
+    
 
     public void SaveGame()
     {
@@ -606,6 +588,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(10);
         LoadScene("Menu");
     }
+
 
     public void EndGame()
     {
@@ -636,4 +619,34 @@ public class GameManager : MonoBehaviour
 
         SaveGame();
     }
+
+    #region UtilityFunctions
+    public static int GetChildIndex(Transform child)
+    {
+        Transform parent = child.parent;
+        if (parent == null) return -1;
+
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            if (parent.GetChild(i) == child)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static void ChangeUIPosition(Vector2 position, RectTransform element1, RectTransform element2 = null)
+    {
+        element1.anchoredPosition = position;
+
+        Vector2 anch_pos = element1.anchoredPosition;
+        Vector2 pos = element1.position;
+        if (element2 != null)
+        {
+            element2.anchoredPosition = anch_pos;
+            element2.position = new Vector2(pos.x - element1.rect.width / 3, pos.y);
+        }
+    }
+    #endregion
 }
