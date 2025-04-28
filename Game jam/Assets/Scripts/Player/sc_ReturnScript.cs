@@ -203,17 +203,18 @@ public class ReturnScript : MonoBehaviour
         Collider[] colls = Physics.OverlapSphere(origin, range, enemyMask);
         if (colls.Length > 0)
         {
+            float level = AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.BLOODTHIRSTY].ability_level;
             foreach (Collider coll in colls)
             {
                 Vector3 d = (coll.transform.position - transform.position).normalized;
                 dir += d;
-                coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f));
-                coll.GetComponent<EnemyLife>().Damage(damage_amount);
+                coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f * level));
+                coll.GetComponent<EnemyLife>().Damage((int)(damage_amount * level));
 
+                // Cura del jugador
                 if (can_heal && !healed)
                 {
-                    // Cura del jugador
-                    playerLife.Damage((int)(-damage * 0.15f));
+                    playerLife.Damage((int)(-damage * 0.15f * level));
                     healed = true;
                 }
             }
@@ -527,14 +528,19 @@ public class ReturnScript : MonoBehaviour
             explosion_timer += Time.deltaTime;
             if (explosion_timer > 0.75f)
             {
-
+                float level = AbilitiesSystem.instance.abilities[(int)AbilitiesSystem.Abilities.EXPLODE_PATH].ability_level;
                 /// Instancia las partículas
                 Destroy(pre_explosion_particles[explosion_num]);
 
-                GameManager.gm.SpawnShpereRadius(positions[explosion_num], range * 2, Color.cyan, true, 50);
+                GameManager.gm.SpawnShpereRadius(positions[explosion_num], range * 2 * level, Color.cyan, true, 50);
 
                 /// Aplica el daño a los enemigos
-                DamageToEnemies(positions[explosion_num], (int)(damage * 0.25f), range, Vector3.up * (2 + (damage * 0.1f)));
+                DamageToEnemies(
+                    positions[explosion_num], 
+                    (int)(damage * 0.25f * level), 
+                    range, 
+                    Vector3.up * (2 + (damage * 0.1f))
+                );
 
                 
 

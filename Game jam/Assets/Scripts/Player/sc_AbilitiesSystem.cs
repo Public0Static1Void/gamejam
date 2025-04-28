@@ -13,6 +13,7 @@ public class AbilitiesSystem : MonoBehaviour
     public static AbilitiesSystem instance {  get; private set; }
 
     public List<Ability> abilities = new List<Ability>();
+    public List<Ability> abilities_log;
     private List<Ability> abilities_equipped = new List<Ability>();
     List<int> rand_abilities_index = new List<int>();
 
@@ -188,6 +189,21 @@ public class AbilitiesSystem : MonoBehaviour
 
         /// ¡¡ Recuerda añadir la nueva habilidad al enum !! -------------------------------------------------------------
 
+
+        /// Carga los niveles de las habilidades
+        SaveManager sm = new SaveManager();
+        sm.SaveAbilities(abilities.ToArray());
+
+        Ability[] abs_level = sm.LoadAbilitiesData();
+        if (abs_level != null && abs_level.Length > 0)
+        {
+            for (int i = 0; i < abs_level.Length; i++)
+            {
+                abilities[i].ability_level = abs_level[i].ability_level;
+            }
+        }
+
+        abilities_log = new List<Ability>(abilities); /// Copia la lista
 
         // Referencias de los slots de habilidades
 

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
+    // Jugador
     public void SaveGame(PlayerData data)
     {
         string json = JsonUtility.ToJson(data);
@@ -22,6 +23,27 @@ public class SaveManager : MonoBehaviour
         Debug.LogWarning("Save data not found");
         return null;
     }
+
+    // Habilidades
+    public void SaveAbilities(Ability[] data)
+    {
+        AbilitiesDataWrapper ab_array = new AbilitiesDataWrapper();
+        ab_array.abilities = data;
+        string json = JsonUtility.ToJson(ab_array, true); // pretty print optional
+        File.WriteAllText(Application.persistentDataPath + "/abilities_data.json", json);
+    }
+
+    public Ability[] LoadAbilitiesData()
+    {
+        string path = Application.persistentDataPath + "/abilities_data.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            AbilitiesDataWrapper ab_array = JsonUtility.FromJson<AbilitiesDataWrapper>(json);
+            return ab_array.abilities;
+        }
+        return null;
+    }
 }
 
 [System.Serializable]
@@ -36,4 +58,15 @@ public class PlayerData
     public float explosion_range;
 
     public int hp;
+}
+[System.Serializable]
+public class AbilitiesLevel
+{
+    public int id;
+    public float level;
+}
+[System.Serializable]
+public class AbilitiesDataWrapper
+{
+    public Ability[] abilities;
 }

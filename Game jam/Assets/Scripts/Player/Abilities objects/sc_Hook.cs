@@ -136,7 +136,9 @@ public class Hook : MonoBehaviour
                         PlayerMovement.instance.canMove = false;
                         PlayerMovement.instance.onGround = false;
 
-                        player.GetComponent<Rigidbody>().AddForce((-dir + Vector3.up * 2) * (dist / 2), ForceMode.VelocityChange);
+                        float level = AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.HOOK].ability_level;
+
+                        player.GetComponent<Rigidbody>().AddForce((-dir + Vector3.up * (2 * level)) * (dist / 2), ForceMode.VelocityChange);
 
                         audioSource.Stop();
                         SoundManager.instance.InstantiateSound(clip_chainpulled, player.transform.position);

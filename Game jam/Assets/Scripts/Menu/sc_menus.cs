@@ -33,12 +33,17 @@ public class menus : MonoBehaviour
 
     SaveManager sm;
 
+    public Transform abilities_holder;
+    public GameObject prefab_ability_model;
+
     private void Start()
     {
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         UnityEngine.Cursor.visible = true;
 
         sm = GetComponent<SaveManager>();
+
+        LoadAbilities();
     }
 
     public void LoadStatsTexts()
@@ -99,7 +104,7 @@ public class menus : MonoBehaviour
                 break;
             case "EXPLOSION RANGE":
                 pd.explosion_range += 0.5f;
-                txt_hp.text = "EXPLOSION RANGE: " + pd.explosion_range.ToString();
+                txt_explosion_range.text = "EXPLOSION RANGE: " + pd.explosion_range.ToString();
                 break;
             case "HP":
                 pd.hp++;
@@ -117,6 +122,31 @@ public class menus : MonoBehaviour
         Debug.Log("Stat upgraded");
         sm.SaveGame(pd);
     }
+
+
+    // Habilidades
+    public void LoadAbilities()
+    {
+        SaveManager sm = new SaveManager();
+        Ability[] ab_l = sm.LoadAbilitiesData();
+
+        if (ab_l != null)
+        {
+            for (int i = 0; i < ab_l.Length; i++)
+            {
+                GameObject ob = Instantiate(prefab_ability_model);
+                ob.transform.SetParent(abilities_holder);
+
+                UnityEngine.UI.Image im = ob.GetComponentInChildren<UnityEngine.UI.Image>();
+                UnityEngine.UI.Button btn = ob.GetComponentInChildren<UnityEngine.UI.Button>();
+                TMP_Text txt = ob.GetComponentInChildren<TMP_Text>();
+
+                im.sprite = ab_l[i].icon;
+                txt.text = ab_l[i].name;
+            }
+        }
+    }
+
 
     public void PlayGame()
     {

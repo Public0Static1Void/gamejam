@@ -106,6 +106,8 @@ public class sc_Abilities : MonoBehaviour
         active_levitate = true; /// El jugador empezará a detectar si choca con los enemigos
         check_collisions = true;
 
+        float level = AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.LEVITATE].ability_level;
+
         while (active_levitate)
         {
             // Compueba si el jugador ha acabado de volver en el tiempo
@@ -126,7 +128,8 @@ public class sc_Abilities : MonoBehaviour
                         // Estrella a los enemigos contra el suelo
                         enemies_mov[i].rb.useGravity = true;
                         float fall_speed = ReturnScript.instance.damage * 3;
-                        enemies_mov[i].AddForceToEnemy(new Vector3(0, -Mathf.Clamp(fall_speed, 0, 25), 0));
+                        enemies_mov[i].AddForceToEnemy(new Vector3(0, -Mathf.Clamp(fall_speed * level, 0, 25), 0));
+
                         // Hace que el enemigo haga un sonido
                         SoundManager.instance.PlaySoundOnAudioSource(ground_smash_from_air, enemies_mov[i].audioSource);
                     }
@@ -158,6 +161,7 @@ public class sc_Abilities : MonoBehaviour
         active_group = true;
         check_collisions = true;
 
+        float level = AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.GROUP].ability_level;
 
         while (ReturnScript.instance.returning)
         {
@@ -167,7 +171,7 @@ public class sc_Abilities : MonoBehaviour
 
                 Vector3 dir = ReturnScript.instance.transform.position - enemy_targets[i].transform.position;
                 dir = new Vector3(dir.x, dir.y + enemies_mov[i].rb.velocity.y, dir.z);
-                enemies_mov[i].AddForceToEnemy(dir.normalized * Mathf.Clamp(enemy_targets.Count, 2, 16));
+                enemies_mov[i].AddForceToEnemy(dir.normalized * Mathf.Clamp(enemy_targets.Count, 2, 16) * level);
             }
 
             yield return null;
@@ -255,7 +259,7 @@ public class sc_Abilities : MonoBehaviour
 
         if (PlayerMovement.instance.onGround)
         {
-            PlayerMovement.instance.rb.velocity = Vector3.up * force;
+            PlayerMovement.instance.rb.velocity = Vector3.up * (force * stomp_ab.ability_level);
             PlayerMovement.instance.rb.useGravity = true;
             SoundManager.instance.InstantiateSound(levitate_player, transform.position);
 
@@ -310,7 +314,6 @@ public class sc_Abilities : MonoBehaviour
         else
             active_byebye = true;
     }
-
     /// <summary>
     /// Empujará a los enemigos que se encuentre e_fl mientras este no sea kinematic
     /// </summary>
@@ -318,6 +321,8 @@ public class sc_Abilities : MonoBehaviour
     {
         if (e_fl != null)
         {
+            float level = AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.BYEBYE].ability_level;
+
             Vector3 d = (e_fl.transform.position - transform.position).normalized;
             e_fl.agent.enabled = false;
             e_fl.rb.isKinematic = false;
@@ -331,6 +336,7 @@ public class sc_Abilities : MonoBehaviour
                 {
                     foreach (Collider coll in colls)
                     {
+                        // Ignora los choques contra si mismo
                         if (coll.transform.parent.name == e_fl.transform.parent.name) continue;
 
                         if (ef != null)
@@ -339,7 +345,7 @@ public class sc_Abilities : MonoBehaviour
                             ef.agent.enabled = false;
                             ef.rb.isKinematic = false;
                             Debug.Log(Mathf.Abs(ef.rb.velocity.x) + Mathf.Abs(ef.rb.velocity.z));
-                            coll.GetComponent<EnemyFollow>().AddForceToEnemy((dir + d) * ((ReturnScript.instance.damage * 0.25f) * (Mathf.Abs(ef.rb.velocity.x) + Mathf.Abs(ef.rb.velocity.z))));
+                            coll.GetComponent<EnemyFollow>().AddForceToEnemy((dir + d) * ((ReturnScript.instance.damage * 0.25f * level) * (Mathf.Abs(ef.rb.velocity.x) + Mathf.Abs(ef.rb.velocity.z))));
 
                             // Por cada choque se irá frenando
                             ef.rb.velocity *= 0.5f;
@@ -438,7 +444,7 @@ public class sc_Abilities : MonoBehaviour
             anim_left_hand.SetBool("Hologram", true);
 
 
-            while (timer < max_time)
+            while (timer < max_time * holo_ab.ability_level)
             {
                 timer += Time.deltaTime;
 
@@ -508,7 +514,12 @@ public class sc_Abilities : MonoBehaviour
             Rounds.instance.enemies_follow[i].target = transform;
         }
 
-        CreateExplosion(monkey.transform.position, (int)(ReturnScript.instance.damage * 0.5f), ReturnScript.instance.explosion_range, Color.red);
+        CreateExplosion(
+            monkey.transform.position, 
+            (int)(ReturnScript.instance.damage * 0.5f * monkey_ab.ability_level), 
+            ReturnScript.instance.explosion_range * monkey_ab.ability_level, 
+            Color.red
+        );
 
         Destroy(monkey);
     }
@@ -527,7 +538,8 @@ public class sc_Abilities : MonoBehaviour
 
                 /// Si la habilidad de levitar está activa añade una fuerza vertical
                 if (active_levitate)
-                    e_fl.AddForceToEnemy(new Vector3(e_fl.rb.velocity.x, ReturnScript.instance.damage * 0.05f, e_fl.rb.velocity.z));
+                    e_fl.AddForceToEnemy(new Vector3(e_fl.rb.velocity.x, ReturnScript.instance.damage * 0.05f * AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.LEVITATE].ability_level,
+                                         e_fl.rb.velocity.z));
 
                 // Suena el sonido de levitación
                 if (levitate_enemy != null)

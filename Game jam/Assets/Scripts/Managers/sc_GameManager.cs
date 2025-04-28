@@ -456,6 +456,11 @@ public class GameManager : MonoBehaviour
         button.Select();
     }
 
+    public void EnableDisableButton(UnityEngine.UI.Button button)
+    {
+        button.enabled = !button.enabled;
+    }
+
     public void InputPause(InputAction.CallbackContext con)
     {
         if (con.performed)

@@ -55,7 +55,8 @@ public class sc_Mine : MonoBehaviour
             SoundManager.instance.InstantiateSound(clip_explosion, transform.position);
 
             // Daña a los enemigos que estén en la zona y los manda por los aires
-            ReturnScript.instance.DamageToEnemies(transform.position, damage, explosion_range, Vector3.up * (damage / 2));
+            ReturnScript.instance.DamageToEnemies(transform.position, (int)(damage * AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.MINE].ability_level),
+                                                  explosion_range, Vector3.up * (damage / 2));
 
             Destroy(gameObject);
         }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+[System.Serializable]
 public class Ability
 {
     public int id;
@@ -16,6 +17,8 @@ public class Ability
     public AbilitiesSystem.AbilityType rarity;
     public float cooldown = 0;
     public float current_cooldown = 0;
+
+    public float ability_level = 1;
 
     public bool onCooldown = false;
     public bool onExecution = false;
