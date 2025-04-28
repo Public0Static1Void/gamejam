@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using System;
 
 public class menus : MonoBehaviour
 {
@@ -35,6 +38,25 @@ public class menus : MonoBehaviour
 
     public Transform abilities_holder;
     public GameObject prefab_ability_model;
+    public TMP_Text txt_description_ability;
+
+    [Header("Icons")]
+    public Sprite sprite_levitate;
+    public Sprite sprite_explodepath;
+    public Sprite sprite_group;
+    public Sprite sprite_mine;
+    public Sprite sprite_hook;
+    public Sprite sprite_stomp;
+    public Sprite sprite_byebye;
+    public Sprite sprite_bloodthirsty;
+    public Sprite sprite_hologram;
+    public Sprite sprite_monkey;
+
+    [Header("Abilities ref")]
+    public ScrollRect ab_scroll;
+    public float scrollSpeed;
+
+    private List<Sprite> ab_sprites;
 
     private void Start()
     {
@@ -42,6 +64,20 @@ public class menus : MonoBehaviour
         UnityEngine.Cursor.visible = true;
 
         sm = GetComponent<SaveManager>();
+
+        ab_sprites = new List<Sprite>
+        {
+            sprite_levitate,
+            sprite_explodepath,
+            sprite_group,
+            sprite_mine,
+            sprite_hook,
+            sprite_stomp,
+            sprite_byebye,
+            sprite_bloodthirsty,
+            sprite_hologram,
+            sprite_monkey
+        };
 
         LoadAbilities();
     }
@@ -136,17 +172,86 @@ public class menus : MonoBehaviour
             {
                 GameObject ob = Instantiate(prefab_ability_model);
                 ob.transform.SetParent(abilities_holder);
+                ob.transform.localScale = Vector3.one * 0.3f;
 
-                UnityEngine.UI.Image im = ob.GetComponentInChildren<UnityEngine.UI.Image>();
+                UnityEngine.UI.Image im = ob.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>();
                 UnityEngine.UI.Button btn = ob.GetComponentInChildren<UnityEngine.UI.Button>();
                 TMP_Text txt = ob.GetComponentInChildren<TMP_Text>();
 
-                im.sprite = ab_l[i].icon;
+                im.sprite = ab_sprites[i];
                 txt.text = ab_l[i].name;
+
+                // Configura el evento de selección
+                EventTrigger event_tr = ob.GetComponentInChildren<EventTrigger>();
+                if (event_tr == null)
+                {
+                    event_tr = ob.AddComponent<EventTrigger>();
+                }
+
+                EventTrigger.Entry entry = new EventTrigger.Entry();
+                entry.eventID = EventTriggerType.Select;
+
+                RectTransform ob_rect = ob.GetComponent<RectTransform>();
+                entry.callback.AddListener((data) =>
+                {
+                    StartCoroutine(RelocateScroll(ob_rect));
+                });
+
+                event_tr.triggers.Add(entry);
             }
         }
     }
 
+    private IEnumerator RelocateScroll(RectTransform rect)
+    {
+        RectTransform parent = rect.parent.parent.GetComponent<RectTransform>();
+
+        Vector3[] childCorners = new Vector3[4];
+        Vector3[] parentCorners = new Vector3[4];
+
+        rect.GetWorldCorners(childCorners);
+        parent.GetWorldCorners(parentCorners);
+
+        Vector3 child_center = (childCorners[0] + childCorners[2]) * 0.5f;
+        Debug.Log($"Center = {child_center}, parentC0 = {parentCorners[0]}, parentC2 = {parentCorners[2]}");
+
+
+        float timer = 0;
+
+        // izquierda
+        if (child_center.x < parentCorners[0].x)
+        {
+            Debug.Log("Izquierda");
+            while (child_center.x < parentCorners[0].x)
+            {
+                ab_scroll.horizontalNormalizedPosition -= Time.deltaTime * 0.5f;
+
+                timer += Time.deltaTime;
+                if (timer >= 2)
+                    break;
+                yield return null;
+            }
+        }
+        // derecha
+        else if (child_center.x > parentCorners[2].x)
+        {
+            Debug.Log("Derecha");
+
+            while (child_center.x > parentCorners[2].x)
+            {
+                ab_scroll.horizontalNormalizedPosition += Time.deltaTime * 0.5f;
+
+                timer += Time.deltaTime;
+                if (timer >= 2)
+                    break;
+                yield return null;
+            }
+        }
+        else
+        {
+            Debug.Log("Child is in center");
+        }
+    }
 
     public void PlayGame()
     {
@@ -204,4 +309,14 @@ public class menus : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
+
+    public void MoveAbilitiesScroll(InputAction.CallbackContext con)
+    {
+        if (con.performed && abilities_holder.gameObject.activeSelf)
+        {
+            Vector2 dir = con.ReadValue<Vector2>();
+
+            ab_scroll.horizontalNormalizedPosition -= dir.y * scrollSpeed;
+        }
+    }
 }
