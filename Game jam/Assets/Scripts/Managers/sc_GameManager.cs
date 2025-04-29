@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text txt_total_score_points;
     public TMP_Text txt_converted_score_points;
 
+    public UnityEngine.UI.Slider fps_slider;
+
     public GameObject ob_shpere;
 
     public Sprite cirle_sprite;
@@ -451,6 +453,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SetFPS()
+    {
+        Application.targetFrameRate = (int)fps_slider.value;
+    }
+
+    public void ShowGameObject(GameObject ob)
+    {
+        ob.SetActive(true);
+    }
+    public void HideGameObject(GameObject ob)
+    {
+        ob.SetActive(false);
+    }
     public void ShowOrHideGameobject(GameObject ob)
     {
         ob.SetActive(!ob.gameObject.activeSelf);
