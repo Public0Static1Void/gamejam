@@ -83,7 +83,6 @@ public class menus : MonoBehaviour
     }
     private void Start()
     {
-        GameManager.gm.ChangeCurrentInputMap("UI");
         LoadPlayerStats();
 
         UnityEngine.Cursor.lockState = CursorLockMode.None;
@@ -191,7 +190,7 @@ public class menus : MonoBehaviour
     // Habilidades
     public void LoadAbilities()
     {
-        SaveManager sm = new SaveManager();
+        SaveManager sm = GameManager.gm.saveManager;
         Ability[] ab_l = sm.LoadAbilitiesData();
 
         if (ab_l != null)
@@ -232,8 +231,7 @@ public class menus : MonoBehaviour
                 entry.eventID = EventTriggerType.Deselect;
                 entry.callback.AddListener((data) =>
                 {
-                    close_ability_upgrade = true;
-                    layout_element.ignoreLayout = false;
+                    CloseAbilityDescription();
                 });
 
                 event_tr.triggers.Add(entry);
@@ -246,6 +244,11 @@ public class menus : MonoBehaviour
                 });
             }
         }
+    }
+
+    private void CloseAbilityDescription()
+    {
+        close_ability_upgrade = true;
     }
 
     private void AbilityButton(GameObject ob, UnityEngine.UI.Image im, TMP_Text txt, UnityEngine.UI.Button btn, string description)
@@ -276,7 +279,7 @@ public class menus : MonoBehaviour
     private IEnumerator RelocateAbility(GameObject ob, UnityEngine.UI.Image icon, UnityEngine.UI.Button btn, TMP_Text title, LayoutElement layout_el, int child_num, Transform parent)
     {
         // Configura el nuevo evento del botón
-        SaveManager sm = new SaveManager();
+        SaveManager sm = GameManager.gm.saveManager;
         Ability[] abs = sm.LoadAbilitiesData();
         /// Consigue la habilidad actual
         Ability ab = new Ability();
@@ -363,6 +366,8 @@ public class menus : MonoBehaviour
         string original_text = title.text;
         title.text = $"{ab.name}\n\nPress to upgrade!\nCurrent level: {ab.ability_level.ToString("F2")}\nSkill points: {pd.score.ToString("F2")}";
 
+        close_ability_upgrade = false;
+
         // Mueve los elementos a su nueva posición y cambia el tamaño del fondo
         while (layout_el.ignoreLayout)
         {
@@ -380,7 +385,10 @@ public class menus : MonoBehaviour
             yield return null;
         }
 
+
         close_ability_upgrade = false;
+        if (layout_el.ignoreLayout)
+            layout_el.ignoreLayout = false;
 
         SoundManager.instance.InstantiateSound(clip_selected, transform.position); /// Hace un sonido para indicar la deselección
 
@@ -547,8 +555,7 @@ public class menus : MonoBehaviour
     {
         if (con.performed && ab_description_text.gameObject.activeSelf)
         {
-            close_ability_upgrade = true;
-            layout_element.ignoreLayout = false;
+            CloseAbilityDescription();
         }
     }
 }

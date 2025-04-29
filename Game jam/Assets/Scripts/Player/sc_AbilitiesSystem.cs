@@ -114,7 +114,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     public void LoadAbilitiesData()
     {
-        SaveManager sm = new SaveManager();
+        SaveManager sm = GameManager.gm.saveManager;
 
         PlayerData pd = sm.LoadSaveData();
         // Levitate ability
