@@ -69,6 +69,54 @@ public class AbilitiesSystem : MonoBehaviour
     {
         CloseGamblingMenu();
 
+        LoadAbilitiesData();
+
+        
+        if (ability1_slot == null)
+        {
+            Debug.LogWarning("No se han añadido todas las referencias a [sc_AbilitiesSystem.cs]");
+            return;
+        }
+
+
+        abilities_log = new List<Ability>(abilities); /// Copia la lista
+
+        // Referencias de los slots de habilidades
+
+        slots_buttons = new List<Button>();
+        slots_images = new List<Image>();
+        slots_texts = new List<TMP_Text>();
+
+        slots_buttons.Add(ability1_slot.GetComponent<Button>());
+        slots_buttons.Add(ability2_slot.GetComponent<Button>());
+        slots_buttons.Add(ability3_slot.GetComponent<Button>());
+
+        slots_images.Add(ability1_slot.transform.GetChild(0).GetComponent<Image>());
+        slots_images.Add(ability2_slot.transform.GetChild(0).GetComponent<Image>());
+        slots_images.Add(ability3_slot.transform.GetChild(0).GetComponent<Image>());
+        
+        slots_texts.Add(ability1_slot.transform.GetChild(1).GetComponent<TMP_Text>());
+        slots_texts.Add(ability2_slot.transform.GetChild(1).GetComponent<TMP_Text>());
+        slots_texts.Add(ability3_slot.transform.GetChild(1).GetComponent<TMP_Text>());
+
+
+        // Referencias de los slots
+        attack_abilities_btn = new List<Button>();
+        attack_abilities_im = new List<Image>();
+        for (int i = 0; i < attack_ab_chooser.childCount; i++)
+        {
+            if (attack_ab_chooser.GetChild(i).name.ToLower().Contains("title") || attack_ab_chooser.GetChild(i).name.ToLower().Contains("text")) continue;
+
+            attack_abilities_btn.Add(attack_ab_chooser.GetChild(i).GetComponent<Button>());
+            attack_abilities_im.Add(attack_ab_chooser.GetChild(i).GetComponent<Image>());
+        }
+    }
+
+    public void LoadAbilitiesData()
+    {
+        SaveManager sm = new SaveManager();
+
+        PlayerData pd = sm.LoadSaveData();
         // Levitate ability
         Ability ab = new Ability();
 
@@ -103,7 +151,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab = new Ability();
 
         ab.name = "Path mine";
-        ab.description = $"Place a mine per second when you are returning. Mines explode dealing {ReturnScript.instance.damage * 2} when in contact with an enemy.";
+        ab.description = $"Place a mine per second when you are returning. Mines explode dealing {pd.damage * 2} when in contact with an enemy.";
         ab.icon = sprite_mine;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -131,27 +179,27 @@ public class AbilitiesSystem : MonoBehaviour
         ab.cooldown = 5;
 
         abilities.Add(ab);
-        
+
         // Hit N' Byebye
         ab = new Ability();
 
         ab.name = "Hit N' Bye";
-        ab.description = $"[PASSIVE]\nWhen taking damage, You have a 1 on 3 chance of launching the enemy away, scaling the distance with your damage ({ReturnScript.instance.damage})";
+        ab.description = $"[PASSIVE]\nWhen taking damage, You have a 1 on 3 chance of launching the enemy away, scaling the distance with your damage ({pd.damage})";
         ab.icon = sprite_byebye;
         ab.rarity = AbilityType.PASSIVE;
 
         abilities.Add(ab);
-        
+
         // Bloodthirsty
         ab = new Ability();
 
         ab.name = "Bloodthirsty";
-        ab.description = $"[PASSIVE]\nWhen dealing damage, heal for 15% ({(ReturnScript.instance.damage * 0.15f).ToString("F2")}) of your damage";
+        ab.description = $"[PASSIVE]\nWhen dealing damage, heal for 15% ({(pd.damage * 0.15f).ToString("F2")}) of your damage";
         ab.icon = sprite_bloodthirsty;
         ab.rarity = AbilityType.PASSIVE;
 
         abilities.Add(ab);
-        
+
         // Hologram body
         ab = new Ability();
 
@@ -162,7 +210,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.cooldown = 10;
 
         abilities.Add(ab);
-        
+
         // Monkey bait
         ab = new Ability();
 
@@ -174,11 +222,16 @@ public class AbilitiesSystem : MonoBehaviour
 
         abilities.Add(ab);
 
+
+        /// ¡¡ Recuerda añadir la nueva habilidad al enum !! -------------------------------------------------------------
+
+
         // Asigna la información loopeable
         for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
         {
             abilities[i].id = i;
-            abilities[i].ability_event = methods_abilities[i];
+            if (methods_abilities.Count > 0)
+                abilities[i].ability_event = methods_abilities[i];
             abilities[i].type = (Abilities)i;
             abilities[i].current_cooldown = abilities[i].cooldown;
         }
@@ -186,12 +239,6 @@ public class AbilitiesSystem : MonoBehaviour
         if (abilities.Count != (int)Abilities.LAST_NO_USE)
             Debug.LogWarning("Las habilidades del enum no coinciden con las añadidas en el void Start");
 
-
-        /// ¡¡ Recuerda añadir la nueva habilidad al enum !! -------------------------------------------------------------
-
-
-        /// Carga los niveles de las habilidades
-        SaveManager sm = new SaveManager();
         sm.SaveAbilities(abilities.ToArray());
 
         Ability[] abs_level = sm.LoadAbilitiesData();
@@ -201,38 +248,6 @@ public class AbilitiesSystem : MonoBehaviour
             {
                 abilities[i].ability_level = abs_level[i].ability_level;
             }
-        }
-
-        abilities_log = new List<Ability>(abilities); /// Copia la lista
-
-        // Referencias de los slots de habilidades
-
-        slots_buttons = new List<Button>();
-        slots_images = new List<Image>();
-        slots_texts = new List<TMP_Text>();
-
-        slots_buttons.Add(ability1_slot.GetComponent<Button>());
-        slots_buttons.Add(ability2_slot.GetComponent<Button>());
-        slots_buttons.Add(ability3_slot.GetComponent<Button>());
-
-        slots_images.Add(ability1_slot.transform.GetChild(0).GetComponent<Image>());
-        slots_images.Add(ability2_slot.transform.GetChild(0).GetComponent<Image>());
-        slots_images.Add(ability3_slot.transform.GetChild(0).GetComponent<Image>());
-        
-        slots_texts.Add(ability1_slot.transform.GetChild(1).GetComponent<TMP_Text>());
-        slots_texts.Add(ability2_slot.transform.GetChild(1).GetComponent<TMP_Text>());
-        slots_texts.Add(ability3_slot.transform.GetChild(1).GetComponent<TMP_Text>());
-
-
-        // Referencias de los slots
-        attack_abilities_btn = new List<Button>();
-        attack_abilities_im = new List<Image>();
-        for (int i = 0; i < attack_ab_chooser.childCount; i++)
-        {
-            if (attack_ab_chooser.GetChild(i).name.ToLower().Contains("title") || attack_ab_chooser.GetChild(i).name.ToLower().Contains("text")) continue;
-
-            attack_abilities_btn.Add(attack_ab_chooser.GetChild(i).GetComponent<Button>());
-            attack_abilities_im.Add(attack_ab_chooser.GetChild(i).GetComponent<Image>());
         }
     }
 
@@ -499,7 +514,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     public void CloseGamblingMenu(AbilityType selected_type = AbilityType.LAST_NO_USE)
     {
-        if (selected_type == AbilityType.BASIC && AttackSystem.instance.equipped_attacks.Count >= 2) return;
+        if (selected_type == AbilityType.BASIC && AttackSystem.instance.equipped_attacks.Count >= 2 || ob_gamblingparent == null) return;
 
         gambling_open = false;
 

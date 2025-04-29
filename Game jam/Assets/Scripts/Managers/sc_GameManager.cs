@@ -80,6 +80,15 @@ public class GameManager : MonoBehaviour
         saveManager = GetComponent<SaveManager>();
     }
 
+    public void ChangeControllerScheme(string scheme)
+    {
+        playerInput.SwitchCurrentControlScheme(scheme);
+    }
+    public void ChangeCurrentInputMap(string map)
+    {
+        playerInput.SwitchCurrentActionMap(map);
+    }
+
 
     Texture2D ConvertToEditable(Texture2D source)
     {
@@ -302,7 +311,7 @@ public class GameManager : MonoBehaviour
         float timer = 0;
         while (timer < duration)
         {
-            if (!PlayerMovement.instance.canMove) break;
+            //if (PlayerMovement.instance == null && !PlayerMovement.instance.canMove) break;
 
             timer += Time.deltaTime;
 
