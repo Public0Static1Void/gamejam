@@ -362,6 +362,7 @@ GameObject:
   - component: {fileID: 347495398}
   - component: {fileID: 347495397}
   - component: {fileID: 347495396}
+  - component: {fileID: 347495399}
   m_Layer: 5
   m_Name: Close button
   m_TagString: Untagged
@@ -448,10 +449,10 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 2072584184}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SelectUIButton
+        m_MethodName: EnableDisableButton
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 347495396}
+          m_ObjectArgument: {fileID: 1470557965}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -460,7 +461,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 2072584184}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: EnableDisableButton
+        m_MethodName: SelectUIButton
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1470557965}
@@ -489,6 +490,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 825785431}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 412795592}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 768b744ca10304f4ea2e54713bf2dfa0, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -532,6 +545,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 347495394}
   m_CullTransparentMesh: 1
+--- !u!114 &347495399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 347495394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 412795592}
+          m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+          m_MethodName: PlaySound
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8300000, guid: 768b744ca10304f4ea2e54713bf2dfa0, type: 3}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &412795588
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,6 +624,10 @@ MonoBehaviour:
   button: {fileID: 0}
   audiosToPlay:
   - {fileID: 8300000, guid: a1247709e5dce8a4fbceccc346eb2930, type: 3}
+  clip_cantupgrade: {fileID: 8300000, guid: ee05706004866c549af09ca8ecc2ece7, type: 3}
+  clip_upgraded: {fileID: 8300000, guid: 780f7f57610b9554daacb391a87134b2, type: 3}
+  clip_click: {fileID: 8300000, guid: 768b744ca10304f4ea2e54713bf2dfa0, type: 3}
+  clip_selected: {fileID: 8300000, guid: d44430f5a80dbb5488efcaa93dfc7706, type: 3}
   txt_damage: {fileID: 868236968}
   txt_speed: {fileID: 527438680}
   txt_stamina: {fileID: 2125539874}
@@ -718,7 +764,7 @@ MonoBehaviour:
   audioMixerGroup: {fileID: 24300002, guid: 640085060d3d82749ade4e7338efd18d, type: 2}
   slider_volume: {fileID: 0}
   funnySounds: 0
-  pool_number_audiosources: 1
+  pool_number_audiosources: 5
 --- !u!114 &412795593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1651,6 +1697,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 412795592}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlaySound
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 768b744ca10304f4ea2e54713bf2dfa0, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &825785432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1994,6 +2052,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879066678}
   m_CullTransparentMesh: 1
+--- !u!1 &879507695
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 879507697}
+  - component: {fileID: 879507696}
+  m_Layer: 0
+  m_Name: AbilitiesManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &879507696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879507695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb3a96ad9a3eff74b9807ab60d2ff6b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilities: []
+  abilities_log: []
+  gambling_open: 0
+  ob_gamblingparent: {fileID: 0}
+  ob_abilities_ui_holder: {fileID: 0}
+  ability1_slot: {fileID: 0}
+  ability2_slot: {fileID: 0}
+  ability3_slot: {fileID: 0}
+  slots_texts: []
+  im_description: {fileID: 0}
+  txt_description: {fileID: 0}
+  attack_ab_chooser: {fileID: 0}
+  attack_abilities_btn: []
+  methods_abilities: []
+  sprite_levitate: {fileID: 21300000, guid: a7113af17439c75428a03d7a0327be1a, type: 3}
+  sprite_explodepath: {fileID: 21300000, guid: f30e172021665db4f898f96e4bc02865, type: 3}
+  sprite_group: {fileID: 21300000, guid: 5d171dbf84860a349a35e08e1f4432b4, type: 3}
+  sprite_mine: {fileID: 21300000, guid: 6daa2dde5d8f366459163b4f1225b786, type: 3}
+  sprite_hook: {fileID: 21300000, guid: 10d7294b5bb2fca4b8928d4da0a875f8, type: 3}
+  sprite_stomp: {fileID: 21300000, guid: 12d211f76c5b0af4c84adb6ae971a1b9, type: 3}
+  sprite_byebye: {fileID: 21300000, guid: 52ba33d67adfab74da0511b0bdf42959, type: 3}
+  sprite_bloodthirsty: {fileID: 21300000, guid: 9c9b5bf3b07ab4840b8e3ddbd8c279a8, type: 3}
+  sprite_hologram: {fileID: 21300000, guid: 61d945c44f86b9841a0d0f9b9ded2587, type: 3}
+  sprite_monkey: {fileID: 21300000, guid: 0e2422905f7ae764292d898e188bd3af, type: 3}
+--- !u!4 &879507697
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879507695}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &981787434
 GameObject:
   m_ObjectHideFlags: 0
@@ -3697,7 +3823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1866588862
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3930,7 +4056,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 5.303467, y: 0.0126953125}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -527.91, y: -314.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1932170988
@@ -4059,9 +4185,9 @@ MonoBehaviour:
   m_fontSize: 10
   m_fontSizeBase: 10
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 6
+  m_fontSizeMax: 10
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -4161,7 +4287,7 @@ MonoBehaviour:
   damage_recieved: 0
   damage_healed: 0
   saveManager: {fileID: 0}
-  playerInput: {fileID: 0}
+  playerInput: {fileID: 2072584187}
   controller_name: 
 --- !u!4 &2072584185
 Transform:
@@ -4311,6 +4437,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 4598bdd8-fd40-48a6-b2b8-85243b0aa5dd
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 412795590}
+        m_TargetAssemblyTypeName: menus, Assembly-CSharp
+        m_MethodName: CloseAbilityInfo
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 636bca9f-27f2-4d69-b203-e7e0ea12aca3
+    m_ActionName: UI/Back[/Keyboard/backspace,/Keyboard/escape,/XInputControllerWindows/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
