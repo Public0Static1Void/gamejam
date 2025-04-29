@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
@@ -114,6 +115,7 @@ public class SoundManager : MonoBehaviour
     public void SetVolume()
     {
         audioMixerGroup.audioMixer.SetFloat("MasterVolume", slider_volume.value);
+        GameManager.ChangeUIPosition(slider_volume.handleRect.anchoredPosition, CameraRotation.instance.ui_sensivity_value_image.rectTransform, CameraRotation.instance.ui_sensivity_value.rectTransform);
     }
     public void SetSFXVolume()
     {
