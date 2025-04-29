@@ -56,6 +56,9 @@ public class menus : MonoBehaviour
     [Header("Abilities ref")]
     public ScrollRect ab_scroll;
     public float scrollSpeed;
+    public TMP_Text ab_description_text;
+
+    private LayoutElement layout_element;
 
     private List<Sprite> ab_sprites;
 
@@ -201,44 +204,92 @@ public class menus : MonoBehaviour
                 event_tr.triggers.Add(entry);
 
                 // Configura el evento al hacer click
+                string description = ab_l[i].description;
                 btn.onClick.AddListener(() =>
                 {
                     LayoutElement layout_el = btn.gameObject.GetComponent<LayoutElement>();
-                    layout_el.ignoreLayout = true;
 
+                    Transform parent = btn.transform;
                     int child_num = GameManager.GetChildIndex(btn.transform);
+                    btn.transform.SetParent(btn.transform.parent.parent, true);
                     btn.transform.SetAsLastSibling();
 
-                    StartCoroutine(RelocateAbility(ob, im, btn, txt));
+                    if (layout_element != null)
+                    {
+                        layout_element.ignoreLayout = false;
+                    }
+                    layout_element = layout_el;
+                    layout_element.ignoreLayout = true;
+
+                    ab_description_text.text = description;
+
+                    ab_description_text.gameObject.SetActive(true);
+
+                    StartCoroutine(RelocateAbility(ob, im, btn, txt, layout_element, child_num, abilities_holder));
                 });
             }
         }
     }
 
-    private IEnumerator RelocateAbility(GameObject ob, UnityEngine.UI.Image icon, UnityEngine.UI.Button btn, TMP_Text title)
+    private IEnumerator RelocateAbility(GameObject ob, UnityEngine.UI.Image icon, UnityEngine.UI.Button btn, TMP_Text title, LayoutElement layout_el, int child_num, Transform parent)
     {
         UnityEngine.UI.Image bg = ob.GetComponent<Image>();
 
-        Vector2 scaled_bg = bg.rectTransform.sizeDelta * 3;
+        Vector2 scaled_bg = new Vector2(bg.rectTransform.sizeDelta.x * 2.5f, bg.rectTransform.sizeDelta.y * 2);
 
-        Vector2 icon_previous_anchor = icon.rectTransform.anchorMax;
-        icon.rectTransform.anchorMax = new Vector2(0, 0.75f);
-        Vector2 icon_new_pos = new Vector2(icon.rectTransform.rect.xMax, 0.75f);
+        Vector2 bg_new_pos = new Vector2(0, 0);
+        bg.rectTransform.anchorMin = new Vector2(0.35f, 0.5f);
+        bg.rectTransform.anchorMax = bg.rectTransform.anchorMin;
+        bg.rectTransform.pivot = bg.rectTransform.anchorMax;
 
-        Vector2 txt_previous_anchor = title.rectTransform.anchorMax;
-        title.rectTransform.anchorMax = new Vector2(0, 0.5f);
-        Vector2 txt_new_pos = new Vector2(title.preferredWidth, 0.5f);
+        Vector2 icon_previous_pos = icon.rectTransform.anchoredPosition;
+        Vector2 icon_new_pos = new Vector2(-bg.rectTransform.rect.width + icon.rectTransform.rect.xMax / 2, bg.rectTransform.rect.height - icon.rectTransform.rect.yMax);
+
+        Vector2 txt_previous_anchor = title.rectTransform.anchoredPosition;
+        Vector2 txt_new_pos = new Vector2(-bg.rectTransform.rect.width + title.rectTransform.rect.xMax / 2, 0.5f);
+
+        ab_description_text.transform.SetParent(ob.transform, false);
+        ab_description_text.rectTransform.anchorMin = new Vector2(0.5f, 0.1f);
+        ab_description_text.rectTransform.anchorMax = new Vector2(0.9f, 0.9f);
+        ab_description_text.rectTransform.pivot = Vector2.one * 0.5f;
 
 
-        while (bg.gameObject.activeSelf)
+        while (layout_el.ignoreLayout)
         {
-            bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime);
+            ab_description_text.gameObject.SetActive(true);
 
-            icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime);
-            title.rectTransform.anchoredPosition = Vector2.Lerp(title.rectTransform.anchoredPosition, txt_new_pos, Time.deltaTime);
+            bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime * 2);
+            bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_new_pos, Time.deltaTime * 2);
+
+            icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime * 2);
+            title.rectTransform.anchoredPosition = Vector2.Lerp(title.rectTransform.anchoredPosition, txt_new_pos, Time.deltaTime * 2);
 
             yield return null;
         }
+
+        ab_description_text.gameObject.SetActive(false);
+        ob.SetActive(false);
+
+        bg.transform.SetParent(parent, false);
+        bg.transform.SetSiblingIndex(child_num);
+
+        yield return null;
+
+        GridLayoutGroup grid = parent.GetComponent<GridLayoutGroup>();
+        grid.enabled = false;
+        yield return null;
+        grid.enabled = true;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parent as RectTransform);
+
+        ob.SetActive(true);
+
+        bg.rectTransform.anchorMax = Vector2.one * 0.5f;
+        bg.rectTransform.anchorMin = Vector2.one * 0.5f;
+        bg.rectTransform.pivot = Vector2.one * 0.5f;
+
+        icon.rectTransform.anchoredPosition = icon_previous_pos;
+        title.rectTransform.anchoredPosition = txt_previous_anchor;
     }
 
     // Recoloca el scroll de las habilidades
