@@ -14,6 +14,7 @@ public class SoundManager : MonoBehaviour
 
     [Header("References")]
     public Slider slider_volume;
+    public Slider slider_sfx_volume;
 
     public bool funnySounds;
 
@@ -78,6 +79,7 @@ public class SoundManager : MonoBehaviour
             audioSource.Stop();
         }
     }
+
     /// <summary>
     /// Hace sonar un audioClip en la posición indicada
     /// </summary>
@@ -112,6 +114,10 @@ public class SoundManager : MonoBehaviour
     public void SetVolume()
     {
         audioMixerGroup.audioMixer.SetFloat("MasterVolume", slider_volume.value);
+    }
+    public void SetSFXVolume()
+    {
+        audioMixerGroup.audioMixer.SetFloat("SFXVolume", slider_sfx_volume.value);
     }
 
     public void SetHighPassEffect(float cutoff_freq)
