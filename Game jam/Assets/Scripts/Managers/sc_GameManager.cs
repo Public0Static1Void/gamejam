@@ -413,6 +413,8 @@ public class GameManager : MonoBehaviour
 
         pause_menu.SetActive(false);
         SoundManager.instance.SetHighPassEffect(10);
+
+        pause = false;
     }
     public void PauseGame()
     {
@@ -624,7 +626,7 @@ public class GameManager : MonoBehaviour
 
         stats_resume_holder.SetActive(true);
 
-        ScoreManager.instance.score += ScoreManager.instance.score / 100;
+        ScoreManager.instance.score = ScoreManager.instance.score / 100;
 
         SaveGame();
     }

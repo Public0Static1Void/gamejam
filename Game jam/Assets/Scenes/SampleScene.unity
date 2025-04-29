@@ -18189,9 +18189,9 @@ RectTransform:
   - {fileID: 1318931940}
   - {fileID: 1502989151}
   - {fileID: 565344}
+  - {fileID: 552953522}
   - {fileID: 1351792937}
   - {fileID: 574072334}
-  - {fileID: 552953522}
   - {fileID: 594907143}
   - {fileID: 1715138926}
   - {fileID: 272478908}
@@ -21262,7 +21262,7 @@ MonoBehaviour:
   - {fileID: 884736393386133593, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
   - {fileID: 6845868788880733797, guid: c898474947a343e4eaf251cf5189d333, type: 3}
   enemies_follow: []
-  enemyRound: 0
+  enemyRound: 10
   clip_roundstart: {fileID: 8300000, guid: 947e275716657e74d816fdd0506cf4da, type: 3}
   txt_round: {fileID: 664061370}
 --- !u!4 &843739052
@@ -45123,6 +45123,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb3a96ad9a3eff74b9807ab60d2ff6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  abilities: []
+  abilities_log: []
   gambling_open: 0
   ob_gamblingparent: {fileID: 314122226}
   ob_abilities_ui_holder: {fileID: 574072333}
@@ -48941,6 +48943,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: c9a7281b-ae0d-44d3-8402-994f1b202545
     m_ActionName: Player/Melee attack[/Mouse/rightButton,/XInputControllerWindows/leftShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 636bca9f-27f2-4d69-b203-e7e0ea12aca3
+    m_ActionName: UI/Back[/Keyboard/backspace,/Keyboard/escape,/XInputControllerWindows/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -49252,6 +49258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4783933dfc4ca949accf867cd353652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  equipped_attacks: []
   slots_abilities:
   - {fileID: 6170822}
   - {fileID: 240114968}

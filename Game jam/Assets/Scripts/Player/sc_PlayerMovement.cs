@@ -142,7 +142,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 stamina_image_bg.fillAmount = 1;
                 GameManager.gm.ColorPulse(stamina_image, Color.white, 4);
-                GameManager.gm.ChangeImageSize(stamina_image, stamina_image.rectTransform.localScale * 1.06f, 4);
             }
         }
 

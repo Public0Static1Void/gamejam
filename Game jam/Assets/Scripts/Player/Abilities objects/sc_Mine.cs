@@ -24,6 +24,7 @@ public class sc_Mine : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = clip_pip;
 
+
         damage = ReturnScript.instance.damage * 2;
 
         // La mina se pone al nivel del suelo

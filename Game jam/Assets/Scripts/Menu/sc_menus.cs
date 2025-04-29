@@ -83,6 +83,8 @@ public class menus : MonoBehaviour
     }
     private void Start()
     {
+        Time.timeScale = 1;
+
         LoadPlayerStats();
 
         UnityEngine.Cursor.lockState = CursorLockMode.None;
@@ -374,6 +376,7 @@ public class menus : MonoBehaviour
             ab_description_text.gameObject.SetActive(true);
 
             bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime * 4);
+            Debug.Log($"DeltaNow: {bg.rectTransform.sizeDelta}, Target: {scaled_bg}");
             bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_new_pos, Time.deltaTime * 2);
 
             icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime * 2);
