@@ -94,6 +94,11 @@ public class sc_Abilities : MonoBehaviour
                 colls[i].GetComponent<EnemyLife>().Damage(damage);
             }
         }
+
+        if (Vector3.Distance(position, PlayerMovement.instance.transform.position) < range)
+        {
+            GameManager.gm.ShakeController(0.5f * (damage * 0.15f), 0, 0.05f + (damage * 0.15f));
+        }
     }
 
     #region Levitate

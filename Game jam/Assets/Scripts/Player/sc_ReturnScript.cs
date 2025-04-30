@@ -189,9 +189,11 @@ public class ReturnScript : MonoBehaviour
             else
             {
                 timer += Time.deltaTime;
-                ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, past_positions[0], Time.deltaTime);
+                ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, past_positions[0], Time.deltaTime * 1.25f);
                 ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, q_rotations[0], Time.deltaTime);
-                if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 0.5f)
+
+                // Si está muy cerca del jugador se desvanecerá
+                if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 0.25f)
                 {
                     if (!isFadingOut)
                         StartCoroutine(FadeOutHologramObject(ob_AfterImage));
