@@ -60,6 +60,8 @@ public class ReturnScript : MonoBehaviour
 
     private bool isFadingOut = false, isFadingIn = false;
 
+    private bool afterImage_attack = false;
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -189,19 +191,22 @@ public class ReturnScript : MonoBehaviour
             else
             {
                 timer += Time.deltaTime;
-                ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, past_positions[0], Time.deltaTime * 1.25f);
-                ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, q_rotations[0], Time.deltaTime);
+                if (!afterImage_attack)
+                {
+                    ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, past_positions[0], Time.deltaTime * 1.25f);
+                    ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, q_rotations[0], Time.deltaTime);
 
-                // Si está muy cerca del jugador se desvanecerá
-                if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 0.25f)
-                {
-                    if (!isFadingOut)
-                        StartCoroutine(FadeOutHologramObject(ob_AfterImage));
-                }
-                else
-                {
-                    if (!isFadingIn)
-                        StartCoroutine(FadeInHologramObject(ob_AfterImage));
+                    // Si está muy cerca del jugador se desvanecerá
+                    if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 0.25f)
+                    {
+                        if (!isFadingOut)
+                            StartCoroutine(FadeOutHologramObject(ob_AfterImage));
+                    }
+                    else
+                    {
+                        if (!isFadingIn)
+                            StartCoroutine(FadeInHologramObject(ob_AfterImage));
+                    }
                 }
             }
         }
@@ -360,6 +365,8 @@ public class ReturnScript : MonoBehaviour
 
     private IEnumerator AfterImageAttack()
     {
+        afterImage_attack = true;
+
         List<Vector3> positions = new List<Vector3>(past_positions);
         List<Quaternion> rotations = new List<Quaternion>(q_rotations);
 
@@ -449,6 +456,8 @@ public class ReturnScript : MonoBehaviour
         GameManager.gm.ShakeController(0, 0, 0);
 
         //ob_AfterImage.SetActive(false);
+
+        afterImage_attack = false;
     }
 
     private IEnumerator HideObjectsOnView()
@@ -488,6 +497,7 @@ public class ReturnScript : MonoBehaviour
                     {
                         foreach (Material mat in meshes_to_hide[i].materials)
                         {
+                            if (!mat.shader.name.ToLower().Contains("standard")) continue;
                             Color col = mat.color;
                             alpha[i] -= Time.deltaTime;
                             mat.color = new Color(col.r, col.g, col.b, alpha[i]);

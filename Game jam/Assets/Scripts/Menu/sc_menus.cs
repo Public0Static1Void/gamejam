@@ -316,7 +316,7 @@ public class menus : MonoBehaviour
                     if (abilities[i].name == ab.name)
                     {
                         abilities[i].ability_level += 0.1f;
-                        title.text = $"{ab.name}\n\nPress to upgrade!\nCurrent level: {abilities[i].ability_level}\nSkill points: {pd.score}";
+                        title.text = $"{ab.name}\n\nPress to upgrade!\nCurrent level: {abilities[i].ability_level.ToString("F2")}\nSkill points: {pd.score.ToString("F2")}";
                         ab = abilities[i];
                         break;
                     }
@@ -406,7 +406,7 @@ public class menus : MonoBehaviour
 
         GridLayoutGroup grid = parent.GetComponent<GridLayoutGroup>();
         grid.enabled = false;
-        yield return null; // Espera un frame para que los cambios de apliquen
+        yield return new WaitForSeconds(0.1f); // Espera un frame para que los cambios de apliquen
         grid.enabled = true;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(parent as RectTransform);
@@ -430,9 +430,10 @@ public class menus : MonoBehaviour
         title.text = ab.name;
 
         // Vuelve a añadir el evento del botón
+        btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() =>
         {
-            AbilityButton(ob, icon, title, btn, ab_description_text.text);
+            AbilityButton(ob, icon, title, btn, ab.description);
         });
     }
 

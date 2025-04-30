@@ -705,6 +705,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Anykey",
+                    "type": "Button",
+                    "id": "8d7d3c32-c7ed-4c3b-91ac-04f7eba39916",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -1211,6 +1220,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "733522d5-bdd4-4898-828e-02c9d3a14a98",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Anykey",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
