@@ -30,6 +30,8 @@ public class ReturnScript : MonoBehaviour
     public ParticleSystem huge_water_explosion_particle;
     public GameObject ob_AfterImage;
 
+    private Vector3 afterImage_target;
+
     [Header("Sonidos")]
     public AudioClip return_clip;
     public AudioClip explosion_clip, funny_explosion_clip, tictac_clip, nautilus_explosion;
@@ -54,6 +56,9 @@ public class ReturnScript : MonoBehaviour
     [Header("Colors")]
     public Color color_cooldown_ready;
     public Color color_on_cooldown;
+
+
+    private bool isFadingOut = false, isFadingIn = false;
 
     private void Awake()
     {
@@ -184,6 +189,18 @@ public class ReturnScript : MonoBehaviour
             else
             {
                 timer += Time.deltaTime;
+                ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, past_positions[0], Time.deltaTime);
+                ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, q_rotations[0], Time.deltaTime);
+                if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 0.5f)
+                {
+                    if (!isFadingOut)
+                        StartCoroutine(FadeOutHologramObject(ob_AfterImage));
+                }
+                else
+                {
+                    if (!isFadingIn)
+                        StartCoroutine(FadeInHologramObject(ob_AfterImage));
+                }
             }
         }
 
@@ -196,6 +213,59 @@ public class ReturnScript : MonoBehaviour
                 healed = false;
             }
         }
+    }
+
+    private IEnumerator FadeOutHologramObject(GameObject ob)
+    {
+        isFadingOut = true; /// Controla si se está ejecutando la ecorutina
+
+        MeshRenderer mesh_r = ob.GetComponent<MeshRenderer>();
+
+        MeshRenderer[] childs_mesh = new MeshRenderer[ob.transform.childCount];
+        for (int i = 0; i < ob.transform.childCount; i++)
+        {
+            childs_mesh[i] = ob.transform.GetChild(i).GetComponent<MeshRenderer>();
+        }
+
+        float alpha = mesh_r.materials[0].GetFloat("_Alpha");
+        while (alpha > 0)
+        {
+            alpha -= Time.deltaTime * 0.5f;
+            mesh_r.materials[0].SetFloat("_Alpha", alpha);
+            for (int i = 0; i < childs_mesh.Length; i++)
+            {
+                childs_mesh[i].materials[0].SetFloat("_Alpha", alpha);
+            }
+            yield return null;
+        }
+
+        isFadingOut = false;
+    }
+    private IEnumerator FadeInHologramObject(GameObject ob)
+    {
+        isFadingIn = true;
+
+        MeshRenderer mesh_r = ob.GetComponent<MeshRenderer>();
+
+        MeshRenderer[] childs_mesh = new MeshRenderer[ob.transform.childCount];
+        for (int i = 0; i < ob.transform.childCount; i++)
+        {
+            childs_mesh[i] = ob.transform.GetChild(i).GetComponent<MeshRenderer>();
+        }
+
+        float alpha = mesh_r.materials[0].GetFloat("_Alpha");
+        while (alpha < 1)
+        {
+            alpha += Time.deltaTime * 0.5f;
+            mesh_r.materials[0].SetFloat("_Alpha", alpha);
+            for (int i = 0; i < childs_mesh.Length; i++)
+            {
+                childs_mesh[i].materials[0].SetFloat("_Alpha", alpha);
+            }
+            yield return null;
+        }
+
+        isFadingIn = false;
     }
 
     public void DamageToEnemies(Vector3 origin, int damage_amount, float range, Vector3 dir = new Vector3())
@@ -376,7 +446,7 @@ public class ReturnScript : MonoBehaviour
 
         GameManager.gm.ShakeController(0, 0, 0);
 
-        ob_AfterImage.SetActive(false);
+        //ob_AfterImage.SetActive(false);
     }
 
     private IEnumerator HideObjectsOnView()

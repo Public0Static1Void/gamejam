@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44168407, g: 0.49058396, b: 0.5705713, a: 1}
+  m_IndirectSpecularColor: {r: 0.44168356, g: 0.4905833, b: 0.5705704, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1818,7 +1818,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5528869263986569793, guid: 7f4ce44f40063944f808e643e2c01b03, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6713664932141645193, guid: 7f4ce44f40063944f808e643e2c01b03, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -18529,7 +18529,7 @@ TerrainCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: 28f2e31aac791014aaa13ca7aa6a3d1a, type: 2}
-  m_EnableTreeColliders: 1
+  m_EnableTreeColliders: 0
 --- !u!218 &662854124
 Terrain:
   m_ObjectHideFlags: 0
@@ -18579,7 +18579,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 26
@@ -34398,6 +34398,7 @@ MonoBehaviour:
   txt_damage_healed: {fileID: 1879766537}
   txt_total_score_points: {fileID: 39028772}
   txt_converted_score_points: {fileID: 377432515}
+  fps_slider: {fileID: 0}
   ob_shpere: {fileID: 951447432250635709, guid: 7abd8d752d41fba4081c4642c522ebf2, type: 3}
   cirle_sprite: {fileID: 21300000, guid: 149084dddd848454587900ba0544afa5, type: 3}
   plane: {fileID: 0}
@@ -44853,6 +44854,7 @@ MonoBehaviour:
   audioSource: {fileID: 1836626145}
   audioMixerGroup: {fileID: 24300002, guid: 640085060d3d82749ade4e7338efd18d, type: 2}
   slider_volume: {fileID: 742061274}
+  slider_sfx_volume: {fileID: 0}
   funnySounds: 0
   pool_number_audiosources: 100
 --- !u!82 &1632659702
@@ -51286,7 +51288,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1836626136}
   m_LocalRotation: {x: 0.0495459, y: -0, z: -0, w: 0.9987719}
-  m_LocalPosition: {x: 172.4, y: 1.91, z: 223.58}
+  m_LocalPosition: {x: 176.2, y: 1.91, z: 223.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
