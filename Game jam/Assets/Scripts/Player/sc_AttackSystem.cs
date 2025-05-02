@@ -50,6 +50,10 @@ public class AttackSystem : MonoBehaviour
         for (int i = 0; i < slots_cooldowns.Count; i++)
         {
             ui_positions.Add(slots_cooldowns[i].rectTransform.anchorMax);
+
+            Color col = Color.white;
+            slots_abilities[i].color = new Color(col.r, col.g, col.b, 0);
+            slots_cooldowns[i].color = new Color(col.r, col.g, col.b, 0);
         }
 
         for (int i = 0; i < dir.Length; i++)

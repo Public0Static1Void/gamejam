@@ -231,7 +231,10 @@ public class ReturnScript : MonoBehaviour
         MeshRenderer[] childs_mesh = new MeshRenderer[ob.transform.childCount];
         for (int i = 0; i < ob.transform.childCount; i++)
         {
-            childs_mesh[i] = ob.transform.GetChild(i).GetComponent<MeshRenderer>();
+            if (ob.transform.GetChild(i).TryGetComponent<MeshRenderer>(out MeshRenderer mr))
+            {
+                childs_mesh[i] = mr;
+            }
         }
 
         float alpha = mesh_r.materials[0].GetFloat("_Alpha");
