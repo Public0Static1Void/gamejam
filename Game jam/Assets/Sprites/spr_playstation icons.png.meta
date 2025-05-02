@@ -1,0 +1,1319 @@
+fileFormatVersion: 2
+guid: ca56c86816e3b7d4ab7cfcd4d9191d68
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: spr_playstation icons_0
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 2594
+        width: 444
+        height: 444
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e644ff5dfb84ab74886f67f7da39eaa8
+      internalID: 1590331476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_1
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 2594
+        width: 446
+        height: 444
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce6e6d07e19a16c4f8bc6ceafa369b55
+      internalID: -2091441826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_2
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 2048
+        width: 2049
+        height: 1024
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1d13246104860af448c956fcfe59fbf8
+      internalID: -633757706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_3
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 2081
+        width: 444
+        height: 445
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 760f24f242f19d0479cfa547548ef144
+      internalID: -2046898063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_4
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 2081
+        width: 446
+        height: 445
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7e35784886c5b24448fdfeb2c6f327cc
+      internalID: -871594373
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_5
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 1569
+        width: 444
+        height: 446
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24620abc204698a41950351353383abb
+      internalID: 1814511968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_6
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 1569
+        width: 446
+        height: 446
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1c8c6efa9039a24288225e386e95ffc
+      internalID: -834162353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_7
+      rect:
+        serializedVersion: 2
+        x: 1058
+        y: 1569
+        width: 445
+        height: 446
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50efa50f52110874fb717862648dd21f
+      internalID: 655879401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_8
+      rect:
+        serializedVersion: 2
+        x: 1571
+        y: 1569
+        width: 444
+        height: 446
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 515c87a3e2ecac145b29a0a9a9901471
+      internalID: -2049548972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_9
+      rect:
+        serializedVersion: 2
+        x: 2073
+        y: 1569
+        width: 975
+        height: 446
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d21beba3f85e764f94f9893dc56f71e
+      internalID: -1702050403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_10
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 1215
+        width: 199
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 482058a52f7e6324ab96c3504cbabb0c
+      internalID: 1649478496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_11
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 1301
+        width: 137
+        height: 198
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59b2d88103291c3468c25e8bac2e5fbb
+      internalID: 1751300837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_12
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 1215
+        width: 198
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0aaa2d3a34b497478755945211cbedf
+      internalID: -372208340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_13
+      rect:
+        serializedVersion: 2
+        x: 554
+        y: 1215
+        width: 198
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4187a7d85a5ce5408034f829e280b84
+      internalID: 65080902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_14
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 1301
+        width: 136
+        height: 198
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca7116802abeca347b701c2e4cf86510
+      internalID: 1052683577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_15
+      rect:
+        serializedVersion: 2
+        x: 785
+        y: 1215
+        width: 199
+        height: 134
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4a21d4b492f509b40b1b6a7eac4da118
+      internalID: 1534390047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_16
+      rect:
+        serializedVersion: 2
+        x: 1065
+        y: 1217
+        width: 198
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7dadc971b23f09498487e46d020eb8a
+      internalID: -2000471618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_17
+      rect:
+        serializedVersion: 2
+        x: 1212
+        y: 1302
+        width: 137
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 392c27a7d6f135543813b0fb3d3a3729
+      internalID: -1523195570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_18
+      rect:
+        serializedVersion: 2
+        x: 1298
+        y: 1217
+        width: 198
+        height: 135
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e0bf3269c3616740aa3e72b678a859b
+      internalID: -923463255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_19
+      rect:
+        serializedVersion: 2
+        x: 1577
+        y: 1220
+        width: 199
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d76249d5b6b4bcf42acf6ef8d703ac9b
+      internalID: 141129973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_20
+      rect:
+        serializedVersion: 2
+        x: 1725
+        y: 1305
+        width: 137
+        height: 198
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: adf4813562034c34ca00a88582630911
+      internalID: -1907130560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_21
+      rect:
+        serializedVersion: 2
+        x: 1809
+        y: 1220
+        width: 198
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c9538c3ce74e144f990a40e4968aa05
+      internalID: -472953712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_22
+      rect:
+        serializedVersion: 2
+        x: 2096
+        y: 1103
+        width: 397
+        height: 370
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d4fb576554bb594692f7f282e1485c0
+      internalID: 96090441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_23
+      rect:
+        serializedVersion: 2
+        x: 2627
+        y: 1103
+        width: 397
+        height: 370
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 217e77074868013428744894dc278112
+      internalID: -302150967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_24
+      rect:
+        serializedVersion: 2
+        x: 189
+        y: 1061
+        width: 137
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b98128ecaab230e4093fc3a379865682
+      internalID: 864345082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_25
+      rect:
+        serializedVersion: 2
+        x: 701
+        y: 1061
+        width: 136
+        height: 199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba1050886bc4c9646a4de7451d2398ea
+      internalID: 40517078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_26
+      rect:
+        serializedVersion: 2
+        x: 1212
+        y: 1064
+        width: 137
+        height: 198
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cf661afbb10c904d82875337e9f14f2
+      internalID: 115726189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_27
+      rect:
+        serializedVersion: 2
+        x: 1725
+        y: 1065
+        width: 137
+        height: 200
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d51e73f7603b4cb4ca3248b4084304ac
+      internalID: 309174419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_28
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 588
+        width: 390
+        height: 359
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db43ad3ad3a52eb499af26e8df602863
+      internalID: 130170260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_29
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 588
+        width: 391
+        height: 359
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bce9f5023b6eb0a4282aa92e035d7696
+      internalID: 2140114502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_30
+      rect:
+        serializedVersion: 2
+        x: 1055
+        y: 638
+        width: 451
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d96261997448284ea45d510d98ff8c3
+      internalID: -836563213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_31
+      rect:
+        serializedVersion: 2
+        x: 1568
+        y: 638
+        width: 450
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6db9fa65b8c5c9488b8572a8f2ccdc5
+      internalID: -789891354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_32
+      rect:
+        serializedVersion: 2
+        x: 2105
+        y: 609
+        width: 399
+        height: 318
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b90188ba0e420743bb845924792759b
+      internalID: 110369846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_33
+      rect:
+        serializedVersion: 2
+        x: 2618
+        y: 609
+        width: 397
+        height: 318
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1fda445e69318264e9c62fa6658b66b3
+      internalID: 570113707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_34
+      rect:
+        serializedVersion: 2
+        x: 2210
+        y: 381
+        width: 34
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db5e7215511e5924a9e74f5e87d12430
+      internalID: -1041400522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_35
+      rect:
+        serializedVersion: 2
+        x: 2249
+        y: 381
+        width: 36
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c3301f60ac4830419eb31f1e1cced17
+      internalID: -1396415342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_36
+      rect:
+        serializedVersion: 2
+        x: 2288
+        y: 381
+        width: 42
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4199726cbf5cd43449ba7c2940cf9a45
+      internalID: 904765759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_37
+      rect:
+        serializedVersion: 2
+        x: 2331
+        y: 381
+        width: 36
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c33225b23e60e5842b2e003529a82a26
+      internalID: 59873999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_38
+      rect:
+        serializedVersion: 2
+        x: 2369
+        y: 381
+        width: 31
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ce12c2ba5973e2469a63ebbbc5e5d6e
+      internalID: 1263356007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_39
+      rect:
+        serializedVersion: 2
+        x: 2690
+        y: 381
+        width: 39
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95d8924000ef08249be3191521e38c86
+      internalID: -356250102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_40
+      rect:
+        serializedVersion: 2
+        x: 2733
+        y: 381
+        width: 35
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae0de80d1f54e3048bc3d3c9e6f245df
+      internalID: -447049107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_41
+      rect:
+        serializedVersion: 2
+        x: 2769
+        y: 381
+        width: 36
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32dfd7432b196884c8ec4ee2948516bb
+      internalID: 560307344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_42
+      rect:
+        serializedVersion: 2
+        x: 2810
+        y: 381
+        width: 10
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e7f2432c504f7a47a17cee4afe81d1f
+      internalID: 2002482645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_43
+      rect:
+        serializedVersion: 2
+        x: 2825
+        y: 381
+        width: 39
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddb6bea3e543d07428968c7d00c8ef7e
+      internalID: -945034011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_44
+      rect:
+        serializedVersion: 2
+        x: 2867
+        y: 381
+        width: 39
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb5cec5cd3edc334d8854ae010c7397c
+      internalID: 1418484458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_45
+      rect:
+        serializedVersion: 2
+        x: 2909
+        y: 381
+        width: 34
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a91e08a5817de904b9c326470c138fd7
+      internalID: 416977989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_46
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 165
+        width: 226
+        height: 182
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba04b59f10ffa484f97829760a0e71b5
+      internalID: 1646965013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_47
+      rect:
+        serializedVersion: 2
+        x: 677
+        y: 143
+        width: 183
+        height: 226
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7afdbd1d0e7ad24488c7605b91dbd882
+      internalID: -1675234062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_48
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 165
+        width: 226
+        height: 182
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 406349540f887844fbf0e0b451ef32a8
+      internalID: -1487382950
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_49
+      rect:
+        serializedVersion: 2
+        x: 1701
+        y: 144
+        width: 182
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f4941728692f6348bb812f24b39656d
+      internalID: 1781002921
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_50
+      rect:
+        serializedVersion: 2
+        x: 2222
+        y: 69
+        width: 166
+        height: 296
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 45a24919291dab64a953eb76032139ee
+      internalID: 1156369476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_51
+      rect:
+        serializedVersion: 2
+        x: 2733
+        y: 69
+        width: 167
+        height: 296
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61b73cde65e21d044aafc60f9ddd0936
+      internalID: 1545021253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spr_playstation icons_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 3072
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5838c83eafcbc444b4e9023f542fe0b
+      internalID: -1564487277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: e79503db72c4d3b49991015482510835
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      spr_playstation icons_0: 1590331476
+      spr_playstation icons_1: -2091441826
+      spr_playstation icons_10: 1649478496
+      spr_playstation icons_11: 1751300837
+      spr_playstation icons_12: -372208340
+      spr_playstation icons_13: 65080902
+      spr_playstation icons_14: 1052683577
+      spr_playstation icons_15: 1534390047
+      spr_playstation icons_16: -2000471618
+      spr_playstation icons_17: -1523195570
+      spr_playstation icons_18: -923463255
+      spr_playstation icons_19: 141129973
+      spr_playstation icons_2: -633757706
+      spr_playstation icons_20: -1907130560
+      spr_playstation icons_21: -472953712
+      spr_playstation icons_22: 96090441
+      spr_playstation icons_23: -302150967
+      spr_playstation icons_24: 864345082
+      spr_playstation icons_25: 40517078
+      spr_playstation icons_26: 115726189
+      spr_playstation icons_27: 309174419
+      spr_playstation icons_28: 130170260
+      spr_playstation icons_29: 2140114502
+      spr_playstation icons_3: -2046898063
+      spr_playstation icons_30: -836563213
+      spr_playstation icons_31: -789891354
+      spr_playstation icons_32: 110369846
+      spr_playstation icons_33: 570113707
+      spr_playstation icons_34: -1041400522
+      spr_playstation icons_35: -1396415342
+      spr_playstation icons_36: 904765759
+      spr_playstation icons_37: 59873999
+      spr_playstation icons_38: 1263356007
+      spr_playstation icons_39: -356250102
+      spr_playstation icons_4: -871594373
+      spr_playstation icons_40: -447049107
+      spr_playstation icons_41: 560307344
+      spr_playstation icons_42: 2002482645
+      spr_playstation icons_43: -945034011
+      spr_playstation icons_44: 1418484458
+      spr_playstation icons_45: 416977989
+      spr_playstation icons_46: 1646965013
+      spr_playstation icons_47: -1675234062
+      spr_playstation icons_48: -1487382950
+      spr_playstation icons_49: 1781002921
+      spr_playstation icons_5: 1814511968
+      spr_playstation icons_50: 1156369476
+      spr_playstation icons_51: 1545021253
+      spr_playstation icons_52: -1564487277
+      spr_playstation icons_6: -834162353
+      spr_playstation icons_7: 655879401
+      spr_playstation icons_8: -2049548972
+      spr_playstation icons_9: -1702050403
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

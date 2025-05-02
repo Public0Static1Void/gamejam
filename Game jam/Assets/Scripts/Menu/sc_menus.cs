@@ -67,6 +67,7 @@ public class menus : MonoBehaviour
     public TMP_Text ab_description_text;
 
     private bool close_ability_upgrade = false;
+    public bool on_ability_menu = false;
 
     private LayoutElement layout_element;
 
@@ -106,6 +107,7 @@ public class menus : MonoBehaviour
         };
 
         LoadAbilities();
+        LoadStatsTexts();
     }
 
     public PlayerData LoadPlayerStats()
@@ -146,14 +148,19 @@ public class menus : MonoBehaviour
         txt_stamina.text = "STAMINA: " + pd.stamina.ToString();
         txt_hp.text = "HP: " + pd.hp.ToString();
         txt_explosion_range.text = "EXPLOSION RANGE: " + pd.explosion_range.ToString();
-        txt_skill_points.text = "SKILL POINTS: " + pd.score.ToString();
+        txt_skill_points.text = "SKILL POINTS: " + pd.score.ToString("F2");
     }
 
     public void UpgradeStat(GameObject stat)
     {
         PlayerData pd = sm.LoadSaveData();
 
-        if (pd == null || pd.score < 1) return;
+        if (pd == null || pd.score < 1)
+        {
+            GameManager.gm.ShakeUIElement(stat.GetComponent<RectTransform>(), 0.5f, 30);
+            SoundManager.instance.InstantiateSound(clip_cantupgrade, transform.position);
+            return;
+        }
 
         string name = stat.name;
 
@@ -161,15 +168,15 @@ public class menus : MonoBehaviour
         {
             case "DAMAGE":
                 pd.damage++;
-                txt_damage.text = "DAMAGE: " + pd.damage.ToString();
+                txt_damage.text = "Damage: " + pd.damage.ToString();
                 break;
             case "SPEED":
                 pd.speed += 10;
-                txt_speed.text = "SPEED: " + pd.speed.ToString();
+                txt_speed.text = "Speed: " + pd.speed.ToString();
                 break;
             case "EXPLOSION RANGE":
                 pd.explosion_range += 0.5f;
-                txt_explosion_range.text = "EXPLOSION RANGE: " + pd.explosion_range.ToString();
+                txt_explosion_range.text = "Explosion range: " + pd.explosion_range.ToString();
                 break;
             case "HP":
                 pd.hp++;
@@ -177,12 +184,12 @@ public class menus : MonoBehaviour
                 break;
             case "STAMINA":
                 pd.stamina++;
-                txt_stamina.text = "STAMINA: " + pd.stamina.ToString();
+                txt_stamina.text = "Stamina: " + pd.stamina.ToString();
                 break;
         }
 
         pd.score--;
-        txt_skill_points.text = "SKILL POINTS: " + pd.score.ToString();
+        txt_skill_points.text = "Skill points: " + pd.score.ToString();
 
         Debug.Log("Stat upgraded");
         sm.SaveGame(pd);
@@ -259,8 +266,7 @@ public class menus : MonoBehaviour
 
         Transform parent = btn.transform;
         int child_num = GameManager.GetChildIndex(btn.transform);
-        btn.transform.SetParent(btn.transform.parent.parent, true);
-        btn.transform.SetAsLastSibling();
+        
 
         if (layout_element != null)
         {
@@ -280,6 +286,8 @@ public class menus : MonoBehaviour
 
     private IEnumerator RelocateAbility(GameObject ob, UnityEngine.UI.Image icon, UnityEngine.UI.Button btn, TMP_Text title, LayoutElement layout_el, int child_num, Transform parent)
     {
+        on_ability_menu = true;
+
         // Configura el nuevo evento del botón
         SaveManager sm = GameManager.gm.saveManager;
         Ability[] abs = sm.LoadAbilitiesData();
@@ -301,6 +309,11 @@ public class menus : MonoBehaviour
 
         UnityEngine.UI.Image bg = ob.GetComponent<UnityEngine.UI.Image>();
 
+        Vector3 initial_size = bg.rectTransform.sizeDelta;
+        Vector3 initial_scale = bg.rectTransform.localScale;
+
+        btn.transform.SetParent(btn.transform.parent.parent, true);
+        btn.transform.SetAsLastSibling();
 
         // Quita el evento anterior y añade uno nuevo
         btn.onClick.RemoveAllListeners();
@@ -327,7 +340,7 @@ public class menus : MonoBehaviour
             }
             else // No tiene suficientes puntos de skill para mejorar
             {
-                GameManager.gm.ShakeUIElement(bg.rectTransform, 0.5f, 15);
+                GameManager.gm.ShakeUIElement(bg.rectTransform, 0.5f, 45);
                 SoundManager.instance.InstantiateSound(clip_cantupgrade, transform.position);
             }
         });
@@ -338,7 +351,7 @@ public class menus : MonoBehaviour
 
         // Imagen del fondo
         Vector2 bg_new_pos = new Vector2(0, 0);
-        bg.rectTransform.anchorMin = new Vector2(0.35f, 0.5f);
+        bg.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         bg.rectTransform.anchorMax = bg.rectTransform.anchorMin;
         bg.rectTransform.pivot = bg.rectTransform.anchorMax;
 
@@ -376,7 +389,6 @@ public class menus : MonoBehaviour
             ab_description_text.gameObject.SetActive(true);
 
             bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime * 4);
-            Debug.Log($"DeltaNow: {bg.rectTransform.sizeDelta}, Target: {scaled_bg}");
             bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_new_pos, Time.deltaTime * 2);
 
             icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime * 2);
@@ -399,8 +411,12 @@ public class menus : MonoBehaviour
         ab_description_text.gameObject.SetActive(false);
         ob.SetActive(false);
 
+        bg.rectTransform.sizeDelta = initial_size;
+        bg.rectTransform.localScale = initial_scale;
+
         bg.transform.SetParent(parent, false);
         bg.transform.SetSiblingIndex(child_num);
+
 
         yield return null; // Espera un frame para que los cambios de apliquen
 
@@ -417,6 +433,8 @@ public class menus : MonoBehaviour
         bg.rectTransform.anchorMax = Vector2.one * 0.5f;
         bg.rectTransform.anchorMin = Vector2.one * 0.5f;
         bg.rectTransform.pivot = Vector2.one * 0.5f;
+
+       
 
         icon.rectTransform.anchoredPosition = icon_previous_pos;
 
@@ -435,6 +453,8 @@ public class menus : MonoBehaviour
         {
             AbilityButton(ob, icon, title, btn, ab.description);
         });
+
+        on_ability_menu = false;
     }
 
     // Recoloca el scroll de las habilidades

@@ -114,7 +114,8 @@ public class SoundManager : MonoBehaviour
     public void SetVolume()
     {
         audioMixerGroup.audioMixer.SetFloat("MasterVolume", slider_volume.value);
-        GameManager.ChangeUIPosition(slider_volume.handleRect.anchoredPosition, CameraRotation.instance.ui_sensivity_value_image.rectTransform, CameraRotation.instance.ui_sensivity_value.rectTransform);
+        if (CameraRotation.instance != null)
+            GameManager.ChangeUIPosition(slider_volume.handleRect.anchoredPosition, CameraRotation.instance.ui_sensivity_value_image.rectTransform, CameraRotation.instance.ui_sensivity_value.rectTransform);
     }
     public void SetSFXVolume()
     {
