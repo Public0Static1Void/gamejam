@@ -340,13 +340,13 @@ public class menus : MonoBehaviour
             }
             else // No tiene suficientes puntos de skill para mejorar
             {
-                GameManager.gm.ShakeUIElement(bg.rectTransform, 0.5f, 45);
+                GameManager.gm.ShakeUIElement(bg.rectTransform, 0.5f, 120);
                 SoundManager.instance.InstantiateSound(clip_cantupgrade, transform.position);
             }
         });
 
 
-        Vector2 scaled_bg = new Vector2(bg.rectTransform.sizeDelta.x * 2.5f, bg.rectTransform.sizeDelta.y * 2);
+        Vector2 scaled_bg = new Vector2(bg.rectTransform.sizeDelta.x * 3f, bg.rectTransform.sizeDelta.y * 2.5f);
 
 
         // Imagen del fondo

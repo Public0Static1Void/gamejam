@@ -197,7 +197,7 @@ public class ReturnScript : MonoBehaviour
                     ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, q_rotations[0], Time.deltaTime);
 
                     // Si está muy cerca del jugador se desvanecerá
-                    if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 0.25f)
+                    if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 1)
                     {
                         if (!isFadingOut)
                             StartCoroutine(FadeOutHologramObject(ob_AfterImage));
@@ -445,7 +445,7 @@ public class ReturnScript : MonoBehaviour
                     }
                     catch
                     {
-                        Debug.Log("Enemy was destroyed and ReturnScript 366 is trying to access it");
+                        Debug.Log("Enemy was destroyed and ReturnScript 435 is trying to access it");
                     }
                 }
             }
