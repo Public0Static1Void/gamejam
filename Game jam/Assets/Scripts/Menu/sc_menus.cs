@@ -45,7 +45,9 @@ public class menus : MonoBehaviour
 
     SaveManager sm;
 
-    public Transform abilities_holder;
+    public Transform abilities_holder_ultimate;
+    public Transform abilities_holder_basic;
+    public Transform abilities_holder_passive;
     public GameObject prefab_ability_model;
     public TMP_Text txt_description_ability;
 
@@ -207,7 +209,21 @@ public class menus : MonoBehaviour
             for (int i = 0; i < ab_l.Length; i++)
             {
                 GameObject ob = Instantiate(prefab_ability_model);
-                ob.transform.SetParent(abilities_holder);
+                Transform parent = abilities_holder_ultimate;
+                switch (ab_l[i].rarity)
+                {
+                    case AbilitiesSystem.AbilityType.PASSIVE:
+                        parent = abilities_holder_passive;
+                        break;
+                    case AbilitiesSystem.AbilityType.BASIC:
+                        parent = abilities_holder_basic;
+                        break;
+                    case AbilitiesSystem.AbilityType.ULTIMATE:
+                        parent = abilities_holder_ultimate;
+                        break;
+                }
+                ob.transform.SetParent(parent);
+
                 ob.transform.localScale = Vector3.one * 0.3f;
 
                 UnityEngine.UI.Image im = ob.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>();
@@ -249,7 +265,7 @@ public class menus : MonoBehaviour
                 string description = ab_l[i].description;
                 btn.onClick.AddListener(() =>
                 {
-                    AbilityButton(ob, im, txt, btn, description);
+                    AbilityButton(ob, im, txt, btn, description, parent);
                 });
             }
         }
@@ -260,11 +276,10 @@ public class menus : MonoBehaviour
         close_ability_upgrade = true;
     }
 
-    private void AbilityButton(GameObject ob, UnityEngine.UI.Image im, TMP_Text txt, UnityEngine.UI.Button btn, string description)
+    private void AbilityButton(GameObject ob, UnityEngine.UI.Image im, TMP_Text txt, UnityEngine.UI.Button btn, string description, Transform parent)
     {
         LayoutElement layout_el = btn.gameObject.GetComponent<LayoutElement>();
 
-        Transform parent = btn.transform;
         int child_num = GameManager.GetChildIndex(btn.transform);
         
 
@@ -281,7 +296,7 @@ public class menus : MonoBehaviour
 
         SoundManager.instance.InstantiateSound(clip_click, transform.position);
 
-        StartCoroutine(RelocateAbility(ob, im, btn, txt, layout_element, child_num, abilities_holder));
+        StartCoroutine(RelocateAbility(ob, im, btn, txt, layout_element, child_num, parent));
     }
 
     private IEnumerator RelocateAbility(GameObject ob, UnityEngine.UI.Image icon, UnityEngine.UI.Button btn, TMP_Text title, LayoutElement layout_el, int child_num, Transform parent)
@@ -451,7 +466,7 @@ public class menus : MonoBehaviour
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() =>
         {
-            AbilityButton(ob, icon, title, btn, ab.description);
+            AbilityButton(ob, icon, title, btn, ab.description, parent);
         });
 
         on_ability_menu = false;
@@ -568,7 +583,7 @@ public class menus : MonoBehaviour
 
     public void MoveAbilitiesScroll(InputAction.CallbackContext con)
     {
-        if (con.performed && abilities_holder.gameObject.activeSelf)
+        if (con.performed && abilities_holder_ultimate.gameObject.activeSelf)
         {
             Vector2 dir = con.ReadValue<Vector2>();
 
