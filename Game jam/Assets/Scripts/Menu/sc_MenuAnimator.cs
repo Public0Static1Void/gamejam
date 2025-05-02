@@ -58,14 +58,20 @@ public class sc_MenuAnimator : MonoBehaviour
             if (controller.ToLower().Contains("dualshock") || controller.ToLower().Contains("dualsense"))
             {
                 im_input_icon.sprite = spr_R2;
+                UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+                UnityEngine.Cursor.visible = false;
             }
             else if (controller.ToLower().Contains("xbox") || controller.ToLower().Contains("xinput"))
             {
                 im_input_icon.sprite = spr_RT;
+                UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+                UnityEngine.Cursor.visible = false;
             }
             else if (controller.ToLower().Contains("keyboard"))
             {
                 im_input_icon.sprite = spr_enter;
+                UnityEngine.Cursor.lockState = CursorLockMode.None;
+                UnityEngine.Cursor.visible = true;
             }
 
             last_controller = controller; /// Evita hacer comprobaciones innecesarias si no se ha cambiado de control

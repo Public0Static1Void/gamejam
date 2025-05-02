@@ -22,9 +22,14 @@ public class AttackSystem : MonoBehaviour
 
     private bool moving_ui = false;
 
-
+    [Header("Icon")]
+    public UnityEngine.UI.Image im_attack_icon;
+    public Sprite spr_left_click;
+    public Sprite spr_R2;
+    public Sprite spr_RT;
     Vector2[] dir;
 
+    private string last_controller = "";
 
     void Awake()
     {
@@ -54,6 +59,28 @@ public class AttackSystem : MonoBehaviour
                 target = 0;
 
             dir[i] = (ui_positions[target] - ui_positions[i]).normalized;
+        }
+    }
+
+    private void Update()
+    {
+        string controller = GameManager.gm.GetCurrentControllerName();
+        if (controller != last_controller)
+        {
+            if (controller.ToLower().Contains("dualshock") || controller.ToLower().Contains("dualsense"))
+            {
+                im_attack_icon.sprite = spr_R2;
+            }
+            else if (controller.ToLower().Contains("xbox") || controller.ToLower().Contains("xinput"))
+            {
+                im_attack_icon.sprite = spr_RT;
+            }
+            else if (controller.ToLower().Contains("keyboard"))
+            {
+                im_attack_icon.sprite = spr_left_click;
+            }
+
+            last_controller = controller; /// Evita hacer comprobaciones innecesarias si no se ha cambiado de control
         }
     }
 
@@ -133,6 +160,7 @@ public class AttackSystem : MonoBehaviour
             slots_abilities[i].sprite = abilities_order[i].icon;
             Color col = slots_abilities[i].color;
             slots_abilities[i].color = new Color(col.r, col.g, col.b, 1);
+            slots_cooldowns[i].color = new Color(col.r, col.g, col.b, 1);
         }
 
         // Esconde todos los slots que no tengan una habilidad
@@ -143,6 +171,7 @@ public class AttackSystem : MonoBehaviour
                 /// Hace el sprite invisible
                 Color col = slots_abilities[i].color;
                 slots_abilities[i].color = new Color(col.r, col.g, col.b, 0);
+                slots_cooldowns[i].color = new Color(col.r, col.g, col.b, 0);
             }
         }
     }
@@ -151,6 +180,8 @@ public class AttackSystem : MonoBehaviour
     {
         if (!equipped_attacks[current_attack].onExecution)
         {
+            if (equipped_attacks[current_attack].onCooldown)
+                GameManager.gm.ColorPulse(slots_cooldowns[current_attack], Color.red, 10);
             // Cambia de ataque
             current_attack++;
             if (current_attack >= equipped_attacks.Count)
@@ -214,6 +245,8 @@ public class AttackSystem : MonoBehaviour
 
     public void AddAttack(Ability ability)
     {
+        if (!im_attack_icon.gameObject.activeSelf)
+            im_attack_icon.gameObject.SetActive(true);
         // A partir de 2 habilidades añadidas se cambiará la primera por la nueva
         if (equipped_attacks.Count < 2)
         {
