@@ -1789,6 +1789,7 @@ MonoBehaviour:
   clip_upgraded: {fileID: 8300000, guid: 780f7f57610b9554daacb391a87134b2, type: 3}
   clip_click: {fileID: 8300000, guid: 768b744ca10304f4ea2e54713bf2dfa0, type: 3}
   clip_selected: {fileID: 8300000, guid: d44430f5a80dbb5488efcaa93dfc7706, type: 3}
+  main_canvas: {fileID: 1319824786}
   txt_damage: {fileID: 509589548}
   txt_speed: {fileID: 679172866}
   txt_stamina: {fileID: 440459819}
@@ -2465,7 +2466,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -37, y: 4.7}
+  m_AnchoredPosition: {x: -37, y: 4.700001}
   m_SizeDelta: {x: 111.3, y: 25.3151}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &440459819
@@ -7023,7 +7024,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 1696556819}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -7307,7 +7308,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -50.3, y: 64.6}
+  m_AnchoredPosition: {x: -50.300003, y: 64.600006}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1413231000
@@ -7653,7 +7654,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -27.7, y: 4.7}
+  m_AnchoredPosition: {x: -27.7, y: 4.700001}
   m_SizeDelta: {x: 111.3, y: 25.3151}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1480605783
@@ -10807,7 +10808,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -77.1, y: -0.00000019135587}
+  m_AnchoredPosition: {x: -77.100006, y: -0.00000019135587}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1929266163

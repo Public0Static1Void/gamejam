@@ -28,6 +28,7 @@ public class menus : MonoBehaviour
     public AudioClip clip_selected;
 
     [Header("References")]
+    public Canvas main_canvas;
     public TMP_Text txt_damage;
     public TMP_Text txt_speed;
     public TMP_Text txt_stamina;
@@ -197,6 +198,23 @@ public class menus : MonoBehaviour
         sm.SaveGame(pd);
     }
 
+    public Vector2 GetAnchoredPositionOnCanvas(Canvas canvas, Vector2 screenPosition)
+    {
+        RectTransform canvasRect = canvas.transform as RectTransform;
+        Vector2 localPoint;
+
+        // For Screen Space - Camera or World
+        Camera cam = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPosition,
+            cam,
+            out localPoint
+        );
+
+        return localPoint; // This is the anchoredPosition you can assign
+    }
 
     // Habilidades
     public void LoadAbilities()
@@ -327,17 +345,28 @@ public class menus : MonoBehaviour
         Vector3 initial_size = bg.rectTransform.sizeDelta;
         Vector3 initial_scale = bg.rectTransform.localScale;
 
-        Vector3 worldPos = btn.transform.position;
 
         HorizontalLayoutGroup grid = parent.GetComponent<HorizontalLayoutGroup>();
         grid.enabled = false;
 
         Transform new_parent = btn.transform.parent.parent.parent.parent.parent.parent;
 
+        // Cambia el parent y lo reposiciona
         btn.transform.SetParent(new_parent, false);
+        Vector3 worldPos = btn.transform.position;
         btn.transform.SetAsLastSibling();
 
-        btn.transform.localPosition = new_parent.InverseTransformPoint(worldPos);
+        Camera cam = main_canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : main_canvas.worldCamera;
+        
+
+        Vector3[] corners = new Vector3[4];
+        ob.GetComponent<RectTransform>().GetWorldCorners(corners);
+        Vector3 child_center = (corners[0] + corners[2]) * 0.5f;
+
+        Vector2 screen_pos = RectTransformUtility.WorldToScreenPoint(cam, child_center);
+        Debug.Log("Screen pos: " + screen_pos + ", BG pos: " + child_center);
+
+        bg.rectTransform.anchoredPosition = GetAnchoredPositionOnCanvas(main_canvas, child_center);
 
         // Quita el evento anterior y añade uno nuevo
         btn.onClick.RemoveAllListeners();
@@ -412,6 +441,8 @@ public class menus : MonoBehaviour
             ab_description_text.gameObject.SetActive(true);
 
             bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime * 4);
+
+
             bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_new_pos, Time.deltaTime * 2);
 
             icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime * 2);
