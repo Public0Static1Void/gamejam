@@ -352,19 +352,15 @@ public class menus : MonoBehaviour
         Transform new_parent = btn.transform.parent.parent.parent.parent.parent.parent;
 
         // Cambia el parent y lo reposiciona
+        Vector3[] corners = new Vector3[4];
+        bg.rectTransform.GetWorldCorners(corners);
+        Vector3 child_center = (corners[0] + corners[2]) * 0.5f;
+
         btn.transform.SetParent(new_parent, false);
         Vector3 worldPos = btn.transform.position;
         btn.transform.SetAsLastSibling();
 
-        Camera cam = main_canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : main_canvas.worldCamera;
-        
-
-        Vector3[] corners = new Vector3[4];
-        ob.GetComponent<RectTransform>().GetWorldCorners(corners);
-        Vector3 child_center = (corners[0] + corners[2]) * 0.5f;
-
-        Vector2 screen_pos = RectTransformUtility.WorldToScreenPoint(cam, child_center);
-        Debug.Log("Screen pos: " + screen_pos + ", BG pos: " + child_center);
+        Vector2 screen_pos = RectTransformUtility.WorldToScreenPoint(null, child_center);
 
         bg.rectTransform.anchoredPosition = GetAnchoredPositionOnCanvas(main_canvas, child_center);
 
