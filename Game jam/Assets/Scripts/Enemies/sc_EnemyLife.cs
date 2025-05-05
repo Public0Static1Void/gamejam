@@ -57,6 +57,9 @@ public class EnemyLife : MonoBehaviour
             ScoreManager.instance.ChangeScore(amount, transform.position, true);
             // Se quita de la lista de enemigos vivos y se destruye
             Rounds.instance.enemies.Remove(this.gameObject);
+            // Añade xp al morirse
+            AbilitiesSystem.instance.AddXP(max_hp * 0.05f);
+
             Destroy(gameObject);
         }
         StartCoroutine(ActivateKinematic());

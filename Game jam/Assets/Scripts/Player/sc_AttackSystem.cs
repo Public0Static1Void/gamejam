@@ -64,6 +64,8 @@ public class AttackSystem : MonoBehaviour
 
             dir[i] = (ui_positions[target] - ui_positions[i]).normalized;
         }
+
+        im_attack_icon.gameObject.SetActive(false);
     }
 
     private void Update()

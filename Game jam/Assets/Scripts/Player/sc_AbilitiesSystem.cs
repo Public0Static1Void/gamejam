@@ -22,6 +22,12 @@ public class AbilitiesSystem : MonoBehaviour
     public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, HOLOGRAM_BODY, MONKEY_BAIT, LAST_NO_USE }
     public enum AbilityType { BASIC, ULTIMATE, PASSIVE, LAST_NO_USE }
 
+    [Header("XP")]
+    public float max_xp = 10;
+    private float current_xp = 0;
+    public UnityEngine.UI.Image im_xp_bar;
+    public TMP_Text txt_xp;
+
     [Header("References")]
     public GameObject ob_gamblingparent;
     public GameObject ob_abilities_ui_holder;
@@ -56,6 +62,10 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_bloodthirsty;
     public Sprite sprite_hologram;
     public Sprite sprite_monkey;
+
+
+    private Animator gambling_anim;
+
     
     void Awake()
     {
@@ -67,6 +77,8 @@ public class AbilitiesSystem : MonoBehaviour
 
     void Start()
     {
+        gambling_anim = ob_gamblingparent.GetComponent<Animator>();
+        gambling_anim.updateMode = AnimatorUpdateMode.UnscaledTime;
         CloseGamblingMenu();
 
         LoadAbilitiesData();
@@ -480,6 +492,7 @@ public class AbilitiesSystem : MonoBehaviour
         }
 
         ob_gamblingparent.SetActive(true);
+        gambling_anim.Play("anim_open_gambling");
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         UnityEngine.Cursor.visible = true;
     }
@@ -526,5 +539,48 @@ public class AbilitiesSystem : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
         Time.timeScale = 1;
+    }
+    /// <summary>
+    /// Añade experiencia para desbloquear una habilidad
+    /// </summary>
+    public void AddXP(float value)
+    {
+        if (instance == null) return;
+
+        current_xp += value;
+
+        if (current_xp >= max_xp)
+        {
+            current_xp = 0;
+            max_xp *= 1.25f;
+
+            GetRandomAbilities(); /// Cuando el jugador consiga suficiente experiencia conseguirá una habilidad
+        }
+
+        txt_xp.text = $"{current_xp} / {max_xp}";
+        im_xp_bar.fillAmount = current_xp / max_xp;
+
+        StartCoroutine(ShowXPBar());
+    }
+
+    private IEnumerator ShowXPBar()
+    {
+        UnityEngine.UI.Image im_parent = im_xp_bar.transform.parent.GetComponent<Image>();
+        //GameManager.gm.UIGrowButton(im_parent);
+        while (im_xp_bar.color.a < 1)
+        {
+            im_xp_bar.color = new Color(im_xp_bar.color.g, im_xp_bar.color.g, im_xp_bar.color.b, im_xp_bar.color.a + Time.deltaTime * 3);
+            im_parent.color = new Color(im_parent.color.g, im_parent.color.g, im_parent.color.b, im_parent.color.a + Time.deltaTime * 3);
+            txt_xp.color = new Color(txt_xp.color.g, txt_xp.color.g, txt_xp.color.b, txt_xp.color.a + Time.deltaTime * 3);
+            yield return null;
+        }
+        yield return new WaitForSeconds(1.5f);
+        while (im_xp_bar.color.a > 0)
+        {
+            im_xp_bar.color = new Color(im_xp_bar.color.g, im_xp_bar.color.g, im_xp_bar.color.b, im_xp_bar.color.a - Time.deltaTime * 2);
+            im_parent.color = new Color(im_parent.color.g, im_parent.color.g, im_parent.color.b, im_parent.color.a - Time.deltaTime * 2);
+            txt_xp.color = new Color(txt_xp.color.g, txt_xp.color.g, txt_xp.color.b, txt_xp.color.a - Time.deltaTime * 2);
+            yield return null;
+        }
     }
 }

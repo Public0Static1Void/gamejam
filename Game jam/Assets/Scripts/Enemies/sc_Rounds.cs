@@ -80,7 +80,7 @@ public class Rounds : MonoBehaviour
     {
         spawning = true;
 
-        AbilitiesSystem.instance.GetRandomAbilities();
+        //AbilitiesSystem.instance.GetRandomAbilities(); Ahora se consiguen habilidades llenando la barra de experiencia
 
         float wait_time = 12.5f - round * 0.25f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
         if (wait_time < 3) wait_time = 3;

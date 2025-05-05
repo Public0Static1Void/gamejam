@@ -59,7 +59,7 @@ public class sc_bate : MonoBehaviour
             Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
 
             other.GetComponent<EnemyFollow>().AddForceToEnemy(forceDir * 10f);
-            other.GetComponent<EnemyLife>().Damage((int)(ReturnScript.instance.damage * 0.1f));
+            other.GetComponent<EnemyLife>().Damage((int)(ReturnScript.instance.damage * 0.5f));
 
             if (audioSource == null)
             {

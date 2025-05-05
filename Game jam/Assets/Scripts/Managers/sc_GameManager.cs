@@ -675,5 +675,23 @@ public class GameManager : MonoBehaviour
             element2.position = new Vector2(pos.x - element1.rect.width / 3, pos.y);
         }
     }
+
+    // Change Ui size
+    public void UIGrowButton(UnityEngine.UI.Image image)
+    {
+        StartCoroutine(UIChangeButtonSizeCoroutine(image, new Vector2(image.rectTransform.sizeDelta.x * 1.5f, image.rectTransform.sizeDelta.y * 10)));
+    }
+    public void UIShrinkButton(UnityEngine.UI.Image image)
+    {
+        StartCoroutine(UIChangeButtonSizeCoroutine(image, new Vector2(image.rectTransform.sizeDelta.x * 0.5f, image.rectTransform.sizeDelta.y / 10)));
+    }
+    private IEnumerator UIChangeButtonSizeCoroutine(UnityEngine.UI.Image image, Vector2 new_size)
+    {
+        while (Vector2.Distance(image.rectTransform.sizeDelta, new_size) > 0.1f)
+        {
+            image.rectTransform.sizeDelta = Vector2.Lerp(image.rectTransform.sizeDelta, new_size, Time.deltaTime * 2);
+            yield return null;
+        }
+    }
     #endregion
 }
