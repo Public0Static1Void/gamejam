@@ -29,6 +29,7 @@ public class sc_MenuAnimator : MonoBehaviour
 
     [Header("References")]
     public UnityEngine.UI.Image im_input_icon;
+    public UnityEngine.UI.Image im_input_bg;
     public Sprite spr_enter;
     public Sprite spr_R2;
     public Sprite spr_RT;
@@ -41,6 +42,7 @@ public class sc_MenuAnimator : MonoBehaviour
     private string last_controller = "";
     private Vector2 im_input_startsize;
 
+    private int bg_child_pos = 0;
 
     private void Start()
     {
@@ -48,6 +50,8 @@ public class sc_MenuAnimator : MonoBehaviour
         btn_play.Select();
 
         im_input_startsize = im_input_icon.rectTransform.sizeDelta;
+
+        bg_child_pos = GameManager.GetChildIndex(im_input_bg.transform);
     }
 
     private void Update()
@@ -103,11 +107,30 @@ public class sc_MenuAnimator : MonoBehaviour
             im_input_icon.rectTransform.sizeDelta *= 1.005f;
             im_input_icon.color = new Color(im_input_icon.color.r + Time.deltaTime, im_input_icon.color.g + Time.deltaTime, im_input_icon.color.b, 1);
 
-            if (timer > 1.5f)
+            im_input_bg.fillAmount += Time.deltaTime;
+            if (im_input_bg.color.a < 0.5f)
+                im_input_bg.color = new Color(im_input_bg.color.r, im_input_bg.color.g, im_input_bg.color.b + Time.deltaTime, im_input_bg.color.a + Time.deltaTime);
+            if (timer > 0.5f)
             {
-                SceneManager.LoadScene("SampleScene");
+                StartCoroutine(EnterGame());
             }
         }
+    }
+
+    private IEnumerator EnterGame()
+    {
+        while (im_input_bg.fillAmount < 1)
+        {
+            im_input_bg.color = new Color(im_input_bg.color.r, im_input_bg.color.g, im_input_bg.color.b, im_input_bg.color.a + Time.deltaTime);
+            im_input_bg.rectTransform.sizeDelta = new Vector2(im_input_bg.rectTransform.sizeDelta.x + Time.deltaTime * 10, im_input_bg.rectTransform.sizeDelta.y);
+
+            if (!enter_pressed)
+                break;
+            yield return null;
+        }
+
+        if (enter_pressed)
+            SceneManager.LoadScene("SampleScene");
     }
 
     #region Inputs
@@ -128,14 +151,24 @@ public class sc_MenuAnimator : MonoBehaviour
         {
             enter_pressed = true;
             GameManager.gm.SpawnUICircle(im_input_icon.rectTransform, 2, Color.white, true, 6);
+            im_input_bg.transform.SetAsLastSibling();
         }
         if (con.canceled)
         {
             enter_pressed = false;
+
             im_input_icon.color = Color.white;
+            im_input_bg.fillAmount = 0;
+
             im_input_icon.rectTransform.sizeDelta = im_input_startsize;
+            im_input_bg.color = new Color(im_input_bg.color.r, im_input_bg.color.g, 109, 0);
+
             timer = 0;
+
+            im_input_bg.transform.SetSiblingIndex(bg_child_pos);
         }
+
+        im_input_bg.gameObject.SetActive(enter_pressed);
     }
     public void CloseMenus(InputAction.CallbackContext con)
     {

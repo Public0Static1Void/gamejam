@@ -244,7 +244,8 @@ public class ReturnScript : MonoBehaviour
             mesh_r.materials[0].SetFloat("_Alpha", alpha);
             for (int i = 0; i < childs_mesh.Length; i++)
             {
-                childs_mesh[i].materials[0].SetFloat("_Alpha", alpha);
+                if (childs_mesh[i] != null)
+                    childs_mesh[i].materials[0].SetFloat("_Alpha", alpha);
             }
             yield return null;
         }
@@ -260,7 +261,10 @@ public class ReturnScript : MonoBehaviour
         MeshRenderer[] childs_mesh = new MeshRenderer[ob.transform.childCount];
         for (int i = 0; i < ob.transform.childCount; i++)
         {
-            childs_mesh[i] = ob.transform.GetChild(i).GetComponent<MeshRenderer>();
+            if (ob.transform.GetChild(i).TryGetComponent<MeshRenderer>(out MeshRenderer mr))
+            {
+                childs_mesh[i] = mr;
+            }
         }
 
         float alpha = mesh_r.materials[0].GetFloat("_Alpha");
@@ -270,7 +274,11 @@ public class ReturnScript : MonoBehaviour
             mesh_r.materials[0].SetFloat("_Alpha", alpha);
             for (int i = 0; i < childs_mesh.Length; i++)
             {
-                childs_mesh[i].materials[0].SetFloat("_Alpha", alpha);
+                if (childs_mesh[i] != null)
+                {
+                    childs_mesh[i].materials[0].SetFloat("_Alpha", alpha);
+                    
+                }
             }
             yield return null;
         }

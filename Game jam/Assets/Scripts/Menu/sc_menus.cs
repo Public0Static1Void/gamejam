@@ -9,6 +9,9 @@ using UnityEngine.EventSystems;
 using System;
 using Unity.VisualScripting;
 using static System.Net.Mime.MediaTypeNames;
+using System.Numerics;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class menus : MonoBehaviour
 {
@@ -356,13 +359,16 @@ public class menus : MonoBehaviour
         bg.rectTransform.GetWorldCorners(corners);
         Vector3 child_center = (corners[0] + corners[2]) * 0.5f;
 
-        btn.transform.SetParent(new_parent, false);
+        btn.transform.SetParent(new_parent, false); /// Cambia el parent
+
         Vector3 worldPos = btn.transform.position;
+
         btn.transform.SetAsLastSibling();
 
         Vector2 screen_pos = RectTransformUtility.WorldToScreenPoint(null, child_center);
-
-        bg.rectTransform.anchoredPosition = GetAnchoredPositionOnCanvas(main_canvas, child_center);
+        Vector2 bg_start_anchor = GetAnchoredPositionOnCanvas(main_canvas, child_center);
+        bg_start_anchor = new Vector2(bg_start_anchor.x, bg_start_anchor.y + 45);
+        bg.rectTransform.anchoredPosition = bg_start_anchor;
 
         // Quita el evento anterior y añade uno nuevo
         btn.onClick.RemoveAllListeners();
@@ -450,16 +456,43 @@ public class menus : MonoBehaviour
             yield return null;
         }
 
+        title.text = ab.name;
+
+        // Pone todos los elementos en su disposición original
+        bg.rectTransform.anchorMax = Vector2.one * 0.5f;
+        bg.rectTransform.anchorMin = Vector2.one * 0.5f;
+        bg.rectTransform.pivot = Vector2.one * 0.5f;
+
+        icon.rectTransform.anchoredPosition = icon_previous_pos;
+
+        /// Vuelve a poner el título como estaba
+        title.rectTransform.anchoredPosition = txt_previous_pos;
+        title.text = original_text;
+        title.alignment = TextAlignmentOptions.Center;
+        title.rectTransform.anchorMin = txt_previous_anchors[0];
+        title.rectTransform.anchorMax = txt_previous_anchors[1];
+
+        ab_description_text.gameObject.SetActive(false);
+
+        // Quita todos los eventos al botón para evitar problemas
+        btn.onClick.RemoveAllListeners();
+
+        while (Vector2.Distance(bg.rectTransform.sizeDelta, initial_size) > 0.1f)
+        {
+            bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, initial_size, Time.deltaTime * 10);
+            bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_start_anchor, Time.deltaTime * 5);
+
+            icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_previous_pos, Time.deltaTime * 5);
+            title.rectTransform.anchoredPosition = Vector2.Lerp(title.rectTransform.anchoredPosition, txt_previous_pos, Time.deltaTime * 4.5f);
+
+            yield return null;
+        }
 
         close_ability_upgrade = false;
         if (layout_el.ignoreLayout)
             layout_el.ignoreLayout = false;
 
         SoundManager.instance.InstantiateSound(clip_selected, transform.position); /// Hace un sonido para indicar la deselección
-
-        // Vuelve a ordenar el grid layout group
-        ab_description_text.gameObject.SetActive(false);
-        ob.SetActive(false);
 
         bg.rectTransform.sizeDelta = initial_size;
         bg.rectTransform.localScale = initial_scale;
@@ -476,25 +509,7 @@ public class menus : MonoBehaviour
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(parent as RectTransform);
 
-        ob.SetActive(true);
 
-        // Pone todos los elementos en su disposición original
-        bg.rectTransform.anchorMax = Vector2.one * 0.5f;
-        bg.rectTransform.anchorMin = Vector2.one * 0.5f;
-        bg.rectTransform.pivot = Vector2.one * 0.5f;
-
-       
-
-        icon.rectTransform.anchoredPosition = icon_previous_pos;
-
-        // Vuelve a poner el título como estaba
-        title.rectTransform.anchoredPosition = txt_previous_pos;
-        title.text = original_text;
-        title.alignment = TextAlignmentOptions.Center;
-        title.rectTransform.anchorMin = txt_previous_anchors[0];
-        title.rectTransform.anchorMax = txt_previous_anchors[1];
-
-        title.text = ab.name;
 
         // Vuelve a añadir el evento del botón
         btn.onClick.RemoveAllListeners();
