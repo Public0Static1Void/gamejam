@@ -28,6 +28,7 @@ public class menus : MonoBehaviour
     public AudioClip clip_selected;
 
     [Header("References")]
+    public Canvas main_canvas;
     public TMP_Text txt_damage;
     public TMP_Text txt_speed;
     public TMP_Text txt_stamina;
@@ -197,6 +198,23 @@ public class menus : MonoBehaviour
         sm.SaveGame(pd);
     }
 
+    public Vector2 GetAnchoredPositionOnCanvas(Canvas canvas, Vector2 screenPosition)
+    {
+        RectTransform canvasRect = canvas.transform as RectTransform;
+        Vector2 localPoint;
+
+        // For Screen Space - Camera or World
+        Camera cam = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPosition,
+            cam,
+            out localPoint
+        );
+
+        return localPoint; // This is the anchoredPosition you can assign
+    }
 
     // Habilidades
     public void LoadAbilities()
@@ -224,7 +242,7 @@ public class menus : MonoBehaviour
                 }
                 ob.transform.SetParent(parent);
 
-                ob.transform.localScale = Vector3.one * 0.3f;
+                ob.transform.localScale = Vector3.one * 3f;
 
                 UnityEngine.UI.Image im = ob.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>();
                 UnityEngine.UI.Button btn = ob.GetComponentInChildren<UnityEngine.UI.Button>();
@@ -327,8 +345,24 @@ public class menus : MonoBehaviour
         Vector3 initial_size = bg.rectTransform.sizeDelta;
         Vector3 initial_scale = bg.rectTransform.localScale;
 
-        btn.transform.SetParent(btn.transform.parent.parent, true);
+
+        HorizontalLayoutGroup grid = parent.GetComponent<HorizontalLayoutGroup>();
+        grid.enabled = false;
+
+        Transform new_parent = btn.transform.parent.parent.parent.parent.parent.parent;
+
+        // Cambia el parent y lo reposiciona
+        Vector3[] corners = new Vector3[4];
+        bg.rectTransform.GetWorldCorners(corners);
+        Vector3 child_center = (corners[0] + corners[2]) * 0.5f;
+
+        btn.transform.SetParent(new_parent, false);
+        Vector3 worldPos = btn.transform.position;
         btn.transform.SetAsLastSibling();
+
+        Vector2 screen_pos = RectTransformUtility.WorldToScreenPoint(null, child_center);
+
+        bg.rectTransform.anchoredPosition = GetAnchoredPositionOnCanvas(main_canvas, child_center);
 
         // Quita el evento anterior y añade uno nuevo
         btn.onClick.RemoveAllListeners();
@@ -361,10 +395,9 @@ public class menus : MonoBehaviour
         });
 
 
-        Vector2 scaled_bg = new Vector2(bg.rectTransform.sizeDelta.x * 3f, bg.rectTransform.sizeDelta.y * 2.5f);
-
-
         // Imagen del fondo
+        Vector2 scaled_bg = new Vector2(bg.rectTransform.sizeDelta.x * 2.5f, bg.rectTransform.sizeDelta.y * 2);
+
         Vector2 bg_new_pos = new Vector2(0, 0);
         bg.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         bg.rectTransform.anchorMax = bg.rectTransform.anchorMin;
@@ -372,7 +405,7 @@ public class menus : MonoBehaviour
 
         // Icono de la habilidad
         Vector2 icon_previous_pos = icon.rectTransform.anchoredPosition;
-        Vector2 icon_new_pos = new Vector2(-bg.rectTransform.rect.width + icon.rectTransform.rect.xMax / 2, bg.rectTransform.rect.height - icon.rectTransform.rect.yMax);
+        Vector2 icon_new_pos = new Vector2(-bg.rectTransform.rect.width + icon.rectTransform.rect.xMax / 2, bg.rectTransform.rect.height - icon.rectTransform.rect.yMax * 1.75f);
 
         // Título de la habilidad
         Vector2 txt_previous_pos = title.rectTransform.anchoredPosition;
@@ -404,6 +437,8 @@ public class menus : MonoBehaviour
             ab_description_text.gameObject.SetActive(true);
 
             bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime * 4);
+
+
             bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_new_pos, Time.deltaTime * 2);
 
             icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime * 2);
@@ -429,13 +464,12 @@ public class menus : MonoBehaviour
         bg.rectTransform.sizeDelta = initial_size;
         bg.rectTransform.localScale = initial_scale;
 
-        bg.transform.SetParent(parent, false);
+        bg.transform.SetParent(parent, true);
         bg.transform.SetSiblingIndex(child_num);
 
 
         yield return null; // Espera un frame para que los cambios de apliquen
 
-        GridLayoutGroup grid = parent.GetComponent<GridLayoutGroup>();
         grid.enabled = false;
         yield return new WaitForSeconds(0.1f); // Espera un frame para que los cambios de apliquen
         grid.enabled = true;
