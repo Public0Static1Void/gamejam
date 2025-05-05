@@ -133,7 +133,7 @@ public class ScoreManager : MonoBehaviour
         if (show_text) /// Si es true mostrará un texto de score en la posición del sonido
         {
             Vector3 dir_to_player = sound_position - PlayerMovement.instance.transform.position; /// Calcula la dirección entre el origen del sonido al player
-            StartCoroutine(ShowTextOnPosition(sum_or_not + string_value, sound_position, dir_to_player.normalized, 0));
+            StartCoroutine(ShowTextOnPosition(sum_or_not + string_value, sound_position, dir_to_player.normalized, 0, Color.yellow));
         }
 
 
@@ -156,14 +156,19 @@ public class ScoreManager : MonoBehaviour
             current_text = 0;
     }
 
-    public IEnumerator ShowTextOnPosition(string phrase, Vector3 position, Vector3 face_direction, float duration)
+    public void InstantiateText(string phrase, Vector3 position, Vector3 face_direction, int text_size, float duration, Color col)
+    {
+        StartCoroutine(ShowTextOnPosition(phrase, position, face_direction, duration, col, text_size));
+    }
+    public IEnumerator ShowTextOnPosition(string phrase, Vector3 position, Vector3 face_direction, float duration, Color col, int text_size = -1)
     {
         float timer = 0;
         Quaternion look_rotation = Quaternion.LookRotation(face_direction, Vector3.up);
         Text text = Instantiate(text_to_show, position, look_rotation).transform.GetChild(0).GetComponent<Text>(); /// Instancia el texto en la posición del sonido y mirando al player
         text.text = phrase;
+        text.fontSize = text_size;
 
-        Color col = text.color;
+        text.color = col;
         text.color = new Color(col.r, col.g, col.b, 0);
         while (text.color.a < 1) /// Hace un fade in del texto
         {

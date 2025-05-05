@@ -60,6 +60,9 @@ public class EnemyLife : MonoBehaviour
             // Añade xp al morirse
             AbilitiesSystem.instance.AddXP(max_hp * 0.05f);
 
+            Vector3 dir = transform.position - PlayerMovement.instance.transform.position;
+            ScoreManager.instance.InstantiateText($"XP +{max_hp * 0.05f}", transform.position, dir.normalized, 40, 2, Color.cyan);
+
             Destroy(gameObject);
         }
         StartCoroutine(ActivateKinematic());

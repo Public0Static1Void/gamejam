@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class PlayerLife : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class PlayerLife : MonoBehaviour
 
     private List<Image> blood_images = new List<Image>();
     private int curr_blood = 0;
+
+    public Image im_direction_icon;
+    private Vector2 im_start_position;
+
 
     private bool damaged;
     private float timer = 0;
@@ -85,6 +90,8 @@ public class PlayerLife : MonoBehaviour
 
             blood_images.Add(im);
         }
+
+        im_start_position = im_direction_icon.rectTransform.anchoredPosition;
     }
 
     void Update()
@@ -235,9 +242,38 @@ public class PlayerLife : MonoBehaviour
             Vector3 dir = (transform.position - coll.transform.position).normalized;
             Debug.Log(!(Vector3.Dot(transform.right, dir) > 0));
             SplashBloodOnScreen(!(Vector3.Dot(transform.right, dir) > 0));
+
+            StartCoroutine(InstantiateDamageDirection(coll.transform.position));
+
+            // Aplica el daño
             Damage(2);
             damaged = true;
         }
+    }
+
+    private IEnumerator InstantiateDamageDirection(Vector3 pos)
+    {
+        Image im = Instantiate(im_direction_icon.gameObject, main_canvas).GetComponent<Image>();
+        Vector3 point = Camera.main.WorldToViewportPoint(pos);
+        Vector2 ui_pos = new Vector2(point.x - 0.5f, point.z - 0.5f).normalized;
+
+        im.rectTransform.anchoredPosition = (im_start_position + ui_pos);
+        Vector3 world_dir = pos - transform.position;
+        Vector3 canvas_dir = new Vector2(world_dir.x, world_dir.z).normalized;
+
+        float angleDeg = Vector3.SignedAngle((pos - transform.position).normalized, Camera.main.transform.forward, Vector3.up);
+
+        im.rectTransform.localRotation = Quaternion.Euler(0, 0, angleDeg);
+
+        im.gameObject.SetActive(true);
+
+        while (im.color.a > 0)
+        {
+            im.color = new Color(im.color.r, im.color.g, im.color.b, im.color.a - Time.deltaTime * 2);
+            yield return null;
+        }
+
+        Destroy(im.gameObject);
     }
 
     private IEnumerator ChangeBackgroundLife(float new_value)

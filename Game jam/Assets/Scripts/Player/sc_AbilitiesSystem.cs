@@ -447,6 +447,8 @@ public class AbilitiesSystem : MonoBehaviour
                     im_description.rectTransform.anchoredPosition = txt_description.rectTransform.anchoredPosition;
                     im_description.rectTransform.sizeDelta = txt_description.rectTransform.sizeDelta * 1.25f;
 
+                    gambling_anim.enabled = false;
+
                     txt_description.gameObject.SetActive(true);
                     im_description.gameObject.SetActive(true);
                 });
@@ -491,8 +493,11 @@ public class AbilitiesSystem : MonoBehaviour
             }
         }
 
+        gambling_anim.enabled = true;
         ob_gamblingparent.SetActive(true);
+
         gambling_anim.Play("anim_open_gambling");
+
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         UnityEngine.Cursor.visible = true;
     }

@@ -679,17 +679,19 @@ public class GameManager : MonoBehaviour
     // Change Ui size
     public void UIGrowButton(UnityEngine.UI.Image image)
     {
-        StartCoroutine(UIChangeButtonSizeCoroutine(image, new Vector2(image.rectTransform.sizeDelta.x * 1.5f, image.rectTransform.sizeDelta.y * 10)));
+        StopCoroutine(UIChangeButtonSizeCoroutine(image, new Vector2(image.rectTransform.sizeDelta.x * 1.1f, image.rectTransform.sizeDelta.y * 1.1f)));
+        StartCoroutine(UIChangeButtonSizeCoroutine(image, new Vector2(image.rectTransform.sizeDelta.x * 1.1f, image.rectTransform.sizeDelta.y * 1.1f)));
     }
     public void UIShrinkButton(UnityEngine.UI.Image image)
     {
-        StartCoroutine(UIChangeButtonSizeCoroutine(image, new Vector2(image.rectTransform.sizeDelta.x * 0.5f, image.rectTransform.sizeDelta.y / 10)));
+        StopCoroutine(UIChangeButtonSizeCoroutine(image, new Vector2(image.rectTransform.sizeDelta.x * 0.9f, image.rectTransform.sizeDelta.y * 0.9f)));
+        StartCoroutine(UIChangeButtonSizeCoroutine(image, new Vector2(image.rectTransform.sizeDelta.x * 0.9f, image.rectTransform.sizeDelta.y * 0.9f)));
     }
     private IEnumerator UIChangeButtonSizeCoroutine(UnityEngine.UI.Image image, Vector2 new_size)
     {
-        while (Vector2.Distance(image.rectTransform.sizeDelta, new_size) > 0.1f)
+        while (Vector2.Distance(image.rectTransform.sizeDelta, new_size) > 0.15f)
         {
-            image.rectTransform.sizeDelta = Vector2.Lerp(image.rectTransform.sizeDelta, new_size, Time.deltaTime * 2);
+            image.rectTransform.sizeDelta = Vector2.Lerp(image.rectTransform.sizeDelta, new_size, Time.unscaledDeltaTime * 3);
             yield return null;
         }
     }
