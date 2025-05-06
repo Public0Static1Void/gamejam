@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 
 public class sc_Abilities : MonoBehaviour
 {
+    public static sc_Abilities instance { get; private set; }
+
     // Booleanos que detectan colisiones
     private bool active_levitate = false, active_group = false, active_byebye = false;
 
@@ -51,6 +53,22 @@ public class sc_Abilities : MonoBehaviour
     //Hook
     private Hook spawned_hook;
 
+    // Kill N Speed
+    public bool can_upgrade_speed = false;
+    private float total_speed_upgraded = 0;
+    private float speed_timer = 0;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         spawned_hook = Instantiate(prefab_hook).GetComponent<Hook>();
@@ -556,6 +574,45 @@ public class sc_Abilities : MonoBehaviour
         );
 
         Destroy(monkey);
+    }
+    #endregion
+
+    #region KillNSpeed
+    public void EnableKillNSpeed()
+    {
+        can_upgrade_speed = true;
+    }
+    public void KillNSpeed(float value)
+    {
+        if (!can_upgrade_speed) return;
+
+        speed_timer = 0;
+        StartCoroutine(KillNSpeedCoroutine(value));
+    }
+    private IEnumerator KillNSpeedCoroutine(float value)
+    {
+        float speed_ab_level = AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.KILLNSPEED].ability_level;
+
+        value *= speed_ab_level;
+
+        PlayerMovement.instance.speed += value;
+        if (PlayerMovement.instance.moving)
+        {
+            PlayerMovement.instance.current_speed += value;
+            PlayerMovement.instance.target_speed += value;
+        }
+
+        total_speed_upgraded += value;
+
+
+        while (speed_timer <= 5 * speed_ab_level)
+        {
+            speed_timer += Time.deltaTime;
+            yield return null;
+        }
+
+        PlayerMovement.instance.speed -= total_speed_upgraded;
+        total_speed_upgraded = 0;
     }
     #endregion
 

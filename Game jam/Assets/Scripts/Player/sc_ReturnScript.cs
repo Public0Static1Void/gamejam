@@ -103,7 +103,7 @@ public class ReturnScript : MonoBehaviour
             if (Vector3.Distance(transform.position, past_positions[current_point]) > 1f)
             {
                 Vector3 dir = (past_positions[current_point] - transform.position).normalized;
-                transform.Translate(dir * (return_speed * 0.75f + Vector3.Distance(transform.position, past_positions[current_point])) * Time.deltaTime, Space.World); /// Mueve al jugador en la dirección a su anterior posición
+                transform.Translate(dir * (return_speed + Vector3.Distance(transform.position, past_positions[current_point])) * Time.deltaTime, Space.World); /// Mueve al jugador en la dirección a su anterior posición
 
                 transform.rotation = Quaternion.Lerp(transform.rotation, q_rotations[current_point], Time.deltaTime * return_speed);
 
@@ -126,22 +126,8 @@ public class ReturnScript : MonoBehaviour
 
                     cooldown_image.fillAmount = 0;
 
-                    #region DamageToEnemy
-                    /*
-                    if (SoundManager.instance.funnySounds) /// Sonidos de explosión
-                    {
-                        SoundManager.instance.InstantiateSound(funny_explosion_clip, transform.position);
-                    }
-                    else
-                    {
-                        SoundManager.instance.InstantiateSound(explosion_clip, transform.position);
-                    }
-                    GameManager.gm.ShakeController(1, 0.25f, 1);
-                    DamageToEnemies(transform.position, damage, explosion_range, Vector3.zero);
-                    */
-                    #endregion
-
                     playerLife.Invulnerable(); /// Hace que el jugador sea invulnerable cuando acaba de llegar
+
                     PlayerMovement.instance.canMove = true;
                     GetComponent<Rigidbody>().isKinematic = false;
                     GetComponent<Collider>().isTrigger = false;
@@ -386,7 +372,7 @@ public class ReturnScript : MonoBehaviour
         int curr_pos = positions.Count - 1;
 
         // Cuánta más distancia recorra la imagen más daño hará
-        float scaled_damage = (Vector3.Distance(positions[curr_pos], positions[0]) * 0.1f) * (damage * 0.2f);
+        float scaled_damage = (Vector3.Distance(positions[curr_pos], positions[0]) * (damage * 0.025f));
 
         ob_AfterImage.transform.position = transform.position;
         ob_AfterImage.transform.rotation = transform.rotation;
@@ -446,7 +432,7 @@ public class ReturnScript : MonoBehaviour
 
                         // Envia el enemigo a volar y después le aplica el daño
                         Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
-                        colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
+                        colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 7.5f);
                         colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
 
                         ScoreManager.instance.InstantiateText("-" + scaled_damage.ToString("F0"), colls[i].transform.position, dir, 65, 3, Color.red);

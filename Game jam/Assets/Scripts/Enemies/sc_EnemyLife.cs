@@ -63,6 +63,9 @@ public class EnemyLife : MonoBehaviour
             Vector3 dir = transform.position - PlayerMovement.instance.transform.position;
             ScoreManager.instance.InstantiateText($"XP +{max_hp * 0.05f}", transform.position, dir.normalized, 40, 2, Color.cyan);
 
+            // Suma la velocidad si se puede
+            sc_Abilities.instance.KillNSpeed(150);
+
             Destroy(gameObject);
         }
         StartCoroutine(ActivateKinematic());

@@ -19,7 +19,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     public bool gambling_open = false;
 
-    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, HOLOGRAM_BODY, MONKEY_BAIT, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, HOLOGRAM_BODY, MONKEY_BAIT, KILLNSPEED, LAST_NO_USE }
     public enum AbilityType { BASIC, ULTIMATE, PASSIVE, LAST_NO_USE }
 
     [Header("XP")]
@@ -63,6 +63,7 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_bloodthirsty;
     public Sprite sprite_hologram;
     public Sprite sprite_monkey;
+    public Sprite sprite_killnspeed;
 
 
     private Animator gambling_anim;
@@ -132,6 +133,17 @@ public class AbilitiesSystem : MonoBehaviour
         SaveManager sm = GameManager.gm.saveManager;
 
         PlayerData pd = sm.LoadSaveData();
+
+        Ability[] abs_level = sm.LoadAbilitiesData();
+        if (abs_level.Length == 0)
+        {
+
+            abs_level = new Ability[(int)Abilities.LAST_NO_USE];
+            for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
+            {
+                abs_level[i].ability_level = 1.0f;
+            }
+        }
         // Levitate ability
         Ability ab = new Ability();
 
@@ -236,6 +248,19 @@ public class AbilitiesSystem : MonoBehaviour
         ab.cooldown = 15;
 
         abilities.Add(ab);
+        
+        // Kill N Speed
+        ab = new Ability();
+
+        ab.name = "Kill N Speed";
+        ab.description = 
+            $"Kill an enemy to gain {(15 * abs_level[(int)Abilities.KILLNSPEED].ability_level).ToString("F0")} speed for " +
+            $"{(5 * abs_level[(int)Abilities.KILLNSPEED].ability_level).ToString("F0")} seconds, infinitely stackable";
+        ab.icon = sprite_killnspeed;
+        ab.rarity = AbilityType.PASSIVE;
+        ab.cooldown = 0;
+
+        abilities.Add(ab);
 
 
         /// ¡¡ Recuerda añadir la nueva habilidad al enum !! -------------------------------------------------------------
@@ -256,7 +281,6 @@ public class AbilitiesSystem : MonoBehaviour
 
         sm.SaveAbilities(abilities.ToArray());
 
-        Ability[] abs_level = sm.LoadAbilitiesData();
         if (abs_level != null && abs_level.Length > 0)
         {
             for (int i = 0; i < abs_level.Length; i++)
