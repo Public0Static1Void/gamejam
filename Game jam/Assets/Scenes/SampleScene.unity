@@ -24450,7 +24450,7 @@ MonoBehaviour:
   - {fileID: 884736393386133593, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
   - {fileID: 6845868788880733797, guid: c898474947a343e4eaf251cf5189d333, type: 3}
   enemies_follow: []
-  enemyRound: 7
+  enemyRound: 5
   clip_roundstart: {fileID: 8300000, guid: 947e275716657e74d816fdd0506cf4da, type: 3}
   txt_round: {fileID: 664061370}
 --- !u!4 &843739052

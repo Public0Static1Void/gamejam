@@ -466,7 +466,7 @@ public class GameManager : MonoBehaviour
 
     private void LoadPauseInfo()
     {
-        im_hp.fillAmount = playerLife.hp / playerLife.max_hp;
+        im_hp.fillAmount = 1 - (1 - ((float)playerLife.hp / (float)playerLife.max_hp));
         im_xp.fillAmount = AbilitiesSystem.instance.current_xp / AbilitiesSystem.instance.max_xp;
         im_stamina.fillAmount = PlayerMovement.instance.current_stamina / PlayerMovement.instance.max_stamina;
 
