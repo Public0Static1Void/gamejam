@@ -59,6 +59,12 @@ public class sc_Mine : MonoBehaviour
             ReturnScript.instance.DamageToEnemies(transform.position, (int)(damage * AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.MINE].ability_level),
                                                   explosion_range, Vector3.up * (damage / 2));
 
+            Vector2 dir = (transform.position - PlayerMovement.instance.transform.position).normalized;
+            ScoreManager.instance.InstantiateText("-" + (damage * AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.MINE].ability_level).ToString("F0"),
+                transform.position + Vector3.up * 2, dir, 120, 5, Color.red);
+
+
+
             Destroy(gameObject);
         }
 

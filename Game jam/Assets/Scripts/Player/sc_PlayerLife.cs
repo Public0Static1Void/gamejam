@@ -254,6 +254,7 @@ public class PlayerLife : MonoBehaviour
     {
         Transform parent = Instantiate(im_direction_icon.transform.parent.gameObject, main_canvas).transform;
         Image im = parent.GetComponentInChildren<Image>();
+        parent.SetAsFirstSibling();
 
         Vector3 point = Camera.main.WorldToViewportPoint(pos);
         Vector2 ui_pos = new Vector2(point.x - 0.5f, point.z - 0.5f).normalized;

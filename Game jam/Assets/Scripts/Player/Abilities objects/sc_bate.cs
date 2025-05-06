@@ -61,6 +61,8 @@ public class sc_bate : MonoBehaviour
             other.GetComponent<EnemyFollow>().AddForceToEnemy(forceDir * 10f);
             other.GetComponent<EnemyLife>().Damage((int)(ReturnScript.instance.damage * 0.5f));
 
+            ScoreManager.instance.InstantiateText("-" + (ReturnScript.instance.damage * 0.5f).ToString("F0"),Camera.main.transform.position + Camera.main.transform.forward * 0.25f, dir, 65, 3, Color.red);
+
             if (audioSource == null)
             {
                 audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);

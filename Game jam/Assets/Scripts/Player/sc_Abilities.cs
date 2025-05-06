@@ -95,6 +95,14 @@ public class sc_Abilities : MonoBehaviour
                 Vector3 dir = (colls[i].transform.position - position).normalized;
                 colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * damage);
                 colls[i].GetComponent<EnemyLife>().Damage(damage);
+                ScoreManager.instance.InstantiateText("-" + damage.ToString("F0"), position, dir, 65, 3, Color.red);
+
+                ScoreManager.instance.InstantiateText(
+                    "-" + damage.ToString("F0"),
+                    colls[i].transform.position,
+                    dir, 75, 3, Color.red
+                );
+
             }
         }
 
@@ -142,7 +150,22 @@ public class sc_Abilities : MonoBehaviour
                         SoundManager.instance.PlaySoundOnAudioSource(ground_smash_from_air, enemies_mov[i].audioSource);
                     }
                     if (enemy_targets[i] != null)
-                        enemy_targets[i].GetComponent<EnemyLife>().Damage(0); /// Quita vida a los enemigos
+                    {
+                        while (enemies_mov[i].rb.velocity.y < -0.01f)
+                        {
+                            
+
+                            yield return null;
+                        }
+
+                        enemy_targets[i].GetComponent<EnemyLife>().Damage(ReturnScript.instance.damage * 3); /// Quita vida a los enemigos
+                        Debug.Log("Lev damaged");
+                        Vector3 dir = (enemies_mov[i].transform.position - playerLife.transform.position).normalized;
+                        ScoreManager.instance.InstantiateText(
+                            "-" + (ReturnScript.instance.damage * 3).ToString("F0"),
+                            enemy_targets[i].transform.position,
+                            dir, 85, 3, Color.red);
+                    }
 
                 }
             }
@@ -301,6 +324,9 @@ public class sc_Abilities : MonoBehaviour
         {
             coll.GetComponent<EnemyFollow>().AddForceToEnemy(Vector3.up * ((force + hit.distance * 1.5f) * 0.5f));
             coll.GetComponent<EnemyLife>().Damage((int)((hit.distance) * 0.25f));
+            Vector2 dir = (coll.transform.position - PlayerMovement.instance.transform.position).normalized;
+            ScoreManager.instance.InstantiateText("-" + ((hit.distance) * 0.25f).ToString("F0"),
+                coll.transform.position, dir, 65, 5, Color.red);
         }
 
 

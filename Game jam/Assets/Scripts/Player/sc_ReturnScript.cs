@@ -299,6 +299,8 @@ public class ReturnScript : MonoBehaviour
                 coll.GetComponent<EnemyFollow>().AddForceToEnemy(dir * (damage_amount * 1.25f * level));
                 coll.GetComponent<EnemyLife>().Damage((int)(damage_amount * level));
 
+                ScoreManager.instance.InstantiateText("-" + damage_amount.ToString("F0"), Camera.main.transform.position + Camera.main.transform.forward * 0.25f, dir, 65, 3, Color.red);
+
                 // Cura del jugador
                 if (can_heal && !healed)
                 {
@@ -446,6 +448,8 @@ public class ReturnScript : MonoBehaviour
                         Vector3 dir = (colls[i].transform.position - ob_AfterImage.transform.position).normalized;
                         colls[i].GetComponent<EnemyFollow>().AddForceToEnemy(dir * scaled_damage * 5);
                         colls[i].GetComponent<EnemyLife>().Damage((int)scaled_damage);
+
+                        ScoreManager.instance.InstantiateText("-" + scaled_damage.ToString("F0"), colls[i].transform.position, dir, 65, 3, Color.red);
 
                         // hace un sonido de choque eléctrico
                         SoundManager.instance.InstantiateSound(electric_spark, colls[i].transform.position, 0.75f);
