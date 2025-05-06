@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public class PlayerLife : MonoBehaviour
 {
@@ -253,19 +252,17 @@ public class PlayerLife : MonoBehaviour
 
     private IEnumerator InstantiateDamageDirection(Vector3 pos)
     {
-        Image im = Instantiate(im_direction_icon.gameObject, main_canvas).GetComponent<Image>();
+        Transform parent = Instantiate(im_direction_icon.transform.parent.gameObject, main_canvas).transform;
+        Image im = parent.GetComponentInChildren<Image>();
+
         Vector3 point = Camera.main.WorldToViewportPoint(pos);
         Vector2 ui_pos = new Vector2(point.x - 0.5f, point.z - 0.5f).normalized;
 
-        im.rectTransform.anchoredPosition = (im_start_position + ui_pos);
-        Vector3 world_dir = pos - transform.position;
-        Vector3 canvas_dir = new Vector2(world_dir.x, world_dir.z).normalized;
-
         float angleDeg = Vector3.SignedAngle((pos - transform.position).normalized, Camera.main.transform.forward, Vector3.up);
 
-        im.rectTransform.localRotation = Quaternion.Euler(0, 0, angleDeg);
+        parent.transform.localRotation = Quaternion.Euler(0, 0, angleDeg);
 
-        im.gameObject.SetActive(true);
+        parent.gameObject.SetActive(true);
 
         while (im.color.a > 0)
         {
@@ -273,7 +270,7 @@ public class PlayerLife : MonoBehaviour
             yield return null;
         }
 
-        Destroy(im.gameObject);
+        Destroy(parent.gameObject);
     }
 
     private IEnumerator ChangeBackgroundLife(float new_value)

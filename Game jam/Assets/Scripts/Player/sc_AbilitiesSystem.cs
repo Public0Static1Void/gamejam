@@ -14,7 +14,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     public List<Ability> abilities = new List<Ability>();
     public List<Ability> abilities_log;
-    private List<Ability> abilities_equipped = new List<Ability>();
+    public List<Ability> abilities_equipped = new List<Ability>();
     List<int> rand_abilities_index = new List<int>();
 
     public bool gambling_open = false;
@@ -24,7 +24,8 @@ public class AbilitiesSystem : MonoBehaviour
 
     [Header("XP")]
     public float max_xp = 10;
-    private float current_xp = 0;
+    [HideInInspector]
+    public float current_xp = 0;
     public UnityEngine.UI.Image im_xp_bar;
     public TMP_Text txt_xp;
 
@@ -65,6 +66,8 @@ public class AbilitiesSystem : MonoBehaviour
 
 
     private Animator gambling_anim;
+
+    private float timer = 0;
 
     
     void Awake()
@@ -268,6 +271,24 @@ public class AbilitiesSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             GetRandomAbilities();
+        }
+
+        if (gambling_open)
+        {
+            // Reinicia la animación si se queda estancada
+            AnimatorStateInfo animStateInfo = gambling_anim.GetCurrentAnimatorStateInfo(0);
+            if (animStateInfo.IsName("anim_open_gambling") && animStateInfo.normalizedTime < 1)
+            {
+                timer += Time.deltaTime;
+                if (timer >= 1)
+                {
+                    gambling_anim.Play("anim_open_gambling");
+                }
+                else if (timer >= 3)
+                {
+                    gambling_anim.Play("anim_open_gambling_still");
+                }
+            }
         }
     }
 
@@ -543,6 +564,9 @@ public class AbilitiesSystem : MonoBehaviour
 
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
+
+        timer = 0;
+
         Time.timeScale = 1;
     }
     /// <summary>

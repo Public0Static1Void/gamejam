@@ -33,6 +33,8 @@ public class GameManager : MonoBehaviour
     public Transform main_canvas;
     public List<TMP_Text> screen_texts;
 
+    private PlayerLife playerLife;
+
     public UnityEngine.UI.Button btn_resume, btn_continue;
 
     public GameObject stats_resume_holder;
@@ -54,6 +56,19 @@ public class GameManager : MonoBehaviour
     public GameObject plane_ob;
 
     public Material m_Stamp;
+
+    [Header("Pause menu")]
+    public Animator anim_pause;
+    public UnityEngine.UI.Image im_hp;
+    public UnityEngine.UI.Image im_xp;
+    public UnityEngine.UI.Image im_stamina;
+    public TMP_Text txt_hp_text;
+    public TMP_Text txt_xp_text;
+    public TMP_Text txt_stamina_text;
+    public TMP_Text txt_damage_text;
+    public TMP_Text txt_speed_text;
+
+    public Transform pause_abilities_holder;
 
     [Header("Stats")]
     public int enemies_killed = 0;
@@ -80,6 +95,13 @@ public class GameManager : MonoBehaviour
         ShakeController(0, 0, 0);
 
         saveManager = GetComponent<SaveManager>();
+    }
+
+    private void Start()
+    {
+        anim_pause.updateMode = AnimatorUpdateMode.UnscaledTime;
+
+        playerLife = PlayerMovement.instance.gameObject.GetComponent<PlayerLife>();
     }
 
     public void ChangeControllerScheme(string scheme)
@@ -192,7 +214,7 @@ public class GameManager : MonoBehaviour
         Transform new_parent = rt.parent == null ? main_canvas.transform : rt.parent.transform;
         rectTransform.gameObject.transform.SetParent(new_parent, false);
 
-        // Pone la posición como el recttransform pasado
+        // Pone la posiciï¿½n como el recttransform pasado
         rectTransform.anchorMin = rt.anchorMin;
         rectTransform.anchorMax = rt.anchorMax;
         rectTransform.pivot = rt.pivot;
@@ -237,7 +259,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Instancia una esfera con el rango y el color pasados, si grow se marca como true crecerá de 0 hasta radius
+    /// Instancia una esfera con el rango y el color pasados, si grow se marca como true crecerï¿½ de 0 hasta radius
     /// </summary>
     public void SpawnShpereRadius(Vector3 position, float radius, Color col, bool grow, float grow_speed = 50, Material material = null)
     {
@@ -266,7 +288,7 @@ public class GameManager : MonoBehaviour
             renderer.material = material;
         }
         renderer.material.SetColor("_BaseColor", col);
-        // Cambia su tamaño a 0
+        // Cambia su tamaï¿½o a 0
         ob.transform.localScale = Vector3.zero;
 
         // Esconde el objeto
@@ -364,7 +386,7 @@ public class GameManager : MonoBehaviour
 
     public void ShakeController(float time, float low_frequency, float high_frequency)
     {
-        // Solo vibrará el mando cuando se esté usando
+        // Solo vibrarï¿½ el mando cuando se estï¿½ usando
         if (GetCurrentControllerName() == "Keyboard") return;
 
         StartCoroutine(ControllerShake(time, low_frequency, high_frequency));
@@ -405,6 +427,7 @@ public class GameManager : MonoBehaviour
         main_texture.Apply();
     }
 
+    // Pausa -------------------------------------------------------------------------------------------------------------
     public void ResumeGame()
     {
         PlayerMovement.instance.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
@@ -414,19 +437,23 @@ public class GameManager : MonoBehaviour
         UnityEngine.Cursor.lockState = previous_lockmode;
         UnityEngine.Cursor.visible = previous_lockmode == CursorLockMode.None ? true : false;
 
-        pause_menu.SetActive(false);
-        SoundManager.instance.SetHighPassEffect(10);
+        anim_pause.Play("anim_close_pause");
 
         pause = false;
+        StopCoroutine("InterpolateHighPass");
+        SoundManager.instance.SetHighPassEffect(10);
+
     }
     public void PauseGame()
     {
-        if (!pause_menu.activeSelf)
-            previous_lockmode = UnityEngine.Cursor.lockState;
+        LoadPauseInfo();
+        previous_lockmode = UnityEngine.Cursor.lockState;
 
         btn_resume.Select();
 
         pause_menu.SetActive(true);
+        anim_pause.Play("anim_open_pause");
+
         ShakeController(0, 0, 0);
         Time.timeScale = 0;
 
@@ -437,13 +464,47 @@ public class GameManager : MonoBehaviour
         StartCoroutine(InterpolateHighPass(1000));
     }
 
+    private void LoadPauseInfo()
+    {
+        im_hp.fillAmount = playerLife.hp / playerLife.max_hp;
+        im_xp.fillAmount = AbilitiesSystem.instance.current_xp / AbilitiesSystem.instance.max_xp;
+        im_stamina.fillAmount = PlayerMovement.instance.current_stamina / PlayerMovement.instance.max_stamina;
+
+        txt_hp_text.text = $"{playerLife.hp.ToString("F2")}|{playerLife.max_hp}";
+        txt_xp_text.text = $"{AbilitiesSystem.instance.current_xp.ToString("F2")}|{AbilitiesSystem.instance.max_xp}";
+        txt_stamina_text.text = $"{PlayerMovement.instance.current_stamina.ToString("F1")}|{PlayerMovement.instance.max_stamina}";
+        txt_damage_text.text = $"Damage\n\n  {ReturnScript.instance.damage}";
+        txt_speed_text.text = $"Speed\n\n {PlayerMovement.instance.speed}";
+
+        if (pause_abilities_holder.childCount < AbilitiesSystem.instance.abilities_equipped.Count)
+        {
+            List<Ability> abs = new List<Ability>(AbilitiesSystem.instance.abilities_equipped);
+
+            for (int i = 0; i < abs.Count; i++)
+            {
+                if (i < pause_abilities_holder.childCount)
+                {
+                    pause_abilities_holder.GetChild(i).gameObject.GetComponent<UnityEngine.UI.Image>().sprite = abs[i].icon;
+                }
+                else
+                {
+                    GameObject ob = new GameObject(abs[i].name);
+                    UnityEngine.UI.Image im = ob.AddComponent<UnityEngine.UI.Image>();
+                    im.sprite = abs[i].icon;
+
+                    ob.transform.SetParent(pause_abilities_holder);
+                }
+            }
+        }
+    }
+
     private IEnumerator InterpolateHighPass(float value)
     {
         float target_highpass_freq = value;
         float current_freq = 10;
         while (current_freq < target_highpass_freq)
         {
-            if (!pause_menu.activeSelf) /// Si el menú de pausa se cierra se pone la frecuencia a 10 y se sale del bucle
+            if (!pause) /// Si el menï¿½ de pausa se cierra se pone la frecuencia a 10 y se sale del bucle
             {
                 SoundManager.instance.SetHighPassEffect(10);
                 break;
@@ -500,7 +561,7 @@ public class GameManager : MonoBehaviour
         show_announce = true;
     }
     /// <summary>
-    /// Cambia la opacidad y el contenido del texto que le indiques, según si le das una velocidad positiva o negativa
+    /// Cambia la opacidad y el contenido del texto que le indiques, segï¿½n si le das una velocidad positiva o negativa
     /// </summary>
     public void ShowText(TextPositions text_position, string text, float showspeed)
     {
@@ -619,7 +680,7 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
-        // Mostrar UI con resumen de estadísticas de la partida
+        // Mostrar UI con resumen de estadï¿½sticas de la partida
         StartCoroutine(EndGameCoroutine());
 
         SelectUIButton(btn_continue);
