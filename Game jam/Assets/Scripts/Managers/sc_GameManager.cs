@@ -436,7 +436,8 @@ public class GameManager : MonoBehaviour
         UnityEngine.Cursor.lockState = previous_lockmode;
         UnityEngine.Cursor.visible = previous_lockmode == CursorLockMode.None ? true : false;
 
-        anim_pause.Play("anim_close_pause");
+        if (anim_pause != null)
+            anim_pause.Play("anim_close_pause");
 
         pause = false;
         StopCoroutine("InterpolateHighPass");
@@ -451,7 +452,8 @@ public class GameManager : MonoBehaviour
         btn_resume.Select();
 
         pause_menu.SetActive(true);
-        anim_pause.Play("anim_open_pause");
+        if (anim_pause != null)
+            anim_pause.Play("anim_open_pause");
 
         ShakeController(0, 0, 0);
         Time.timeScale = 0;
@@ -465,6 +467,8 @@ public class GameManager : MonoBehaviour
 
     private void LoadPauseInfo()
     {
+        if (im_hp == null) return;
+
         im_hp.fillAmount = 1 - (1 - ((float)playerLife.hp / (float)playerLife.max_hp));
         im_xp.fillAmount = AbilitiesSystem.instance.current_xp / AbilitiesSystem.instance.max_xp;
         im_stamina.fillAmount = PlayerMovement.instance.current_stamina / PlayerMovement.instance.max_stamina;
