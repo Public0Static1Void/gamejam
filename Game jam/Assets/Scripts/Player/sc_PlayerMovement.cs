@@ -38,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip slide_sound;
     private float slide_sprinting_multiplier = 2.1f, slide_walking_multiplier = 7;
 
+    private float slide_particle_speed = 18, slide_particle_amount = 60;
+
     public bool onGround = false;
 
     [Header("References")]
@@ -59,6 +61,8 @@ public class PlayerMovement : MonoBehaviour
     private float slide_timer = 0;
 
 
+    private SphereCollider[] colliders = new SphereCollider[2];
+
     private void Awake()
     {
         if (instance == null)
@@ -70,6 +74,8 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        colliders = GetComponents<SphereCollider>();
 
         start_position = transform.position;
         current_stamina = max_stamina;
@@ -154,9 +160,24 @@ public class PlayerMovement : MonoBehaviour
 
             Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10); /// Movimiento de la cámara
 
-            /// Pérdida de velocidad
+
+            // Pérdida de velocidad y partículas
+
+            /// Velocidad y número de partículas
+            slide_particle_speed = (current_speed * 0.05f);
+            slide_particle_speed = Mathf.Clamp(slide_particle_speed, 6, 18);
+
+            ParticleSystem.MainModule main_m = particle_slide.main;
+            main_m.startSpeed = slide_particle_speed;
+
+            slide_particle_amount = (current_speed * 0.1f);
+
+            ParticleSystem.EmissionModule emission_m = particle_slide.emission;
+            emission_m.rateOverTime = slide_particle_amount;
+
             if (rb.velocity.y >= -0.1f)
             {
+                // Pérdida de velocidad
                 current_speed -= (Time.fixedDeltaTime * ((0.5f * current_speed + target_speed)));
             }
             else // El jugador está descendiendo una pendiente
@@ -292,8 +313,20 @@ public class PlayerMovement : MonoBehaviour
             player_agent.enabled = false;
             if (can_slide && onGround && canMove)
             {
+                // Velocidad y número de partículas
+                slide_particle_amount = 60;
+                slide_particle_speed = 18;
+
+                ParticleSystem.MainModule main_m = particle_slide.main;
+                main_m.startSpeed = slide_particle_speed;
+                ParticleSystem.EmissionModule emission_m = particle_slide.emission;
+                emission_m.rateOverTime = slide_particle_amount;
+
                 can_slide = false;
                 slide = true;
+
+                colliders[0].radius = 0.25f;
+                colliders[0].center = new Vector3(0, -0.25f, 0);
 
                 cameraRotation.cameraSpeed = cameraRotation.cameraSpeed_slide; /// La cámara no podrá moverse tanto mientras te deslizas
 
@@ -311,6 +344,9 @@ public class PlayerMovement : MonoBehaviour
         
         if (con.canceled)
         {
+            colliders[0].radius = 0.5f;
+            colliders[0].center = Vector3.zero;
+
             cameraRotation.cameraSpeed = cameraRotation.cameraSpeed_slide * 5; /// La cámara vuelve a su velocidad original
 
             // Deja de sonar el sonido de slide y se quita el loop

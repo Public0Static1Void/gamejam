@@ -13,6 +13,7 @@ public class EnemyLife : MonoBehaviour
     private EnemyFollow enemyFollow;
     public List<AudioClip> clip_damaged;
     public AudioClip clip_growl, blood_explosion;
+
     [Header("Particles")]
     public ParticleSystem particle_explosion;
 
@@ -47,10 +48,7 @@ public class EnemyLife : MonoBehaviour
         {
             GameManager.gm.enemies_killed++;
 
-            // Instancia las partículas de muerte
-            Instantiate(particle_explosion, transform.position, particle_explosion.transform.rotation);
-            /// Genera un sonido de explosión
-            SoundManager.instance.InstantiateSound(blood_explosion, transform.position, 0.1f);
+
             // Añade el multiplicador
             ScoreManager.instance.AddMultiplier(0.1f);
             // Suma la score
@@ -66,9 +64,53 @@ public class EnemyLife : MonoBehaviour
             // Suma la velocidad si se puede
             sc_Abilities.instance.KillNSpeed(150);
 
-            Destroy(gameObject);
+            StartCoroutine(DestroyCooldown());
         }
         StartCoroutine(ActivateKinematic());
+    }
+
+    private IEnumerator DestroyCooldown()
+    {
+        SkinnedMeshRenderer mesh_r = GetComponentInChildren<SkinnedMeshRenderer>();
+
+        Color[] col = new Color[8];
+        for (int i = 0; i < col.Length; i++)
+        {
+            if (i % 2 != 0)
+            {
+                col[i] = Color.yellow;
+            }
+            else
+            {
+                col[i] = Color.red;
+            }
+        }
+
+        int curr_color = 0;
+        float timer = 0;
+        float global_timer = 1;
+        while (curr_color < col.Length)
+        {
+            mesh_r.material.color = Color.Lerp(mesh_r.material.color, col[curr_color], Time.deltaTime * 3);
+
+            transform.Rotate(Random.Range(0, 50) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime);
+
+            global_timer += Time.deltaTime * 5;
+            timer += Time.deltaTime;
+            if (timer >= 0.1f)
+            {
+                curr_color++;
+                timer = 0;
+            }
+            yield return null;
+        }
+
+        // Instancia las partículas de muerte
+        Instantiate(particle_explosion, transform.position, particle_explosion.transform.rotation);
+        // Genera un sonido de explosión
+        SoundManager.instance.InstantiateSound(blood_explosion, transform.position, 0.2f);
+
+        Destroy(gameObject);
     }
 
     private void OnDestroy()

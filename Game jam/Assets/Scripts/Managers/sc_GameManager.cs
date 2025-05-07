@@ -99,9 +99,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        anim_pause.updateMode = AnimatorUpdateMode.UnscaledTime;
-
-        playerLife = PlayerMovement.instance.gameObject.GetComponent<PlayerLife>();
+        if (anim_pause != null)
+            anim_pause.updateMode = AnimatorUpdateMode.UnscaledTime;
+        if (PlayerMovement.instance != null)
+            playerLife = PlayerMovement.instance.gameObject.GetComponent<PlayerLife>();
     }
 
     public void ChangeControllerScheme(string scheme)
@@ -712,6 +713,13 @@ public class GameManager : MonoBehaviour
     }
 
     #region UtilityFunctions
+    public void EnableOrDisablePlayerMovement(bool value)
+    {
+        if (PlayerMovement.instance != null)
+        {
+            PlayerMovement.instance.canMove = value;
+        }
+    }
     public static int GetChildIndex(Transform child)
     {
         Transform parent = child.parent;

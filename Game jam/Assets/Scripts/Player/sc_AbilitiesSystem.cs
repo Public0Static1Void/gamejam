@@ -81,8 +81,12 @@ public class AbilitiesSystem : MonoBehaviour
 
     void Start()
     {
-        gambling_anim = ob_gamblingparent.GetComponent<Animator>();
-        gambling_anim.updateMode = AnimatorUpdateMode.UnscaledTime;
+        if (ob_gamblingparent != null)
+        {
+            gambling_anim = ob_gamblingparent.GetComponent<Animator>();
+            gambling_anim.updateMode = AnimatorUpdateMode.UnscaledTime;
+        }
+        
         CloseGamblingMenu();
 
         LoadAbilitiesData();
@@ -135,15 +139,16 @@ public class AbilitiesSystem : MonoBehaviour
         PlayerData pd = sm.LoadSaveData();
 
         Ability[] abs_level = sm.LoadAbilitiesData();
-        if (abs_level.Length == 0)
+        if (abs_level != null)
         {
-
             abs_level = new Ability[(int)Abilities.LAST_NO_USE];
             for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
             {
+                abs_level[i] = new Ability();
                 abs_level[i].ability_level = 1.0f;
             }
         }
+        
         // Levitate ability
         Ability ab = new Ability();
 
