@@ -12,6 +12,10 @@ public class TutorialManager : MonoBehaviour
     [Header("References")]
     public UnityEngine.UI.Image im_start_bg;
     public GameObject ob_main_ui;
+
+    [Header("Player bars")]
+    public UnityEngine.UI.Image im_hp_bar;
+    public UnityEngine.UI.Image im_stamina_bar;
     void Awake()
     {
         if (instance == null)
@@ -75,6 +79,21 @@ public class TutorialManager : MonoBehaviour
         while (image_to_hide.color.a < 1)
         {
             image_to_hide.color = new Color(col.r, col.g, col.b, image_to_hide.color.a + Time.fixedDeltaTime * hide_speed);
+            yield return null;
+        }
+    }
+
+    // Anima las barras de vida y stamina del jugador al empezar
+    public void AnimatePlayerBarsOnStart()
+    {
+        StartCoroutine(AnimatePlayerBarsOnStartCoroutine());
+    }
+    private IEnumerator AnimatePlayerBarsOnStartCoroutine()
+    {
+        while (im_hp_bar.fillAmount < 1 || im_stamina_bar.fillAmount < 1)
+        {
+            im_stamina_bar.fillAmount += Time.deltaTime * 0.25f;
+            im_hp_bar.fillAmount += Time.deltaTime * 0.5f;
             yield return null;
         }
     }

@@ -78,6 +78,8 @@ public class CameraRotation : MonoBehaviour
 
     void Update()
     {
+        if (!PlayerMovement.instance.canMove) return; // No hará más cálculos si el jugador no se puede mover
+
         // Efecto de respiración en la cámara
         if (!PlayerMovement.instance.slide && bate != null && !bate.isSwinging && PlayerMovement.instance.current_speed > PlayerMovement.instance.speed * 0.25f)
         {
@@ -109,7 +111,6 @@ public class CameraRotation : MonoBehaviour
                                                   transform.localPosition.z < 0.05f ? original_position.z : transform.localPosition.z);
         }
 
-        if (!PlayerMovement.instance.canMove) return; // No hará más cálculos si el jugador no se puede mover
 
         if (inp.x > 1 || inp.x < -1)
         {
@@ -150,6 +151,10 @@ public class CameraRotation : MonoBehaviour
         inp = con.ReadValue<Vector2>();
     }
 
+    public void ShakeCamera(float force)
+    {
+        StartCoroutine(ShakeCameraRoutine(0.5f, force));
+    }
     public void ShakeCamera(float duration, float force)
     {
         StartCoroutine(ShakeCameraRoutine(duration, force));

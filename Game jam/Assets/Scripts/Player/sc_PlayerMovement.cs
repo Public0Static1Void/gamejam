@@ -231,8 +231,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y < 0)
+        if (transform.position.y < -1000)
+        {
             transform.position = start_position;
+            Debug.Log("The player teleported cause it's assumed outside the map (>1000 blocks away)");
+        }
 
         if (sprinting || slide)
         {

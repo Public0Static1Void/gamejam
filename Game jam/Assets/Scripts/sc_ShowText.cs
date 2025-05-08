@@ -8,6 +8,8 @@ public class sc_ShowText : MonoBehaviour
 {
     public UnityEngine.UI.Image im_text_bg;
     public TMP_Text txt_phrase;
+    public float text_speed = 0.025f;
+    [TextArea(5, 10)]
     public string text_to_show;
 
     private bool showing_text = false;
@@ -56,7 +58,7 @@ public class sc_ShowText : MonoBehaviour
             }
 
             timer += Time.deltaTime;
-            if (timer >= 0.05f)
+            if (timer >= text_speed && curr_char < text_to_show.Length)
             {
                 curr_text += text_to_show[curr_char];
                 txt_phrase.text = curr_text;
