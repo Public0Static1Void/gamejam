@@ -91,7 +91,8 @@ public class AbilitiesSystem : MonoBehaviour
 
         LoadAbilitiesData();
 
-        
+        abilities_log = new List<Ability>(abilities); /// Copia la lista
+
         if (ability1_slot == null)
         {
             Debug.LogWarning("No se han añadido todas las referencias a [sc_AbilitiesSystem.cs]");
@@ -99,7 +100,6 @@ public class AbilitiesSystem : MonoBehaviour
         }
 
 
-        abilities_log = new List<Ability>(abilities); /// Copia la lista
 
         // Referencias de los slots de habilidades
 

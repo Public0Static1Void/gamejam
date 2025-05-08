@@ -713,13 +713,6 @@ public class GameManager : MonoBehaviour
     }
 
     #region UtilityFunctions
-    public void EnableOrDisablePlayerMovement(bool value)
-    {
-        if (PlayerMovement.instance != null)
-        {
-            PlayerMovement.instance.canMove = value;
-        }
-    }
     public static int GetChildIndex(Transform child)
     {
         Transform parent = child.parent;

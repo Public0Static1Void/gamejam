@@ -41,6 +41,8 @@ public class Rounds : MonoBehaviour
         else Destroy(this);
 
         enemies_follow = new List<EnemyFollow>();
+
+        if (TutorialManager.instance != null) Destroy(gameObject);
     }
 
     void Update()

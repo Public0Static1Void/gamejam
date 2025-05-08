@@ -59,6 +59,7 @@ public class ScoreManager : MonoBehaviour
             plus_scoretext_list.Add(Instantiate(ui_plus_scoretext));
             plus_scoretext_list[i].transform.SetParent(ui_canvas);
             plus_scoretext_list[i].gameObject.SetActive(false);
+            plus_scoretext_list[i].transform.SetAsFirstSibling();
         }
     }
 

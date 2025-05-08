@@ -73,9 +73,9 @@ public class sc_Abilities : MonoBehaviour
     {
         spawned_hook = Instantiate(prefab_hook).GetComponent<Hook>();
         /// Pone el cooldown al script del hook
-        if (AbilitiesSystem.instance != null && AbilitiesSystem.instance.abilities != null)
+        if (AbilitiesSystem.instance != null && AbilitiesSystem.instance.abilities_log != null && AbilitiesSystem.instance.abilities_log.Count > 0)
         {
-            spawned_hook.cooldown = AbilitiesSystem.instance.abilities[(int)AbilitiesSystem.Abilities.HOOK].cooldown;
+            spawned_hook.cooldown = AbilitiesSystem.instance.abilities_log[(int)AbilitiesSystem.Abilities.HOOK].cooldown;
         }
 
         playerLife = PlayerMovement.instance.GetComponent<PlayerLife>();
