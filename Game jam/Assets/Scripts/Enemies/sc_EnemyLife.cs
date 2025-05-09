@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyFollow))]
 public class EnemyLife : MonoBehaviour
 {
+    public bool invulnerable = false;
+
     public int hp;
     public int max_hp;
 
@@ -33,7 +35,8 @@ public class EnemyLife : MonoBehaviour
     }
     public void Damage(int amount)
     {
-        hp -= amount;
+        if (!invulnerable)
+            hp -= amount;
 
         GameManager.gm.damage_done += amount;
 

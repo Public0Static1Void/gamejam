@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(AudioSource))]
 public class EnemyFollow : MonoBehaviour
 {
     public Transform target;
     public NavMeshAgent agent;
+
+    public bool can_move = true;
 
     public float speed;
 
@@ -26,7 +27,6 @@ public class EnemyFollow : MonoBehaviour
 
     float relocate_timer = 0;
 
-    [HideInInspector]
     public AudioSource audioSource;
 
     void Start()
@@ -46,7 +46,8 @@ public class EnemyFollow : MonoBehaviour
         if (rb == null) return;
 
         rb.isKinematic = false;
-        agent.enabled = false;
+        if (agent != null)
+            agent.enabled = false;
         collider.isTrigger = false;
         rb.velocity = dir;
     }
@@ -60,7 +61,8 @@ public class EnemyFollow : MonoBehaviour
             if (Physics.Raycast(transform.position, Vector2.down, transform.localScale.y + 0.1f))
             {
                 rb.isKinematic = true;
-                agent.enabled = true;
+                if (agent != null)
+                    agent.enabled = true;
                 collider.isTrigger = true;
             }
             else
@@ -69,33 +71,43 @@ public class EnemyFollow : MonoBehaviour
             }
         }
 
-        if (target != null && agent.isOnNavMesh)
+        if (can_move)
         {
-            agent.SetDestination(target.transform.position);
-            /*Vector3 dir = target.position - transform.position;
-            Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
-            transform.rotation = rot;
+            if (target != null && agent.isOnNavMesh)
+            {
+                agent.SetDestination(target.transform.position);
+                /*Vector3 dir = target.position - transform.position;
+                Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
+                transform.rotation = rot;
 
-            if (Vector3.Distance(transform.position, target.position) > EkkoUlt.instance.transform.localScale.x / 2)
-            {
-                rb.velocity = new Vector3(transform.forward.x * speed * Time.deltaTime, rb.velocity.y, transform.forward.z * speed * Time.deltaTime);
-                //transform.Translate(transform.forward * 10 * Time.deltaTime);
-            }*/
-        }
-        if (!agent.isOnNavMesh)
-        {
-            timer += Time.deltaTime;
-            if (timer > 15 || rb.isKinematic) /// Si pasa cierto tiempo sin estar en la navmesh o es kinematic sin estar en ella se destruye
-            {
-                Destroy(this.gameObject);
+                if (Vector3.Distance(transform.position, target.position) > EkkoUlt.instance.transform.localScale.x / 2)
+                {
+                    rb.velocity = new Vector3(transform.forward.x * speed * Time.deltaTime, rb.velocity.y, transform.forward.z * speed * Time.deltaTime);
+                    //transform.Translate(transform.forward * 10 * Time.deltaTime);
+                }*/
             }
+            if (!agent.isOnNavMesh)
+            {
+                timer += Time.deltaTime;
+                if (timer > 15 || rb.isKinematic) /// Si pasa cierto tiempo sin estar en la navmesh o es kinematic sin estar en ella se destruye
+                {
+                    Destroy(this.gameObject);
+                }
+            }
+
+            if (agent.isOnNavMesh && !rb.isKinematic)
+                rb.velocity *= 0.75f;
         }
-        if (agent.isOnNavMesh && !rb.isKinematic)
-            rb.velocity *= 0.75f;
+        else if (!rb.isKinematic && Physics.Raycast(transform.position, Vector3.down, 0.25f))
+        {
+            rb.velocity *= 0.8f;
+        }
     }
 
     private void Update()
     {
+        if (!can_move) return;
+
         if (Vector3.Distance(transform.position, target.transform.position) <= 3)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(((target.position - Vector3.up / 2) - transform.position).normalized), Time.deltaTime);

@@ -36,7 +36,7 @@ public class sc_bate : MonoBehaviour
 
     public void OnSwing(InputAction.CallbackContext con)
     {
-        if (con.performed && canSwing && !isSwinging && PlayerMovement.instance.current_stamina - PlayerMovement.instance.max_stamina * 0.1f > 0)
+        if (con.performed && gameObject.activeSelf && canSwing && !isSwinging && PlayerMovement.instance.current_stamina - PlayerMovement.instance.max_stamina * 0.1f > 0)
         {
             isSwinging = true;
             anim.SetBool("swing", true);

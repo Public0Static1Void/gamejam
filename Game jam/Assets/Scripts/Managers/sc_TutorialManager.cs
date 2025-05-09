@@ -51,6 +51,28 @@ public class TutorialManager : MonoBehaviour
     }
     #endregion
 
+    #region GameObjects
+    public void TranslateObjectUp(Transform ob)
+    {
+        StartCoroutine(TranslateObjectRoutine(ob, Vector3.up, 2));
+    }
+    public void TranslateObjectDown(Transform ob)
+    {
+        StartCoroutine(TranslateObjectRoutine(ob, -Vector3.up, 2));
+    }
+
+    private IEnumerator TranslateObjectRoutine(Transform ob, Vector3 dir, float duration)
+    {
+        float timer = 0;
+        while (timer < duration)
+        {
+            ob.Translate(dir * Time.deltaTime * 2);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+    }
+    #endregion
+
     #region UI
     public void HideImage(UnityEngine.UI.Image image_to_hide)
     {

@@ -182,7 +182,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else // El jugador está descendiendo una pendiente
             {
-                current_speed += Time.fixedDeltaTime * ((sprinting ? 0.5f : 5) * current_speed + target_speed);
+                current_speed += Time.fixedDeltaTime * ((sprinting ? 1f : 10) * current_speed + target_speed);
                 if (current_speed > 800) current_speed = 800;
             }
 
@@ -342,6 +342,8 @@ public class PlayerMovement : MonoBehaviour
                     current_speed = target_speed * slide_walking_multiplier;
                 else
                     current_speed = target_speed * slide_sprinting_multiplier;
+
+                rb.velocity = new Vector3(rb.velocity.x, -10, rb.velocity.z);
             }
         }
         

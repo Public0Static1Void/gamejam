@@ -417,9 +417,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   agent: {fileID: 0}
+  can_move: 1
   speed: 100
   rb: {fileID: 0}
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 1050810483304101536}
 --- !u!136 &7299681474393857685
 CapsuleCollider:
   m_ObjectHideFlags: 0
