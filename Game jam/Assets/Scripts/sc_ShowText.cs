@@ -45,6 +45,11 @@ public class sc_ShowText : MonoBehaviour
         int curr_char = 0;
 
         string curr_text = "";
+
+        txt_phrase.text = text_to_show;
+        im_text_bg.rectTransform.sizeDelta = new Vector2(im_text_bg.rectTransform.sizeDelta.x, txt_phrase.preferredHeight * 2.5f > 600 ? 600 : txt_phrase.preferredHeight * 2.5f);
+        txt_phrase.text = "";
+
         while (txt_phrase.text.Length < text_to_show.Length && curr_char < text_to_show.Length)
         {
             if (text_to_show[curr_char] == '<')

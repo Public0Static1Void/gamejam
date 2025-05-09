@@ -54,7 +54,7 @@ public class EnemyFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (relocating) return;
+        if (relocating || !can_move) return;
 
         if (rb.velocity.magnitude > -0.05f && rb.velocity.magnitude < 0.05f)
         {
@@ -71,37 +71,30 @@ public class EnemyFollow : MonoBehaviour
             }
         }
 
-        if (can_move)
+        if (target != null && agent.isOnNavMesh)
         {
-            if (target != null && agent.isOnNavMesh)
-            {
-                agent.SetDestination(target.transform.position);
-                /*Vector3 dir = target.position - transform.position;
-                Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
-                transform.rotation = rot;
+            agent.SetDestination(target.transform.position);
+            /*Vector3 dir = target.position - transform.position;
+            Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
+            transform.rotation = rot;
 
-                if (Vector3.Distance(transform.position, target.position) > EkkoUlt.instance.transform.localScale.x / 2)
-                {
-                    rb.velocity = new Vector3(transform.forward.x * speed * Time.deltaTime, rb.velocity.y, transform.forward.z * speed * Time.deltaTime);
-                    //transform.Translate(transform.forward * 10 * Time.deltaTime);
-                }*/
-            }
-            if (!agent.isOnNavMesh)
+            if (Vector3.Distance(transform.position, target.position) > EkkoUlt.instance.transform.localScale.x / 2)
             {
-                timer += Time.deltaTime;
-                if (timer > 15 || rb.isKinematic) /// Si pasa cierto tiempo sin estar en la navmesh o es kinematic sin estar en ella se destruye
-                {
-                    Destroy(this.gameObject);
-                }
-            }
-
-            if (agent.isOnNavMesh && !rb.isKinematic)
-                rb.velocity *= 0.75f;
+                rb.velocity = new Vector3(transform.forward.x * speed * Time.deltaTime, rb.velocity.y, transform.forward.z * speed * Time.deltaTime);
+                //transform.Translate(transform.forward * 10 * Time.deltaTime);
+            }*/
         }
-        else if (!rb.isKinematic && Physics.Raycast(transform.position, Vector3.down, 0.25f))
+        if (!agent.isOnNavMesh)
         {
-            rb.velocity *= 0.8f;
+            timer += Time.deltaTime;
+            if (timer > 15 || rb.isKinematic) /// Si pasa cierto tiempo sin estar en la navmesh o es kinematic sin estar en ella se destruye
+            {
+                Destroy(this.gameObject);
+            }
         }
+
+        if (agent.isOnNavMesh && !rb.isKinematic)
+            rb.velocity *= 0.75f;
     }
 
     private void Update()

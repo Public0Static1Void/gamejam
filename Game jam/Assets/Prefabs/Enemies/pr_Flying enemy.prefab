@@ -463,10 +463,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 3
+  m_Radius: 1
+  m_Height: 0.5
   m_Direction: 1
-  m_Center: {x: 0, y: 1.01, z: 0}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!114 &6891500263985024543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,6 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4de57628d4d29c04388a3934af1585d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invulnerable: 0
   hp: 10
   max_hp: 10
   clip_damaged:
@@ -487,6 +488,7 @@ MonoBehaviour:
   clip_growl: {fileID: 8300000, guid: 8c6bffc97b0a3a241827da1e8b4d8aff, type: 3}
   blood_explosion: {fileID: 8300000, guid: 158e1c912f63e034fbe52ee99b9baa4d, type: 3}
   particle_explosion: {fileID: 7637573092767477360, guid: 5c3adb5c97a56d44996a7e83fe2d670d, type: 3}
+  particle_hit: {fileID: 7778511957972836761, guid: 72f119dd03395384cbb33ebbeafa3cd2, type: 3}
 --- !u!4 &2143835786586986575 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8b91e79c4b8b40847aabfb0efa3ebed0, type: 3}

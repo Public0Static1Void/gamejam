@@ -392,53 +392,7 @@ public class AbilitiesSystem : MonoBehaviour
                 slots_buttons[i].onClick.RemoveAllListeners();
                 slots_buttons[i].onClick.AddListener(() =>
                 {
-                    switch (abilities_to_show[ab_num].rarity)
-                    {
-                        case AbilityType.ULTIMATE: // habilidades activadas al volver en el tiempo
-                            ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)abilities_to_show[ab_num].type].Invoke());
-
-                            AddAbilityIconOnUI(abilities_to_show[ab_num]);
-                            break;
-
-
-                        case AbilityType.BASIC: // habilidades melee
-                            if (AttackSystem.instance.equipped_attacks.Count >= 2)
-                            {
-                                attack_ab_chooser.gameObject.SetActive(true);
-                                // Selecciona el primer botón (navegación por mando)
-                                attack_abilities_btn[0].Select();
-
-                                // Inicializa la UI
-                                for (int j = 0; j < attack_ab_chooser.childCount && j < AttackSystem.instance.equipped_attacks.Count; j++)
-                                {
-                                    attack_abilities_im[j].sprite = AttackSystem.instance.equipped_attacks[j].icon;
-                                    int ab_id = j;
-                                    attack_abilities_btn[j].onClick.AddListener(() =>
-                                    {
-                                        // Quita la habilidad seleccionada y pone la nueva
-                                        AttackSystem.instance.equipped_attacks.RemoveAt(ab_id);
-                                        AttackSystem.instance.AddAttack(abilities_to_show[ab_num]);
-
-                                        attack_ab_chooser.gameObject.SetActive(false);
-                                        CloseGamblingMenu();
-                                    });
-                                }
-                            }
-                            else
-                            {
-                                AttackSystem.instance.AddAttack(abilities_to_show[ab_num]);
-                                CloseGamblingMenu();
-                            }
-                            break;
-
-                        case AbilityType.PASSIVE:
-                            // Inicializa la habilidad pasiva
-                            abilities_to_show[ab_num].ability_event.Invoke();
-
-                            AddAbilityIconOnUI(abilities_to_show[ab_num]);
-                            break;
-                    }
-
+                    InitAbility(abilities_to_show[ab_num]);
 
                     Debug.Log("Ability selected: " + abilities_to_show[ab_num].name);
 
@@ -577,6 +531,73 @@ public class AbilitiesSystem : MonoBehaviour
 
             im_description.rectTransform.anchoredPosition = txt_description.rectTransform.anchoredPosition;
             yield return null;
+        }
+    }
+
+    private void InitAbility(Ability ab)
+    {
+        switch (ab.rarity)
+        {
+            case AbilityType.ULTIMATE: // habilidades activadas al volver en el tiempo
+                ReturnScript.instance.ability.AddListener(() => methods_abilities[(int)ab.type].Invoke());
+
+                AddAbilityIconOnUI(ab);
+                break;
+
+
+            case AbilityType.BASIC: // habilidades melee
+                if (AttackSystem.instance.equipped_attacks.Count >= 2)
+                {
+                    attack_ab_chooser.gameObject.SetActive(true);
+                    // Selecciona el primer botón (navegación por mando)
+                    attack_abilities_btn[0].Select();
+
+                    // Inicializa la UI
+                    for (int j = 0; j < attack_ab_chooser.childCount && j < AttackSystem.instance.equipped_attacks.Count; j++)
+                    {
+                        attack_abilities_im[j].sprite = AttackSystem.instance.equipped_attacks[j].icon;
+                        int ab_id = j;
+                        attack_abilities_btn[j].onClick.AddListener(() =>
+                        {
+                            // Quita la habilidad seleccionada y pone la nueva
+                            AttackSystem.instance.equipped_attacks.RemoveAt(ab_id);
+                            AttackSystem.instance.AddAttack(ab);
+
+                            attack_ab_chooser.gameObject.SetActive(false);
+                            CloseGamblingMenu();
+                        });
+                    }
+                }
+                else
+                {
+                    AttackSystem.instance.AddAttack(ab);
+                    CloseGamblingMenu();
+                }
+                break;
+
+            case AbilityType.PASSIVE:
+                // Inicializa la habilidad pasiva
+                ab.ability_event.Invoke();
+
+                AddAbilityIconOnUI(ab);
+                break;
+        }
+    }
+
+    public void AddAbility(string name)
+    {
+        for (int i = 0; i < abilities.Count; i++)
+        {
+            if (name == abilities[i].name)
+            {
+                abilities_equipped.Add(abilities[i]);
+
+                // Añade la habilidad
+                InitAbility(abilities[i]);
+
+
+                abilities.RemoveAt(i); /// Elimina la habilidad para que no pueda volver a tocar
+            }
         }
     }
 

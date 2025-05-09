@@ -18,6 +18,7 @@ public class EnemyLife : MonoBehaviour
 
     [Header("Particles")]
     public ParticleSystem particle_explosion;
+    public ParticleSystem particle_hit;
 
     float random_pitch = 0;
     private void Start()
@@ -35,11 +36,7 @@ public class EnemyLife : MonoBehaviour
     }
     public void Damage(int amount)
     {
-        if (!invulnerable)
-            hp -= amount;
-
-        GameManager.gm.damage_done += amount;
-
+        Instantiate(particle_hit, transform.position, Quaternion.identity);
         // El enemigo hace un sonido de dañado
         if (enemyFollow.audioSource != null)
         {
@@ -47,6 +44,14 @@ public class EnemyLife : MonoBehaviour
             enemyFollow.audioSource.loop = false;
             enemyFollow.audioSource.Play();
         }
+
+        if (invulnerable) return;
+
+        hp -= amount;
+
+        GameManager.gm.damage_done += amount;
+
+        
         if (hp <= 0)
         {
             GameManager.gm.enemies_killed++;
