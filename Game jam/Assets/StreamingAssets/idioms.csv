@@ -1,0 +1,41 @@
+Key;Spanish;English
+Levitate name;Flotación;Levitate
+Levitate description;Volviendo en el tiempo, todos los enemigos que toques empezarán a levitar para segundos después ser estrellados contra el suelo.;When you are returning in time, all the enemies that you touch will start to levitate and crushed on the ground when you finish returning.
+Exploding name;Senda explosiva;Exploding path
+Exploding description;Volviendo en el tiempo, el camino que has hecho empezará a explotar de final a principio.;While you are returning the path you follow will start to explode, damaging and launching your enemies.
+Group name;Group n' explode;Group n' explode
+Group description;Volviendo en el tiempo todos los enemigos que toques se agruparán.;While you are returning, all the enemies you touch will start to levitate to you, grouping them. The more enemies you group, the faster will go so you can explode them!
+Mine name;Minas;Path mine
+Mine description;Planta una mina por segundo mientras vuelves en el tiempo.;Place a mine per second when you are returning. Mines explode dealing {pd.damage * 2} when in contact with an enemy.
+Hook name;Gancho;Hook
+Hook description;Lanza un gancho y atrae al enemigo que atrapes. Si vuelves a pulsar el botón al engancharlo, saltas hacia él;Launch a hook forward and catch the first enemy hit, pulling it towards you after a short delay. If you press the ability again, you jump to the enemy instead.
+Stomp name;Pisotón;Stomp
+Stomp description;Élevate por los aires para caer rápidamente al suelo y levantar a los enemigos alrededor.;Jump to immediataly stomp de ground, elevating your enemies
+HitNBye name;Hit N' Bye;Hit N' Bye
+HitNBye description;[PASIVA]\nCuando un enemigo te haga daño, tienes 1 entre 3 posibilidades de empujarlo;[PASSIVE]\nWhen taking damage, You have a 1 on 3 chance of launching the enemy away, scaling the distance with your damage ({pd.damage})
+Bloodthirsty name;Sanguinario;Bloodthirsty
+Bloodthirsty description;[PASIVA]\nTe curas un 15% del daño que le hagas a tus enemigos;[PASSIVE]\nHeal for 15% of your damage
+Hologram name;Cuerpo holográfico;Hologram body
+Hologram description;Presiona el botón de ataque para volverte intangible por unos segundos, ganando velocidad;Press the attack button to become intangible for a few seconds, augmenting your speed
+Monkey name;Señuelo de mono;Monkey bait
+Monkey description;Usa el botón de ataque para lanzar un mono que atrae a los enemigos, para después explotar;Press the attack button to launch a Monkey that will attract the enemies for a few seconds
+KillNSpeed name;Kill n' speed;Kill n' speed
+KillNSpeed description;Gana velocidad por unos segundos al matar enemigos;Get additional speed for a few seconds when killing an enemy, infinitely stackable
+;;
+Tutorial WASD keyboard;Presiona <color=yellow>WASD</color> para moverte;Press <color=yellow>WASD</color> to move
+Tutorial WASD gamepad;Presiona la <color=yellow>palanca izquierda</color> para moverte;Press the <color=yellow>left joystick</color> to move
+Tutorial SPRINT keyboard;Presiona <color=yellow>mayúsculas izquierdo</color> para moverte;Press the <color=yellow>left shift</color> to sprint
+Tutorial SPRINT gamepad;Pulsa la <color=yellow>palanca izquierda</color> para correr;Press the <color=yellow>left stick</color> to sprint
+Tutorial SLIDE keyboard;Pulsa <color=yellow>control izquierdo</color> para deslizarte;Press <color=yellow>left control</color> to slide
+Tutorial SLIDE gamepad;Pulsa la <color=yellow>palanca derecha</color> para deslizarte;Press the  <color=yellow>left stick</color> to slide
+Tutorial SLIDE 2;<b>Aceleras</b> mientras te deslizas por pendientes;You <b>accelerate</b> while sliding downhills
+Tutorial ATTACK keyboard;Pulsa <color=yellow>click izquierdo</color> para atacar;Use the <color=yellow>Left click</color> to attack
+Tutorial ATTACK gamepad PS;Pulsa <color=yellow>R1</color> para atacar;Press the <color=yellow>R1</color> to attack
+Tutorial ATTACK gamepad XB;Pulsa <color=yellow>RB</color> para atacar;Press the <color=yellow>RB</color> to attack
+Tutorial ATTACK SLIDE;<b>Empujas</b> a tus enemigos al deslizarte;You <b>push</b> your enemies while sliding
+Tutorial ABILITIES keyboard;Puedes usar <color=yellow>tres tipos de habilidades</color>\n\nPulsa <color=yellow>espacio</color> para volver en el tiempo y activar tus habilidades definitivas;You can use <color=yellow>three types of abilities</color>\n\nPress <color=yellow>space</color> to turn back time and use your ultimate ones
+Tutorial ABILITIES gamepad PS;Puedes usar <color=yellow>tres tipos de habilidades</color>\n\nPulsa <color=yellow>CUADRADO</color> para volver en el tiempo y activar tus habilidades definitivas;You can use <color=yellow>three types of abilities</color>\n\nPress <color=yellow>SQUARE</color> to turn back time and use your ultimate ones
+Tutorial ABILITIES gamepad XB;Puedes usar <color=yellow>tres tipos de habilidades</color>\n\nPulsa <color=yellow>X</color> para volver en el tiempo y activar tus habilidades definitivas;You can use <color=yellow>three types of abilities</color>\n\nPress <color=yellow>X</color> to turn back time and use your ultimate ones
+Tutorial ATTACK_AB keyboard;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>click derecho</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>right click</color> to use them.
+Tutorial ATTACK_AB gamepad PS;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>L1</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>L1</color> to use them.
+Tutorial ATTACK_AB gamepad XB;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>LB</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>LB</color> to use them.

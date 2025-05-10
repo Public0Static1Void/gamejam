@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class sc_ShowText : MonoBehaviour
@@ -9,10 +10,39 @@ public class sc_ShowText : MonoBehaviour
     public UnityEngine.UI.Image im_text_bg;
     public TMP_Text txt_phrase;
     public float text_speed = 0.025f;
-    [TextArea(5, 10)]
-    public string text_to_show;
+
+    public string text_key;
+    private string text_to_show;
 
     private bool showing_text = false;
+
+    private void Start()
+    {
+        LoadText();
+    }
+
+    public void LoadText()
+    {
+        if (text_key.Contains("keyboard"))
+        {
+            if (!GameManager.gm.IsPlayerOnKeyboard())
+            {
+                text_key.Replace("keyboard", "gamepad");
+                
+                string controller_name = Gamepad.current.device.displayName;
+                if (controller_name.ToLower().Contains("dualshock") || controller_name.ToLower().Contains("dualsense"))
+                {
+                    text_key += " PS";
+                }
+                else if (controller_name.ToLower().Contains("xbox") || controller_name.ToLower().Contains("xinput"))
+                {
+                    text_key += " XB";
+                }
+            }
+        }
+
+        text_to_show = IdiomManager.instance.GetKeyText(text_key);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -61,6 +91,7 @@ public class sc_ShowText : MonoBehaviour
                     curr_char = tag_end + 1;
                 }
             }
+
 
             timer += Time.deltaTime;
             if (timer >= text_speed && curr_char < text_to_show.Length)
