@@ -114,7 +114,7 @@ public class TutorialManager : MonoBehaviour
     {
         while (im_hp_bar.fillAmount < 1 || im_stamina_bar.fillAmount < 1)
         {
-            im_stamina_bar.fillAmount += Time.deltaTime * 0.25f;
+            im_stamina_bar.fillAmount += Time.deltaTime * 0.4f;
             im_hp_bar.fillAmount += Time.deltaTime * 0.5f;
             yield return null;
         }

@@ -10,6 +10,9 @@ public class sc_TriggerEventExecuter : MonoBehaviour
     [Description("")]
     public string target_tag = "";
 
+    public bool execute_one_time = false;
+    private bool keep_executing = true;
+
     [Header("Events")]
     public UnityEvent triggerEnterEvent;
     public UnityEvent triggerExitEvent;
@@ -32,30 +35,42 @@ public class sc_TriggerEventExecuter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!keep_executing) return;
+
         if (target_tag != "")
         {
             if (other.CompareTag(target_tag))
             {
                 triggerEnterEvent.Invoke();
+                if (execute_one_time)
+                    keep_executing = false;
             }
         }
         else
         {
             triggerEnterEvent.Invoke();
+            if (execute_one_time)
+                keep_executing = false;
         }
     }
     private void OnTriggerExit(Collider other)
     {
+        if (!keep_executing) return;
+
         if (target_tag != "")
         {
             if (other.CompareTag(target_tag))
             {
                 triggerExitEvent.Invoke();
+                if (execute_one_time)
+                    keep_executing = false;
             }
         }
         else
         {
             triggerExitEvent.Invoke();
+            if (execute_one_time)
+                keep_executing = false;
         }
     }
 }

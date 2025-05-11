@@ -19396,6 +19396,7 @@ MonoBehaviour:
   anim: {fileID: 1125450167}
   clip_swing: {fileID: 8300000, guid: 87465848556a39440bc5d5c5cfd920c9, type: 3}
   clip_hit: {fileID: 8300000, guid: 81f1dd7f4be9bf6499b6f6393b706a34, type: 3}
+  canSwing: 1
 --- !u!95 &510706848
 Animator:
   serializedVersion: 5
@@ -27778,7 +27779,7 @@ MonoBehaviour:
   - {fileID: 3320576298704837473, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
   - {fileID: 6845868788880733797, guid: c898474947a343e4eaf251cf5189d333, type: 3}
   enemies_follow: []
-  enemyRound: 3
+  enemyRound: 1
   clip_roundstart: {fileID: 8300000, guid: 947e275716657e74d816fdd0506cf4da, type: 3}
   txt_round: {fileID: 664061370}
 --- !u!4 &843739052
@@ -58207,13 +58208,13 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 963194228}
-  - {fileID: 437133220}
   - {fileID: 197676179}
   - {fileID: 1125450162}
   - {fileID: 1456147742}
   - {fileID: 1396297743}
   - {fileID: 137611625}
   - {fileID: 494195017}
+  - {fileID: 437133220}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

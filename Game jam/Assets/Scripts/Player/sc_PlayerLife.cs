@@ -245,7 +245,7 @@ public class PlayerLife : MonoBehaviour
             StartCoroutine(InstantiateDamageDirection(coll.transform.position));
 
             // Aplica el daño
-            Damage(2);
+            Damage(1);
             damaged = true;
         }
     }

@@ -77,6 +77,9 @@ public class AbilitiesSystem : MonoBehaviour
             instance = this;
         else
             Destroy(this);
+
+        LoadAbilitiesData();
+        abilities_log = new List<Ability>(abilities); /// Copia la lista
     }
 
     void Start()
@@ -88,10 +91,6 @@ public class AbilitiesSystem : MonoBehaviour
         }
         
         CloseGamblingMenu();
-
-        LoadAbilitiesData();
-
-        abilities_log = new List<Ability>(abilities); /// Copia la lista
 
         if (ability1_slot == null)
         {

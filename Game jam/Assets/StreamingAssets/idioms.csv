@@ -24,7 +24,7 @@ KillNSpeed description;Gana velocidad por unos segundos al matar enemigos;Get ad
 ;;
 Tutorial WASD keyboard;Presiona <color=yellow>WASD</color> para moverte;Press <color=yellow>WASD</color> to move
 Tutorial WASD gamepad;Presiona la <color=yellow>palanca izquierda</color> para moverte;Press the <color=yellow>left joystick</color> to move
-Tutorial SPRINT keyboard;Presiona <color=yellow>mayúsculas izquierdo</color> para moverte;Press the <color=yellow>left shift</color> to sprint
+Tutorial SPRINT keyboard;Presiona <color=yellow>mayúsculas izquierdo</color> para correr;Press the <color=yellow>left shift</color> to sprint
 Tutorial SPRINT gamepad;Pulsa la <color=yellow>palanca izquierda</color> para correr;Press the <color=yellow>left stick</color> to sprint
 Tutorial SLIDE keyboard;Pulsa <color=yellow>control izquierdo</color> para deslizarte;Press <color=yellow>left control</color> to slide
 Tutorial SLIDE gamepad;Pulsa la <color=yellow>palanca derecha</color> para deslizarte;Press the  <color=yellow>left stick</color> to slide
@@ -39,3 +39,5 @@ Tutorial ABILITIES gamepad XB;Puedes usar <color=yellow>tres tipos de habilidade
 Tutorial ATTACK_AB keyboard;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>click derecho</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>right click</color> to use them.
 Tutorial ATTACK_AB gamepad PS;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>L1</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>L1</color> to use them.
 Tutorial ATTACK_AB gamepad XB;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>LB</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>LB</color> to use them.
+;;
+Tutorial DESCEND;<color=red>Desciende a tu miseria</color>;<color=red>Descend to your misery</color>
