@@ -183,8 +183,29 @@ public class TutorialManager : MonoBehaviour
             {
                 if (text[curr_char + 1] == 'w')
                 {
-                    wait_time = float.Parse("" + text[curr_char + 3]);
-                    curr_char = curr_char + 5;
+                    int finish_pos = curr_char;
+                    while (finish_pos < text.Length && text[finish_pos] != '>')
+                    {
+                        finish_pos++;
+                    }
+
+                    string num = "";
+                    for (int i = curr_char; i < finish_pos; i++)
+                    {
+                        if (int.TryParse("" + text[i], out int integer))
+                        {
+                            num += integer.ToString();
+                        }
+                        else if (text[i] == ',')
+                        {
+                            num += ',';
+                        }
+                    }
+                    if (num != "")
+                    {
+                        wait_time = float.Parse(num);
+                        curr_char = finish_pos + 1;
+                    }
                 }
                 else
                 {
@@ -220,7 +241,7 @@ public class TutorialManager : MonoBehaviour
         Time.timeScale = 0; // Detiene todo el movimiento
         PlayerMovement.instance.rb.isKinematic = true;
 
-        string text = "Starting program.<w=1>.<w=1>.";
+        string text = "Starting program.<w=0,5f>.<w=0,5>.";
         StartCoroutine(ShowText(text));
 
         while (showing_text) /// Espera a que termine la animación del texto
@@ -229,7 +250,7 @@ public class TutorialManager : MonoBehaviour
         }
         init_text.text += '\n'; /// Añade un salto de línea
 
-        text = "Program started.";
+        text = "<w=0,5>Program started.";
         StartCoroutine(ShowText(text));
 
         while (showing_text) /// Espera a que termine la animación del texto
@@ -240,7 +261,7 @@ public class TutorialManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.5f);
 
 
-        text = "Initing player configuration...";
+        text = "<w=0,25>Initing player configuration...";
         StartCoroutine(ShowText(text));
         /// Espera a que termine la animación del texto
         while (showing_text) /// Espera a que termine la animación del texto
@@ -251,7 +272,7 @@ public class TutorialManager : MonoBehaviour
         init_text.text += '\n';
 
 
-        text = "<color=red>[ERROR]</color> <w=1> Couldn't find a saved configuration.";
+        text = "<w=0,25><color=red>[ERROR]</color> <w=0,25> Couldn't find a saved configuration.";
         StartCoroutine(ShowText(text));
 
         while (showing_text) 
@@ -262,7 +283,7 @@ public class TutorialManager : MonoBehaviour
         init_text.text += '\n';
 
 
-        text = "Initing manual configuration.";
+        text = "<w=0,15>Initing manual configuration.";
         StartCoroutine(ShowText(text));
         while (showing_text) /// Espera a que termine la animación del texto
         {
@@ -270,9 +291,14 @@ public class TutorialManager : MonoBehaviour
         }
         init_text.text += '\n';
 
-        text = "<color=blue>[AUDIO] Set your preffered volume:";
+        text = "<w=0,5><color=blue>[AUDIO]</color> <color=red>ERROR</color>";
+        yield return new WaitForSecondsRealtime(1f);
         StartCoroutine(ShowText(text));
 
+        while (showing_text) /// Espera a que termine la animación del texto
+        {
+            yield return null;
+        }
 
         // Set audio settings -----------------------------------------------------------------
         ob_audio_menu.SetActive(true);
