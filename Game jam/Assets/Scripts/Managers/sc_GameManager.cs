@@ -760,5 +760,10 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
     }
+
+    public static float GetPercentage(float value, float min, float max)
+    {
+        return ((value - min) / max - min) * 100f;
+    }
     #endregion
 }
