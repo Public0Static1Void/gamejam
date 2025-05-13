@@ -65,3 +65,15 @@ Title fullscreen;Pantalla completa;Fullscreen
 Apply text;Aplicar;Apply
 Title production;Una producción de <color=blue>Public Static Games</color>;A <color=blue>Public Static Games</color> production
 ;;
+Title press any key;Pulsa cualquier tecla para empezar...;Press any key to start...
+Play button text;Jugar;Play
+Options button text;Opciones;Options
+Quit button text;Salir;Quit
+Title abilities;Habilidades;Abilities
+Title stats;Estadísticas;Stats
+stamina text;ESTAMINA;STAMINA
+damage text;DAÑO;DAMAGE
+speed text;VELOCIDAD;SPEED
+Volume title;Volumen;Volume
+;;
+Enter game title;Comenzar partida;Enter game

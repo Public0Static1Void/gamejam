@@ -67,6 +67,7 @@ public class menus : MonoBehaviour
     public Sprite sprite_hologram;
     public Sprite sprite_monkey;
     public Sprite sprite_killnspeed;
+    public Sprite sprite_recharge;
 
     [Header("Abilities ref")]
     public ScrollRect ab_scroll;
@@ -111,7 +112,8 @@ public class menus : MonoBehaviour
             sprite_bloodthirsty,
             sprite_hologram,
             sprite_monkey,
-            sprite_killnspeed
+            sprite_killnspeed,
+            sprite_recharge
         };
 
         LoadAbilities();

@@ -93,6 +93,10 @@ public class sc_MenuAnimator : MonoBehaviour
                     {
                         menu_anim.Play("play_pressed");
                         SoundManager.instance.InstantiateSound(clip_game_started, transform.position);
+
+                        StopCoroutine("UIFadeOutFadeInRepeate");
+                        UIFadeOut(txt_pressanykey);
+
                         btn_play.Select(); /// Selecciona el botón de play
                         play_pressed = true;
                     }
@@ -141,6 +145,10 @@ public class sc_MenuAnimator : MonoBehaviour
             play_pressed = true;
             menu_anim.Play("play_pressed");
             SoundManager.instance.InstantiateSound(clip_game_started, transform.position);
+
+            txt_pressanykey.gameObject.SetActive(false);
+            StopCoroutine("UIFadeOutFadeInRepeate");
+            UIFadeOut(txt_pressanykey);
         }
     }
     public void EnterGame(InputAction.CallbackContext con)

@@ -22,7 +22,14 @@ public class IdiomManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         else
+        {
+            // Añade los objetos a actualizar a la instancia ya creada
+            if (menu_objects.Count > 0)
+                instance.menu_objects.AddRange(menu_objects);
+            // Selecciona el mismo idioma que la instancia
+            current_language = instance.current_language;
             Destroy(gameObject);
+        }
 
         SetIdiom(current_language);
     }
