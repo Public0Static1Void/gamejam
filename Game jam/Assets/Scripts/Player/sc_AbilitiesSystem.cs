@@ -19,7 +19,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     public bool gambling_open = false;
 
-    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, HOLOGRAM_BODY, MONKEY_BAIT, KILLNSPEED, LAST_NO_USE }
+    public enum Abilities { LEVITATE, EXPLODE_PATH, GROUP, MINE, HOOK, STOMP, BYEBYE, BLOODTHIRSTY, HOLOGRAM_BODY, MONKEY_BAIT, KILLNSPEED, RECHARGE, LAST_NO_USE }
     public enum AbilityType { BASIC, ULTIMATE, PASSIVE, LAST_NO_USE }
 
     [Header("XP")]
@@ -64,6 +64,7 @@ public class AbilitiesSystem : MonoBehaviour
     public Sprite sprite_hologram;
     public Sprite sprite_monkey;
     public Sprite sprite_killnspeed;
+    public Sprite sprite_recharge;
 
 
     private Animator gambling_anim;
@@ -151,8 +152,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Levitate ability
         Ability ab = new Ability();
 
-        ab.name = "Levitate";
-        ab.description = "When you are returning in time, all the enemies that you touch will start to levitate and crushed on the ground when you finish returning.";
+        ab.name = IdiomManager.instance.GetKeyText("Levitate name");
+        ab.description = IdiomManager.instance.GetKeyText("Levitate description");
         ab.icon = sprite_levitate;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -161,8 +162,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Exploding path ability
         ab = new Ability();
 
-        ab.name = "Exploding path";
-        ab.description = "While you are returning the path you follow will start to explode, damaging and launching your enemies.";
+        ab.name = IdiomManager.instance.GetKeyText("Exploding name");
+        ab.description = IdiomManager.instance.GetKeyText("Exploding description");
         ab.icon = sprite_explodepath;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -171,8 +172,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Group ability
         ab = new Ability();
 
-        ab.name = "Group n' xplode";
-        ab.description = "While you are returning, all the enemies you touch will start to levitate to you, grouping them. The more enemies you group, the faster will go so you can explode them!";
+        ab.name = IdiomManager.instance.GetKeyText("Group name");
+        ab.description = IdiomManager.instance.GetKeyText("Group description");
         ab.icon = sprite_group;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -181,8 +182,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Plant mine ability
         ab = new Ability();
 
-        ab.name = "Path mine";
-        ab.description = $"Place a mine per second when you are returning. Mines explode dealing {pd.damage * 2} when in contact with an enemy.";
+        ab.name = IdiomManager.instance.GetKeyText("Mine name");
+        ab.description = IdiomManager.instance.GetKeyText("Mine description");
         ab.icon = sprite_mine;
         ab.rarity = AbilityType.ULTIMATE;
 
@@ -191,8 +192,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Hook
         ab = new Ability();
 
-        ab.name = "Hook";
-        ab.description = "Launch a hook forward and catch the first enemy hit, pulling it towards you after a short delay. If you press the ability again, you jump to the enemy instead.";
+        ab.name = IdiomManager.instance.GetKeyText("Hook name");
+        ab.description = IdiomManager.instance.GetKeyText("Hook description");
         ab.icon = sprite_hook;
         ab.rarity = AbilityType.BASIC;
         ab.cooldown = 5;
@@ -202,9 +203,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Stomp
         ab = new Ability();
 
-        ab.name = "Stomp";
-        ab.description = "[ON GROUND] Jump to immediately stomp the ground with your body and launch the enemies on the air" +
-                         "[ON AIR] Quickly descend and smash the enemies on ground, doing extra damage scaling with the distance fell and launching them into the air";
+        ab.name = IdiomManager.instance.GetKeyText("Stomp name");
+        ab.description = IdiomManager.instance.GetKeyText("Stomp description");
         ab.icon = sprite_stomp;
         ab.rarity = AbilityType.BASIC;
         ab.cooldown = 5;
@@ -214,8 +214,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Hit N' Byebye
         ab = new Ability();
 
-        ab.name = "Hit N' Bye";
-        ab.description = $"[PASSIVE]\nWhen taking damage, You have a 1 on 3 chance of launching the enemy away, scaling the distance with your damage ({pd.damage})";
+        ab.name = IdiomManager.instance.GetKeyText("HitNBye name");
+        ab.description = IdiomManager.instance.GetKeyText("HitNBye description");
         ab.icon = sprite_byebye;
         ab.rarity = AbilityType.PASSIVE;
 
@@ -224,8 +224,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Bloodthirsty
         ab = new Ability();
 
-        ab.name = "Bloodthirsty";
-        ab.description = $"[PASSIVE]\nWhen dealing damage, heal for 15% ({(pd.damage * 0.15f).ToString("F2")}) of your damage";
+        ab.name = IdiomManager.instance.GetKeyText("Bloodthirsty name");
+        ab.description = IdiomManager.instance.GetKeyText("Bloodthirsty description");
         ab.icon = sprite_bloodthirsty;
         ab.rarity = AbilityType.PASSIVE;
 
@@ -234,8 +234,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Hologram body
         ab = new Ability();
 
-        ab.name = "Hologram body";
-        ab.description = $"Press the attack button to become an intangible hologram for 3 seconds, augmenting your base speed";
+        ab.name = IdiomManager.instance.GetKeyText("Hologram name");
+        ab.description = IdiomManager.instance.GetKeyText("Hologram description");
         ab.icon = sprite_hologram;
         ab.rarity = AbilityType.BASIC;
         ab.cooldown = 10;
@@ -245,8 +245,8 @@ public class AbilitiesSystem : MonoBehaviour
         // Monkey bait
         ab = new Ability();
 
-        ab.name = "Monkey bait";
-        ab.description = $"Press the attack button to launch a Monkey that will attract the enemies for a few seconds";
+        ab.name = IdiomManager.instance.GetKeyText("Monkey name");
+        ab.description = IdiomManager.instance.GetKeyText("Monkey description");
         ab.icon = sprite_monkey;
         ab.rarity = AbilityType.BASIC;
         ab.cooldown = 15;
@@ -256,11 +256,20 @@ public class AbilitiesSystem : MonoBehaviour
         // Kill N Speed
         ab = new Ability();
 
-        ab.name = "Kill N Speed";
-        ab.description = 
-            $"Kill an enemy to gain {(15 * abs_level[(int)Abilities.KILLNSPEED].ability_level).ToString("F0")} speed for " +
-            $"{(5 * abs_level[(int)Abilities.KILLNSPEED].ability_level).ToString("F0")} seconds, infinitely stackable";
+        ab.name = IdiomManager.instance.GetKeyText("KillNSpeed name");
+        ab.description = IdiomManager.instance.GetKeyText("KillNSpeed description");
         ab.icon = sprite_killnspeed;
+        ab.rarity = AbilityType.PASSIVE;
+        ab.cooldown = 0;
+
+        abilities.Add(ab);
+
+        // Recharge
+        ab = new Ability();
+
+        ab.name = IdiomManager.instance.GetKeyText("Recharge name");
+        ab.description = IdiomManager.instance.GetKeyText("Recharge description");
+        ab.icon = sprite_recharge;
         ab.rarity = AbilityType.PASSIVE;
         ab.cooldown = 0;
 
@@ -338,6 +347,9 @@ public class AbilitiesSystem : MonoBehaviour
     {
         // If the player already has all abilities, return
         if (abilities.Count <= 0) return;
+
+        txt_description.gameObject.SetActive(false);
+        im_description.gameObject.SetActive(false);
 
         gambling_open = true;
 

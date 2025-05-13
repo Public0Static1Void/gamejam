@@ -70,7 +70,9 @@ public class EnemyLife : MonoBehaviour
             ScoreManager.instance.InstantiateText($"XP +{max_hp * 0.05f}", transform.position, dir.normalized, 40, 2, Color.cyan);
 
             // Suma la velocidad si se puede
-            sc_Abilities.instance.KillNSpeed(150);
+            sc_Abilities.instance.KillNSpeed(100);
+            // Suma estamina si puede
+            sc_Abilities.instance.Recharge();
 
             StartCoroutine(DestroyCooldown());
         }

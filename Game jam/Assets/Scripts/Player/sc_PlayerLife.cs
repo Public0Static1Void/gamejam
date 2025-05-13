@@ -66,6 +66,7 @@ public class PlayerLife : MonoBehaviour
             ReturnScript.instance.explosion_range = pd.explosion_range;
             PlayerMovement.instance.speed = pd.speed;
             PlayerMovement.instance.max_stamina = pd.stamina;
+            PlayerMovement.instance.current_stamina = pd.stamina;
         }
 
         hp = max_hp;

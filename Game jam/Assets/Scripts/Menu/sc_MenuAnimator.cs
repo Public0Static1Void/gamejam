@@ -130,7 +130,7 @@ public class sc_MenuAnimator : MonoBehaviour
         }
 
         if (enter_pressed)
-            SceneManager.LoadScene("Tutorial");
+            SceneManager.LoadScene("SampleScene");
     }
 
     #region Inputs

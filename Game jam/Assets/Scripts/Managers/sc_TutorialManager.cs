@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -18,6 +20,7 @@ public class TutorialManager : MonoBehaviour
     public GameObject ob_main_ui;
     public AudioMixerGroup audioMixerGroup;
     public AudioClip clip_slider_change;
+    public AudioClip clip_type;
 
     [Header("Settings references")]
     public GameObject ob_audio_menu;
@@ -26,12 +29,20 @@ public class TutorialManager : MonoBehaviour
     public UnityEngine.UI.Slider sl_sfx_volume;
     public TMP_Text txt_sfx_value;
 
+    public GameObject ob_idiom_menu;
+
+    public GameObject ob_screen_menu;
+    public GameObject ob_screen_resolutions_content;
+    public TMP_Dropdown drop_resolutions;
+
     [Header("Player bars")]
     public UnityEngine.UI.Image im_hp_bar;
     public UnityEngine.UI.Image im_stamina_bar;
 
     private bool showing_text = false;
     public bool showing_settings = true;
+
+    private string started_file_path = "";
 
     void Awake()
     {
@@ -43,17 +54,8 @@ public class TutorialManager : MonoBehaviour
 
     private void Start()
     {
-        /*
-        string started_file_path = Path.Combine(Application.persistentDataPath, "started.txt");
-        if (File.Exists(started_file_path))
-        {
-            SceneManager.LoadScene("Menu");
-        }
-        else
-        {
-            File.Create(started_file_path);
-        }
-        */
+        started_file_path = Path.Combine(Application.persistentDataPath, "started.txt");
+
         SetPlayerMovement(false);
         SetPlayerRotation(Quaternion.identity);
 
@@ -135,6 +137,37 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
+    public void HideText(TMP_Text text_to_hide)
+    {
+        StartCoroutine(HideTextCoroutine(text_to_hide));
+    }
+    public void ShowText(TMP_Text text_to_show)
+    {
+        StartCoroutine(ShowTextCoroutine(text_to_show));
+    }
+    public IEnumerator HideTextCoroutine(TMP_Text text_to_hide, float hide_speed = 2)
+    {
+        Color col = text_to_hide.color;
+        while (text_to_hide.color.a > 0)
+        {
+            text_to_hide.color = new Color(col.r, col.g, col.b, text_to_hide.color.a - Time.fixedDeltaTime * hide_speed);
+            yield return null;
+        }
+
+        text_to_hide.gameObject.SetActive(false);
+    }
+    public IEnumerator ShowTextCoroutine(TMP_Text text_to_hide, float hide_speed = 2)
+    {
+        text_to_hide.gameObject.SetActive(true);
+
+        Color col = text_to_hide.color;
+        while (text_to_hide.color.a < 1)
+        {
+            text_to_hide.color = new Color(col.r, col.g, col.b, text_to_hide.color.a + Time.fixedDeltaTime * hide_speed);
+            yield return null;
+        }
+    }
+
     // Anima las barras de vida y stamina del jugador al empezar
     public void AnimatePlayerBarsOnStart()
     {
@@ -147,6 +180,33 @@ public class TutorialManager : MonoBehaviour
             im_stamina_bar.fillAmount += Time.deltaTime * 0.4f;
             im_hp_bar.fillAmount += Time.deltaTime * 0.5f;
             yield return null;
+        }
+    }
+
+    public void SetSelectedResolution()
+    {
+        string input = drop_resolutions.options[drop_resolutions.value].text;
+        Match match = Regex.Match(input, @"(\d+)\s*x\s*(\d+)");
+
+        if (match.Success)
+        {
+            int width = int.Parse(match.Groups[1].Value);
+            int height = int.Parse(match.Groups[2].Value);
+
+            Screen.SetResolution(width, height, Screen.fullScreen);
+        }
+
+    }
+    public void ChangeFullscreen()
+    {
+        Screen.fullScreen = !Screen.fullScreen;
+        if (!Screen.fullScreen)
+        {
+            Screen.fullScreenMode = FullScreenMode.Windowed;
+        }
+        else
+        {
+            Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
         }
     }
     #endregion
@@ -222,8 +282,9 @@ public class TutorialManager : MonoBehaviour
 
 
             timer += Time.unscaledDeltaTime;
-            if (timer > wait_time)
+            if (timer > wait_time && curr_char < text.Length)
             {
+                SoundManager.instance.InstantiateSound(clip_type, transform.position, 0.1f);
                 curr_text += text[curr_char];
                 init_text.text = curr_text;
                 wait_time = 0.01f;
@@ -238,32 +299,16 @@ public class TutorialManager : MonoBehaviour
 
     private IEnumerator StartAnimation()
     {
+        yield return new WaitForSecondsRealtime(0.25f);
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        UnityEngine.Cursor.visible = true;
+
         Time.timeScale = 0; // Detiene todo el movimiento
         PlayerMovement.instance.rb.isKinematic = true;
 
-        string text = "Starting program.<w=0,5f>.<w=0,5>.";
+        string text = IdiomManager.instance.GetKeyText("Intro start program");
         StartCoroutine(ShowText(text));
 
-        while (showing_text) /// Espera a que termine la animación del texto
-        {
-            yield return null;
-        }
-        init_text.text += '\n'; /// Añade un salto de línea
-
-        text = "<w=0,5>Program started.";
-        StartCoroutine(ShowText(text));
-
-        while (showing_text) /// Espera a que termine la animación del texto
-        {
-            yield return null;
-        }
-        init_text.text += '\n';
-        yield return new WaitForSecondsRealtime(0.5f);
-
-
-        text = "<w=0,25>Initing player configuration...";
-        StartCoroutine(ShowText(text));
-        /// Espera a que termine la animación del texto
         while (showing_text) /// Espera a que termine la animación del texto
         {
             yield return null;
@@ -271,8 +316,25 @@ public class TutorialManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.75f);
         init_text.text += '\n';
 
+        init_text.text = init_text.text.Substring(0, init_text.text.Length - "...".Length);
+        init_text.text += IdiomManager.instance.GetKeyText("Intro started");
+        SoundManager.instance.InstantiateSound(clip_type, transform.position);
 
-        text = "<w=0,25><color=red>[ERROR]</color> <w=0,25> Couldn't find a saved configuration.";
+        yield return new WaitForSecondsRealtime(0.75f);
+        init_text.text += '\n';
+
+        text = IdiomManager.instance.GetKeyText("Intro initing configuration");
+        StartCoroutine(ShowText(text));
+        /// Espera a que termine la animación del texto
+        while (showing_text) /// Espera a que termine la animación del texto
+        {
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(0.75f);
+        init_text.text += "\n\n";
+
+
+        text = IdiomManager.instance.GetKeyText("Intro configuration error");
         StartCoroutine(ShowText(text));
 
         while (showing_text) 
@@ -282,16 +344,26 @@ public class TutorialManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.1f);
         init_text.text += '\n';
 
+        text = IdiomManager.instance.GetKeyText("Intro save new configuration");
+        StartCoroutine(ShowText(text));
+        while (showing_text)
+        {
+            yield return null;
+        }
+        init_text.text += '\n';
+        yield return new WaitForSecondsRealtime(0.15f);
 
-        text = "<w=0,15>Initing manual configuration.";
+        text = IdiomManager.instance.GetKeyText("Intro initing manual configuration");
         StartCoroutine(ShowText(text));
         while (showing_text) /// Espera a que termine la animación del texto
         {
             yield return null;
         }
-        init_text.text += '\n';
+        init_text.text += "\n  ";
 
-        text = "<w=0,5><color=blue>[AUDIO]</color> <color=red>ERROR</color>";
+        // Set audio settings -----------------------------------------------------------------
+
+        text = IdiomManager.instance.GetKeyText("Intro audio error");
         yield return new WaitForSecondsRealtime(1f);
         StartCoroutine(ShowText(text));
 
@@ -299,8 +371,8 @@ public class TutorialManager : MonoBehaviour
         {
             yield return null;
         }
+        yield return new WaitForSecondsRealtime(1);
 
-        // Set audio settings -----------------------------------------------------------------
         ob_audio_menu.SetActive(true);
         sl_master_volume.Select();
 
@@ -309,7 +381,127 @@ public class TutorialManager : MonoBehaviour
             yield return null;
         }
 
-        init_text.text += " <color=green>READY</color>\n";
+        init_text.text = init_text.text.Substring(0, init_text.text.Length - "ERROR".Length);
+        init_text.text += '\t';
+        init_text.text += IdiomManager.instance.GetKeyText("Intro ready");
+
+        // Set idiom settings ------------------------------------------------------------------
+
+        init_text.text += "\n  ";
+
+        text = IdiomManager.instance.GetKeyText("Intro idiom error");
+        StartCoroutine(ShowText(text));
+        while (showing_text) /// Espera a que termine la animación del texto
+        {
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(1);
+
+        ob_idiom_menu.SetActive(true);
+        ob_idiom_menu.GetComponentInChildren<UnityEngine.UI.Button>().Select();
+
+        showing_settings = true;
+        while (showing_settings) /// Espera a que termine de poner las opciones
+        {
+            yield return null;
+        }
+        init_text.text = init_text.text.Substring(0, init_text.text.Length - "ERROR".Length);
+        init_text.text += '\t';
+        init_text.text += IdiomManager.instance.GetKeyText("Intro ready");
+
+        // Set screen settings ------------------------------------------------------------------
+
+        init_text.text += "\n  ";
+
+        Resolution[] resolutions = Screen.resolutions;
+        GameObject resolutions_content = ob_screen_resolutions_content;
+
+        /*
+        /// Crea los botones de las resoluciones
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            GameObject toggle = new GameObject($"Resolution {i}");
+            toggle.transform.SetParent(resolutions_content.transform, false);
+            toggle.AddComponent<UnityEngine.UI.Toggle>();
+
+            GameObject resolution = new GameObject($"Resolution {i}");
+
+            resolution.transform.SetParent(toggle.transform, false);
+
+            TMP_Text txt = resolution.AddComponent<TextMeshProUGUI>();
+            txt.text = $"{resolutions[i].width}x{resolutions[i].height}";
+
+            UnityEngine.UI.Button btn = resolution.AddComponent<UnityEngine.UI.Button>();
+            Resolution res = resolutions[i];
+            btn.onClick.AddListener(() =>
+            {
+                Screen.SetResolution(res.width, res.height, Screen.fullScreen);
+            });
+        }
+        */
+        yield return new WaitForSecondsRealtime(1);
+        for (int i = 0; i < drop_resolutions.options.Count; i++)
+        {
+            resolutions_content.transform.GetChild(0).GetComponentInChildren<TMP_Text>().text = drop_resolutions.options[i].text;
+        }
+
+        text = IdiomManager.instance.GetKeyText("Intro screen error");
+        StartCoroutine(ShowText(text));
+        while (showing_text) /// Espera a que termine la animación del texto
+        {
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(1);
+
+        ob_screen_menu.SetActive(true);
+        ob_screen_menu.GetComponentInChildren<TMP_Dropdown>().Select();
+
+        showing_settings = true;
+        while (showing_settings) /// Espera a que termine de poner las opciones
+        {
+            yield return null;
+        }
+        init_text.text = init_text.text.Substring(0, init_text.text.Length - "ERROR".Length);
+        init_text.text += '\t';
+        init_text.text += IdiomManager.instance.GetKeyText("Intro ready");
+
+
+        // Empieza el tutorial ------------------------------------------------------------------------
+        init_text.text += "\n\n";
+
+        text = IdiomManager.instance.GetKeyText("Intro configuration set");
+        StartCoroutine(ShowText(text));
+        while (showing_text) /// Espera a que termine la animación del texto
+        {
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        init_text.text += '\n';
+
+        text = IdiomManager.instance.GetKeyText("Intro start program");
+        StartCoroutine(ShowText(text));
+        while (showing_text) /// Espera a que termine la animación del texto
+        {
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        Time.timeScale = 1;
+
+        PlayerMovement.instance.rb.isKinematic = false;
+
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
+
+        File.Create(started_file_path); // marca el tutorial como completado
+
+        while (init_text.color.a > 0)
+        {
+            init_text.color = new Color(init_text.color.r, init_text.color.g, init_text.color.b, init_text.color.a - Time.deltaTime * 2);
+            yield return null;
+        }
+        init_text.gameObject.SetActive(false);
     }
 
     public void SetOpenSettingsValue(bool value)

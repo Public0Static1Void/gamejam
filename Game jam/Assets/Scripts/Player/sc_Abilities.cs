@@ -55,6 +55,8 @@ public class sc_Abilities : MonoBehaviour
 
     // Kill N Speed
     public bool can_upgrade_speed = false;
+    public bool can_recover_stamina = true;
+
     private float total_speed_upgraded = 0;
     private float speed_timer = 0;
 
@@ -615,6 +617,18 @@ public class sc_Abilities : MonoBehaviour
         total_speed_upgraded = 0;
     }
     #endregion
+
+    public void EnableRecharge()
+    {
+        can_recover_stamina = true;
+    }
+    public void Recharge()
+    {
+        if (!can_recover_stamina) return;
+
+        PlayerMovement.instance.current_stamina++;
+        PlayerMovement.instance.stamina_image.fillAmount = PlayerMovement.instance.current_stamina / PlayerMovement.instance.max_stamina;
+    }
 
     private void OnTriggerEnter(Collider other)
     {

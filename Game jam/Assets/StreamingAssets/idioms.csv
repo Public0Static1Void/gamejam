@@ -1,30 +1,32 @@
 Key;Spanish;English
-Levitate name;FlotaciÛn;Levitate
-Levitate description;Volviendo en el tiempo, todos los enemigos que toques empezar·n a levitar para segundos despuÈs ser estrellados contra el suelo.;When you are returning in time, all the enemies that you touch will start to levitate and crushed on the ground when you finish returning.
+Levitate name;Flotaci√≥n;Levitate
+Levitate description;Volviendo en el tiempo, todos los enemigos que toques empezar√°n a levitar para segundos despu√©s ser estrellados contra el suelo.;When you are returning in time, all the enemies that you touch will start to levitate and crushed on the ground when you finish returning.
 Exploding name;Senda explosiva;Exploding path
-Exploding description;Volviendo en el tiempo, el camino que has hecho empezar· a explotar de final a principio.;While you are returning the path you follow will start to explode, damaging and launching your enemies.
+Exploding description;Volviendo en el tiempo, el camino que has hecho empezar√° a explotar de final a principio.;While you are returning the path you follow will start to explode, damaging and launching your enemies.
 Group name;Group n' explode;Group n' explode
-Group description;Volviendo en el tiempo todos los enemigos que toques se agrupar·n.;While you are returning, all the enemies you touch will start to levitate to you, grouping them. The more enemies you group, the faster will go so you can explode them!
+Group description;Volviendo en el tiempo todos los enemigos que toques se agrupar√°n.;While you are returning, all the enemies you touch will start to levitate to you, grouping them. The more enemies you group, the faster will go so you can explode them!
 Mine name;Minas;Path mine
 Mine description;Planta una mina por segundo mientras vuelves en el tiempo.;Place a mine per second when you are returning. Mines explode dealing {pd.damage * 2} when in contact with an enemy.
 Hook name;Gancho;Hook
-Hook description;Lanza un gancho y atrae al enemigo que atrapes. Si vuelves a pulsar el botÛn al engancharlo, saltas hacia Èl;Launch a hook forward and catch the first enemy hit, pulling it towards you after a short delay. If you press the ability again, you jump to the enemy instead.
-Stomp name;PisotÛn;Stomp
-Stomp description;…levate por los aires para caer r·pidamente al suelo y levantar a los enemigos alrededor.;Jump to immediataly stomp de ground, elevating your enemies
+Hook description;Lanza un gancho y atrae al enemigo que atrapes. Si vuelves a pulsar el bot√≥n al engancharlo, saltas hacia √©l;Launch a hook forward and catch the first enemy hit, pulling it towards you after a short delay. If you press the ability again, you jump to the enemy instead.
+Stomp name;Pisot√≥n;Stomp
+Stomp description;El√©vate por los aires para caer r√°pidamente al suelo y levantar a los enemigos alrededor.;Jump to immediataly stomp de ground, elevating your enemies
 HitNBye name;Hit N' Bye;Hit N' Bye
-HitNBye description;[PASIVA]\nCuando un enemigo te haga daÒo, tienes 1 entre 3 posibilidades de empujarlo;[PASSIVE]\nWhen taking damage, You have a 1 on 3 chance of launching the enemy away, scaling the distance with your damage ({pd.damage})
+HitNBye description;[PASIVA]\nCuando un enemigo te haga da√±o, tienes 1 entre 3 posibilidades de empujarlo;[PASSIVE]\nWhen taking damage, You have a 1 on 3 chance of launching the enemy away, scaling the distance with your damage ({pd.damage})
 Bloodthirsty name;Sanguinario;Bloodthirsty
-Bloodthirsty description;[PASIVA]\nTe curas un 15% del daÒo que le hagas a tus enemigos;[PASSIVE]\nHeal for 15% of your damage
-Hologram name;Cuerpo hologr·fico;Hologram body
-Hologram description;Presiona el botÛn de ataque para volverte intangible por unos segundos, ganando velocidad;Press the attack button to become intangible for a few seconds, augmenting your speed
-Monkey name;SeÒuelo de mono;Monkey bait
-Monkey description;Usa el botÛn de ataque para lanzar un mono que atrae a los enemigos, para despuÈs explotar;Press the attack button to launch a Monkey that will attract the enemies for a few seconds
+Bloodthirsty description;[PASIVA]\nTe curas un 15% del da√±o que le hagas a tus enemigos;[PASSIVE]\nHeal for 15% of your damage
+Hologram name;Cuerpo hologr√°fico;Hologram body
+Hologram description;Presiona el bot√≥n de ataque para volverte intangible por unos segundos, ganando velocidad;Press the attack button to become intangible for a few seconds, augmenting your speed
+Monkey name;Se√±uelo de mono;Monkey bait
+Monkey description;Usa el bot√≥n de ataque para lanzar un mono que atrae a los enemigos, para despu√©s explotar;Press the attack button to launch a Monkey that will attract the enemies for a few seconds
 KillNSpeed name;Kill n' speed;Kill n' speed
 KillNSpeed description;Gana velocidad por unos segundos al matar enemigos;Get additional speed for a few seconds when killing an enemy, infinitely stackable
+Recharge name;Recarga;Recharge
+Recharge description;Consigue estamina al matar enemigos;Recharge stamina when killing enemies
 ;;
 Tutorial WASD keyboard;Presiona <color=yellow>WASD</color> para moverte;Press <color=yellow>WASD</color> to move
 Tutorial WASD gamepad;Presiona la <color=yellow>palanca izquierda</color> para moverte;Press the <color=yellow>left joystick</color> to move
-Tutorial SPRINT keyboard;Presiona <color=yellow>may˙sculas izquierdo</color> para correr;Press the <color=yellow>left shift</color> to sprint
+Tutorial SPRINT keyboard;Presiona <color=yellow>may√∫sculas izquierdo</color> para correr;Press the <color=yellow>left shift</color> to sprint
 Tutorial SPRINT gamepad;Pulsa la <color=yellow>palanca izquierda</color> para correr;Press the <color=yellow>left stick</color> to sprint
 Tutorial SLIDE keyboard;Pulsa <color=yellow>control izquierdo</color> para deslizarte;Press <color=yellow>left control</color> to slide
 Tutorial SLIDE gamepad;Pulsa la <color=yellow>palanca derecha</color> para deslizarte;Press the  <color=yellow>left stick</color> to slide
@@ -41,3 +43,25 @@ Tutorial ATTACK_AB gamepad PS;<size=90><b><color=yellow>Habilidades de ataque</c
 Tutorial ATTACK_AB gamepad XB;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>LB</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>LB</color> to use them.
 ;;
 Tutorial DESCEND;<color=red>Desciende a tu miseria</color>;<color=red>Descend to your misery</color>
+;;
+;;
+Intro start program;Iniciando programa.<w=0,5>.<w=0,5>.;Starting program.<w=0,5f>.<w=0,5>.
+Intro started;<color=green> EMPEZADO</color>;<color=green> STARTED</color>
+Intro initing configuration;<w=0,25>Iniciando configuraci√≥n del jugador.;<w=0,25>Initing player configuration...
+Intro configuration error;<w=0,25><color=red>[Error de configuraci√≥n] </color> ;<w=0,25><color=red>[Configuration error] </color> 
+Intro save new configuration;Ingresa una nueva configuraci√≥n.;Please save a new configuration.
+Intro initing manual configuration;<w=0,25>Iniciando configuraci√≥n manual.;<w=0,15>Initing manual configuration.
+Intro audio error;<w=0,5><color=blue>[AUDIO]</color> <color=red>ERROR</color>;<w=0,5><color=blue>[AUDIO]</color> <color=red>ERROR</color>
+Intro idiom error;<w=0,5><color=blue>[IDIOMA]</color> <color=red>ERROR</color>;<w=0,5><color=blue>[IDIOM]</color> <color=red>ERROR</color>
+Intro screen error;<w=0,5><color=blue>[PANTALLA]</color> <color=red>ERROR</color>;<w=0,5><color=blue>[SCREEN]</color> <color=red>ERROR</color>
+Intro ready;<color=green>LISTO</color>;<color=green>READY</color>
+Intro configuration set;<color=white>Configuraci√≥n completada;<color=white>All configuration set.
+;;
+;;
+Title idiom;Idioma;Idioms
+Title screen;Pantalla;Screen
+Title resolutions;Resoluciones;Resolutions
+Title fullscreen;Pantalla completa;Fullscreen
+Apply text;Aplicar;Apply
+Title production;Una producci√≥n de <color=blue>Public Static Games</color>;A <color=blue>Public Static Games</color> production
+;;

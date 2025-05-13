@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 
 public class IdiomManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class IdiomManager : MonoBehaviour
     private Dictionary<string, string> language_dictionary;
 
     public string current_language = "Spanish";
+
+    public List<GameObject> menu_objects;
 
     private void Awake()
     {
@@ -21,7 +24,7 @@ public class IdiomManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        LoadIdiom(current_language);
+        SetIdiom(current_language);
     }
     
     public void LoadIdiom(string language)
@@ -58,7 +61,10 @@ public class IdiomManager : MonoBehaviour
     /// </summary>
     public string GetKeyText(string key)
     {
-        return language_dictionary[key];
+        if (language_dictionary.ContainsKey(key))
+            return language_dictionary[key];
+
+        return null;
     }
 
     public void SetIdiom(string language)
@@ -68,6 +74,35 @@ public class IdiomManager : MonoBehaviour
         foreach(sc_ShowText show_text in FindObjectsOfType<sc_ShowText>())
         {
             show_text.LoadText();
+        }
+        /// Consigue la frase según el nombre del objeto
+        UpdateMenuTexts();
+    }
+
+    void UpdateMenuTexts()
+    {
+        foreach (GameObject obj in menu_objects)
+        {
+            if (obj != null)
+                UpdateTextsRecursively(obj.transform);
+        }
+    }
+
+    void UpdateTextsRecursively(Transform current)
+    {
+        TMP_Text txt = current.GetComponent<TMP_Text>();
+        if (txt != null)
+        {
+            string key_text = GetKeyText(current.name);
+            if (key_text != null)
+            {
+                txt.text = GetKeyText(current.name);
+            }
+        }
+
+        foreach (Transform child in current)
+        {
+            UpdateTextsRecursively(child);
         }
     }
 }
