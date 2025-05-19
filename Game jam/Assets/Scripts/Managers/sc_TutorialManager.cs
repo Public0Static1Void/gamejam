@@ -494,15 +494,14 @@ public class TutorialManager : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
 
+        File.Create(started_file_path); // marca el tutorial como completado
 
         while (init_text.color.a > 0)
         {
-            init_text.color = new Color(init_text.color.r, init_text.color.g, init_text.color.b, init_text.color.a - Time.unscaledDeltaTime * 2);
+            init_text.color = new Color(init_text.color.r, init_text.color.g, init_text.color.b, init_text.color.a - Time.deltaTime * 2);
             yield return null;
         }
         init_text.gameObject.SetActive(false);
-
-        File.Create(started_file_path); // marca el tutorial como completado
     }
 
     public void SetOpenSettingsValue(bool value)
