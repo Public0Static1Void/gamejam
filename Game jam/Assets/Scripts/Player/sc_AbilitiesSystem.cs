@@ -283,7 +283,7 @@ public class AbilitiesSystem : MonoBehaviour
         for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
         {
             abilities[i].id = i;
-            if (methods_abilities.Count > 0)
+            if (methods_abilities.Count > 0 && i < methods_abilities.Count)
                 abilities[i].ability_event = methods_abilities[i];
             abilities[i].type = (Abilities)i;
             abilities[i].current_cooldown = abilities[i].cooldown;

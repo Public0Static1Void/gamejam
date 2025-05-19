@@ -92,13 +92,21 @@ public class TutorialManager : MonoBehaviour
     {
         StartCoroutine(TranslateObjectRoutine(ob, -Vector3.up, 2));
     }
+    public void TranslateObjectUpIndefinitely(Transform ob)
+    {
+        StartCoroutine(TranslateObjectRoutine(ob, Vector3.up, 9999, 10));
+    }
+    public void TranslateObjectDownIndefinitely(Transform ob)
+    {
+        StartCoroutine(TranslateObjectRoutine(ob, -Vector3.up, 9999, 10));
+    }
 
-    private IEnumerator TranslateObjectRoutine(Transform ob, Vector3 dir, float duration)
+    private IEnumerator TranslateObjectRoutine(Transform ob, Vector3 dir, float duration, float speed = 2)
     {
         float timer = 0;
         while (timer < duration)
         {
-            ob.Translate(dir * Time.deltaTime * 2);
+            ob.Translate(dir * Time.deltaTime * speed);
             timer += Time.deltaTime;
             yield return null;
         }
@@ -364,7 +372,7 @@ public class TutorialManager : MonoBehaviour
         // Set audio settings -----------------------------------------------------------------
 
         text = IdiomManager.instance.GetKeyText("Intro audio error");
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(0.25f);
         StartCoroutine(ShowText(text));
 
         while (showing_text) /// Espera a que termine la animación del texto
@@ -395,7 +403,7 @@ public class TutorialManager : MonoBehaviour
         {
             yield return null;
         }
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.2f);
 
         ob_idiom_menu.SetActive(true);
         ob_idiom_menu.GetComponentInChildren<UnityEngine.UI.Button>().Select();
@@ -439,7 +447,7 @@ public class TutorialManager : MonoBehaviour
             });
         }
         */
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.25f);
         for (int i = 0; i < drop_resolutions.options.Count; i++)
         {
             resolutions_content.transform.GetChild(0).GetComponentInChildren<TMP_Text>().text = drop_resolutions.options[i].text;
@@ -451,7 +459,7 @@ public class TutorialManager : MonoBehaviour
         {
             yield return null;
         }
-        yield return new WaitForSecondsRealtime(1);
+        yield return new WaitForSecondsRealtime(0.1f);
 
         ob_screen_menu.SetActive(true);
         ob_screen_menu.GetComponentInChildren<TMP_Dropdown>().Select();

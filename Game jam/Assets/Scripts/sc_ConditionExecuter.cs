@@ -131,7 +131,7 @@ public class sc_ConditionExecuter : MonoBehaviour
                         dead_amount++;
                     }
                 }
-                if (objects_to_die.Count <= 0 && all_die_events.Count > 0)
+                if ((objects_to_die.Count <= 0 || (dead_amount > 0 && dead_amount >= objects_to_die.Count)) && all_die_events.Count > 0)
                 {
                     for (int i = 0; i < all_die_events.Count; i++)
                     {

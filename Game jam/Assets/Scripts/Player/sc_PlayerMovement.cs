@@ -231,10 +231,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.y < -1000)
+        if (transform.position.y < -500)
         {
+            rb.velocity = Vector3.zero;
             transform.position = start_position;
-            Debug.Log("The player teleported cause it's assumed outside the map (>1000 blocks away)");
+            Debug.Log("The player teleported cause it's assumed to be outside of the map (>500 blocks away)");
         }
 
         if (sprinting || slide)

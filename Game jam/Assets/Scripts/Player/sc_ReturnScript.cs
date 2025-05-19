@@ -9,6 +9,9 @@ using UnityEngine.UI;
 public class ReturnScript : MonoBehaviour
 {
     public static ReturnScript instance;
+
+    public bool can_return = true;
+    [Space(10)]
     [Header("Stats")]
     public float return_speed;
     public float max_time;
@@ -62,6 +65,8 @@ public class ReturnScript : MonoBehaviour
 
     private bool afterImage_attack = false;
 
+    private bool position_fixed = true;
+
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -88,6 +93,8 @@ public class ReturnScript : MonoBehaviour
 
     void Update()
     {
+        if (!can_return) return;
+
         if (returning && past_positions.Count > 0 && !cooldown)
         {
             // La posición de la cámara se pasa al punto donde volverás en el tiempo para dar una vista aérea
@@ -169,29 +176,32 @@ public class ReturnScript : MonoBehaviour
             {
                 cooldown_image.color = Color.Lerp(cooldown_image.color, color_cooldown_ready, Time.deltaTime * 1.5f); /// Cambia el color de la imágen al normal
             }
-            if (timer > max_time / 10) /// Va actualizando las posiciones del jugador cada cierto tiempo
+            if (!position_fixed)
             {
-                UpdateReturnList();
-                timer = 0;
-            }
-            else
-            {
-                timer += Time.deltaTime;
-                if (!afterImage_attack)
+                if (timer > max_time / 10) /// Va actualizando las posiciones del jugador cada cierto tiempo
                 {
-                    ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, past_positions[0], Time.deltaTime * 1.25f);
-                    ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, q_rotations[0], Time.deltaTime);
+                    UpdateReturnList();
+                    timer = 0;
+                }
+                else
+                {
+                    timer += Time.deltaTime;
+                    if (!afterImage_attack)
+                    {
+                        ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, past_positions[0], Time.deltaTime * 1.25f);
+                        ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, q_rotations[0], Time.deltaTime);
 
-                    // Si está muy cerca del jugador se desvanecerá
-                    if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 1)
-                    {
-                        if (!isFadingOut)
-                            StartCoroutine(FadeOutHologramObject(ob_AfterImage));
-                    }
-                    else
-                    {
-                        if (!isFadingIn)
-                            StartCoroutine(FadeInHologramObject(ob_AfterImage));
+                        // Si está muy cerca del jugador se desvanecerá
+                        if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 1)
+                        {
+                            if (!isFadingOut)
+                                StartCoroutine(FadeOutHologramObject(ob_AfterImage));
+                        }
+                        else
+                        {
+                            if (!isFadingIn)
+                                StartCoroutine(FadeInHologramObject(ob_AfterImage));
+                        }
                     }
                 }
             }
@@ -206,6 +216,27 @@ public class ReturnScript : MonoBehaviour
                 healed = false;
             }
         }
+    }
+
+    public void SetReturn(bool value)
+    {
+        can_return = value;
+    }
+
+    public void FixReturnPosition(Transform pos)
+    {
+        position_fixed = true;
+
+        ob_AfterImage.transform.position = pos.position;
+        ob_AfterImage.transform.LookAt(transform.position, Vector3.up);
+
+        past_positions.Clear();
+        past_rotations.Clear();
+        q_rotations.Clear();
+
+        past_positions.Add(pos.position);
+        past_rotations.Add(Vector2.zero);
+        q_rotations.Add(ob_AfterImage.transform.rotation);
     }
 
     private IEnumerator FadeOutHologramObject(GameObject ob)
@@ -299,7 +330,7 @@ public class ReturnScript : MonoBehaviour
 
     public void ReturnToLastPosition(InputAction.CallbackContext con)
     {
-        if (con.performed && !AbilitiesSystem.instance.gambling_open) // Se ha pulsado espacio y no está abierto el panel de gambling
+        if (can_return && con.performed && !AbilitiesSystem.instance.gambling_open) // Se ha pulsado espacio y no está abierto el panel de gambling
         {
             if (!cooldown && !returning)
             {
@@ -317,6 +348,8 @@ public class ReturnScript : MonoBehaviour
                 {
                     ability.Invoke();
                 }
+
+                position_fixed = false;
 
                 StartCoroutine(AfterImageAttack());
             }

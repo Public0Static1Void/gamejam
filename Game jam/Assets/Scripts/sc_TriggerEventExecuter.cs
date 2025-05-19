@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,7 +16,10 @@ public class sc_TriggerEventExecuter : MonoBehaviour
     private bool keep_executing = true;
 
     [Header("Events")]
+    public bool disable_enter_events = false;
     public UnityEvent triggerEnterEvent;
+    [Space(10)]
+    public bool disable_exit_events = false;
     public UnityEvent triggerExitEvent;
 
     void Start()
@@ -38,10 +42,18 @@ public class sc_TriggerEventExecuter : MonoBehaviour
     {
         can_execute = value;
     }
+    public void SetEnter(bool value)
+    {
+        disable_enter_events = value;
+    }
+    public void SetExit(bool value)
+    {
+        disable_exit_events = value;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!keep_executing ||!can_execute) return;
+        if (!keep_executing || !can_execute || disable_enter_events) return;
 
         if (target_tag != "")
         {
@@ -61,7 +73,7 @@ public class sc_TriggerEventExecuter : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (!keep_executing || !can_execute) return;
+        if (!keep_executing || !can_execute || disable_exit_events) return;
 
         if (target_tag != "")
         {
@@ -70,6 +82,8 @@ public class sc_TriggerEventExecuter : MonoBehaviour
                 triggerExitEvent.Invoke();
                 if (execute_one_time)
                     keep_executing = false;
+
+                disable_enter_events = false;
             }
         }
         else
@@ -77,6 +91,8 @@ public class sc_TriggerEventExecuter : MonoBehaviour
             triggerExitEvent.Invoke();
             if (execute_one_time)
                 keep_executing = false;
+
+            disable_enter_events = false;
         }
     }
 }

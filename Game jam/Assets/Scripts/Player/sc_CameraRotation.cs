@@ -155,6 +155,10 @@ public class CameraRotation : MonoBehaviour
     {
         StartCoroutine(ShakeCameraRoutine(0.5f, force));
     }
+    public void ShakeCameraLong(float force)
+    {
+        StartCoroutine(ShakeCameraRoutine(1, force));
+    }
     public void ShakeCamera(float duration, float force)
     {
         StartCoroutine(ShakeCameraRoutine(duration, force));
