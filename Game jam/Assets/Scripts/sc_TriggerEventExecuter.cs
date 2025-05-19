@@ -10,6 +10,7 @@ public class sc_TriggerEventExecuter : MonoBehaviour
     [Description("")]
     public string target_tag = "";
 
+    public bool can_execute = true;
     public bool execute_one_time = false;
     private bool keep_executing = true;
 
@@ -33,9 +34,14 @@ public class sc_TriggerEventExecuter : MonoBehaviour
             Debug.LogWarning($"{gameObject.name} dosen't have a trigger collider. sc_TriggerEventExecuter requires it");
     }
 
+    public void SetExecute(bool value)
+    {
+        can_execute = value;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (!keep_executing) return;
+        if (!keep_executing ||!can_execute) return;
 
         if (target_tag != "")
         {
@@ -55,7 +61,7 @@ public class sc_TriggerEventExecuter : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (!keep_executing) return;
+        if (!keep_executing || !can_execute) return;
 
         if (target_tag != "")
         {

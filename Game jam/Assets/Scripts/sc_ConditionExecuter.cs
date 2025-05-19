@@ -123,21 +123,23 @@ public class sc_ConditionExecuter : MonoBehaviour
         switch (conditionType)
         {
             case ConditionType.GAMEOBJECTS:
-                bool all_dead = true;
+                int dead_amount = 0;
                 for (int i = 0; i < objects_to_die.Count; i++)
                 {
-                    if (objects_to_die[i] != null)
+                    if (objects_to_die[i] == null)
                     {
-                        all_dead = false;
+                        dead_amount++;
                     }
                 }
-                if (all_dead)
+                if (objects_to_die.Count <= 0 && all_die_events.Count > 0)
                 {
-                    objects_to_die.Clear();
                     for (int i = 0; i < all_die_events.Count; i++)
                     {
                         all_die_events[i].Invoke();
                     }
+
+                    objects_to_die.Clear();
+                    all_die_events.Clear();
                 }
                 break;
             case ConditionType.BOOL:
