@@ -370,6 +370,8 @@ public class PlayerMovement : MonoBehaviour
             slide = false;
             if (!moving)
                 dir = Vector2.zero;
+            else
+                audio_source.Play();
         }
     }
 

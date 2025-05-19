@@ -64,7 +64,8 @@ public class EnemyLife : MonoBehaviour
             // Se quita de la lista de enemigos vivos y se destruye
             Rounds.instance.enemies.Remove(this.gameObject);
             // Añade xp al morirse
-            AbilitiesSystem.instance.AddXP(max_hp * 0.05f);
+            if (TutorialManager.instance == null)
+                AbilitiesSystem.instance.AddXP(max_hp * 0.05f);
 
             Vector3 dir = transform.position - PlayerMovement.instance.transform.position;
             ScoreManager.instance.InstantiateText($"XP +{max_hp * 0.05f}", transform.position, dir.normalized, 40, 2, Color.cyan);
