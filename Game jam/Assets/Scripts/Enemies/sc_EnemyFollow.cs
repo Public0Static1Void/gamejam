@@ -57,10 +57,12 @@ public class EnemyFollow : MonoBehaviour
     {
         if (relocating || !can_move) return;
 
-        if (rb.velocity.magnitude > -0.05f && rb.velocity.magnitude < 0.05f)
+        if (rb.velocity.magnitude > -0.1f && rb.velocity.magnitude < 0.1f)
         {
-            if (Physics.Raycast(transform.position, Vector2.down, transform.localScale.y + 0.1f))
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out hit))
             {
+                Debug.Log("Recovered");
                 rb.isKinematic = true;
                 if (agent != null)
                     agent.enabled = true;
@@ -68,6 +70,8 @@ public class EnemyFollow : MonoBehaviour
             }
             else
             {
+                Debug.DrawRay(transform.position, Vector3.down, Color.red);
+                Debug.Log("Non Recovered: " + rb.velocity.magnitude);
                 rb.isKinematic = false;
             }
         }
@@ -95,7 +99,7 @@ public class EnemyFollow : MonoBehaviour
         }
 
         if (agent.isOnNavMesh && !rb.isKinematic)
-            rb.velocity *= 0.75f;
+            rb.velocity *= 0.7f;
     }
 
     private void Update()

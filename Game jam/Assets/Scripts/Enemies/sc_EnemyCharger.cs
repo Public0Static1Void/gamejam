@@ -33,10 +33,8 @@ public class sc_EnemyCharger : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, enemyFollow.target.position) < detection_range)
             {
-                Debug.Log("In range.");
                 if (Physics.Raycast(transform.position, (enemyFollow.target.position - transform.position).normalized, detection_range, layer_player))
                 {
-                    Debug.Log("Seen");
                     StartCoroutine(Charge());
                 }
             }
@@ -123,12 +121,12 @@ public class sc_EnemyCharger : MonoBehaviour
                         float distance = Vector3.Distance(transform.position, enemyFollow.target.position);
                         if (distance < detection_range * 1.25f)
                         {
-                            CameraRotation.instance.ShakeCamera(0.05f + distance * 0.25f, 0.15f);
+                            CameraRotation.instance.ShakeCamera(0.05f + distance * 0.25f, 0.25f);
                         }
                         timer_vibrations = 0;
                     }
 
-                    if (Vector3.Distance(tr.position, last_pos) < 0.1f)
+                    if (Vector3.Distance(tr.position, last_pos) < 0.25f)
                     {
                         // El enemigo se ha quedado atascado
                         Debug.Log("Charger atascado");
@@ -145,6 +143,7 @@ public class sc_EnemyCharger : MonoBehaviour
 
             GameManager.gm.SpawnShpereRadius(transform.position, detection_range, Color.red, true, 25);
 
+            /// Crea las partículas
             Instantiate(air_particles, tr.position, air_particles.transform.rotation);
 
             SoundManager.instance.InstantiateSound(clip_stomp_heavy, tr.position, 1);
@@ -160,15 +159,19 @@ public class sc_EnemyCharger : MonoBehaviour
                         pl.Damage(charge_damage);
                     PlayerMovement pm = coll.GetComponent<PlayerMovement>();
                     if (pm != null)
-                        pm.rb.AddForce(Vector3.up * (enemyFollow.mass * 0.1f), ForceMode.Impulse);
+                        pm.rb.AddForce(Vector3.up * (enemyFollow.mass * 0.05f), ForceMode.Impulse);
                 }
             }
 
+            enemyFollow.can_move = true;
+
             yield return new WaitForSeconds(2);
+
+
+            enemyFollow.rb.velocity = Vector3.zero;
 
             enemyFollow.rb.freezeRotation = false;
             enemyFollow.agent.enabled = true;
-            enemyFollow.can_move = true;
 
             on_charge = false;
             on_cooldown = true;

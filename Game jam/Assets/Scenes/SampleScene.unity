@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44168407, g: 0.49058396, b: 0.5705713, a: 1}
+  m_IndirectSpecularColor: {r: 0.44168356, g: 0.4905833, b: 0.5705704, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -24028,7 +24028,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 843739050}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: caa124ccfddbaac438ef59b67c212055, type: 3}
   m_Name: 
@@ -65159,6 +65159,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1481993890334477789, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2495388776741248277, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -65169,7 +65173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2495388776741248277, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.02
+      value: 4.15
       objectReference: {fileID: 0}
     - target: {fileID: 2495388776741248277, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
       propertyPath: m_LocalPosition.z
@@ -65203,6 +65207,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2927164150303080810, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3350452505753935191, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
       propertyPath: hp
       value: 50
@@ -65218,6 +65226,14 @@ PrefabInstance:
     - target: {fileID: 6902253219128494121, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
       propertyPath: m_Name
       value: pr_Charge enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 7790342786743061255, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7895559175432766488, guid: 3ba3d0f170c9e4a4a9bd9aba36e6f150, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

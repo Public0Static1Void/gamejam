@@ -168,6 +168,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 6411018923320154778, guid: 8b91e79c4b8b40847aabfb0efa3ebed0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6411018923320154778, guid: 8b91e79c4b8b40847aabfb0efa3ebed0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6413038910533882626, guid: 8b91e79c4b8b40847aabfb0efa3ebed0, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -268,7 +276,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!82 &1050810483304101536
@@ -419,6 +427,7 @@ MonoBehaviour:
   agent: {fileID: 0}
   can_move: 1
   speed: 100
+  mass: 1
   rb: {fileID: 0}
   audioSource: {fileID: 1050810483304101536}
 --- !u!136 &7299681474393857685

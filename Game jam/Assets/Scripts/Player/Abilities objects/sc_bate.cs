@@ -18,7 +18,7 @@ public class sc_bate : MonoBehaviour
 
     public bool canSwing = true;
 
-    private List<string> hitted_gameobjects;
+    private List<string> hitted_gameobjects = new List<string>();
 
     private void Update()
     {
