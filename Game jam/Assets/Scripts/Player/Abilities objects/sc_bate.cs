@@ -18,6 +18,7 @@ public class sc_bate : MonoBehaviour
 
     public bool canSwing = true;
 
+    private List<string> hitted_gameobjects;
 
     private void Update()
     {
@@ -29,6 +30,9 @@ public class sc_bate : MonoBehaviour
             if (stateInfo.IsName("Swing") && stateInfo.normalizedTime >= 0.8f)
             {
                 anim.SetBool("swing", false);
+
+                hitted_gameobjects.Clear();
+
                 isSwinging = false;
             }
         }
@@ -55,7 +59,7 @@ public class sc_bate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy") && isSwinging)
+        if (other.CompareTag("Enemy") && isSwinging && !hitted_gameobjects.Contains(other.transform.parent.name))
         {
             Vector3 dir = (other.transform.position - player.position).normalized;
             Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
@@ -73,6 +77,8 @@ public class sc_bate : MonoBehaviour
             {
                 audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
             }
+
+            hitted_gameobjects.Add(other.transform.parent.name);
         }
     }
 }
