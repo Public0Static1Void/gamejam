@@ -61,8 +61,6 @@ public class EnemyLife : MonoBehaviour
             ScoreManager.instance.AddMultiplier(0.1f);
             // Suma la score
             ScoreManager.instance.ChangeScore(amount, transform.position, true);
-            // Se quita de la lista de enemigos vivos y se destruye
-            Rounds.instance.enemies.Remove(this.gameObject);
             // Añade xp al morirse
             if (TutorialManager.instance == null)
                 AbilitiesSystem.instance.AddXP(max_hp * 0.05f);
@@ -129,8 +127,11 @@ public class EnemyLife : MonoBehaviour
         if (transform.parent != null)
             Destroy(transform.parent.gameObject);
 
-        Rounds.instance.enemies.Remove(gameObject);
-        Rounds.instance.enemies_follow.Remove(enemyFollow);
+        if (Rounds.instance != null)
+        {
+            Rounds.instance.enemies.Remove(gameObject);
+            Rounds.instance.enemies_follow.Remove(enemyFollow);
+        }
     }
 
     private IEnumerator ActivateKinematic()

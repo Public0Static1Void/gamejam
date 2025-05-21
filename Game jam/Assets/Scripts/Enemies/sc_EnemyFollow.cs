@@ -13,6 +13,7 @@ public class EnemyFollow : MonoBehaviour
     public bool can_move = true;
 
     public float speed;
+    public float mass = 1;
 
     public Rigidbody rb;
 
@@ -49,7 +50,7 @@ public class EnemyFollow : MonoBehaviour
         if (agent != null)
             agent.enabled = false;
         collider.isTrigger = false;
-        rb.velocity = dir;
+        rb.velocity = dir / mass;
     }
 
     private void FixedUpdate()

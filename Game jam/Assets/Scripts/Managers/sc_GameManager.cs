@@ -299,12 +299,12 @@ public class GameManager : MonoBehaviour
         while (curr_radius < radius)
         {
             curr_radius += Time.deltaTime * grow_speed;
-            ob.transform.localScale = Vector3.one * curr_radius;
+            if (ob != null)
+                ob.transform.localScale = Vector3.one * curr_radius;
 
             yield return null;
         }
 
-        
     }
 
     private IEnumerator HideShaderObject(Renderer renderer)
