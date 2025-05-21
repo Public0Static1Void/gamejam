@@ -98,7 +98,7 @@ public class sc_EnemyCharger : MonoBehaviour
 
 
                 // Revisa si choca contra algún enemigo mientras carga
-                Collider[] colls = Physics.OverlapSphere(transform.position, detection_range, layer_collisions);
+                Collider[] colls = Physics.OverlapSphere(transform.position, collision_range, layer_collisions);
                 if (colls.Length > 0)
                 {
                     for (int i = 0; i < colls.Length; i++)
@@ -109,7 +109,7 @@ public class sc_EnemyCharger : MonoBehaviour
                         EnemyFollow ef = colls[i].GetComponent<EnemyFollow>();
                         if (ef != null)
                         {
-                            ef.AddForceToEnemy(-dir * (enemyFollow.mass * 2));
+                            ef.AddForceToEnemy(-dir * (enemyFollow.mass * 0.1f));
                         }
                     }
                 }
@@ -131,7 +131,7 @@ public class sc_EnemyCharger : MonoBehaviour
                     if (Vector3.Distance(tr.position, last_pos) < 0.1f)
                     {
                         // El enemigo se ha quedado atascado
-                        Debug.Log("Atascado");
+                        Debug.Log("Charger atascado");
                         break;
                     }
                     else
@@ -160,7 +160,7 @@ public class sc_EnemyCharger : MonoBehaviour
                         pl.Damage(charge_damage);
                     PlayerMovement pm = coll.GetComponent<PlayerMovement>();
                     if (pm != null)
-                        pm.rb.AddForce(Vector3.up * enemyFollow.mass * charge_damage * 0.5f, ForceMode.Impulse);
+                        pm.rb.AddForce(Vector3.up * (enemyFollow.mass * 0.1f), ForceMode.Impulse);
                 }
             }
 

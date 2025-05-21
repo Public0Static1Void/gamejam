@@ -75,6 +75,7 @@ public class Rounds : MonoBehaviour
         onRound = true;
         enemyRound *= 1.5f;
         enemy_speed *= 1.05f;
+        AbilitiesSystem.instance.UnlockAbility();
         StartCoroutine(SpawnLine());
     }
 

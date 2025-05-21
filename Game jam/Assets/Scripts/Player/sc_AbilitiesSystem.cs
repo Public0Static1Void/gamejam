@@ -639,6 +639,14 @@ public class AbilitiesSystem : MonoBehaviour
 
         current_xp += value;
 
+        txt_xp.text = $"{current_xp} / {max_xp}";
+        im_xp_bar.fillAmount = current_xp / max_xp;
+
+        StartCoroutine(ShowXPBar());
+    }
+
+    public void UnlockAbility()
+    {
         if (current_xp >= max_xp)
         {
             current_xp = 0;
@@ -646,11 +654,6 @@ public class AbilitiesSystem : MonoBehaviour
 
             GetRandomAbilities(); /// Cuando el jugador consiga suficiente experiencia conseguirá una habilidad
         }
-
-        txt_xp.text = $"{current_xp} / {max_xp}";
-        im_xp_bar.fillAmount = current_xp / max_xp;
-
-        StartCoroutine(ShowXPBar());
     }
 
     private IEnumerator ShowXPBar()
