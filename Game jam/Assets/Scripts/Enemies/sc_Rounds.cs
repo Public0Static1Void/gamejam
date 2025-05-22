@@ -116,8 +116,6 @@ public class Rounds : MonoBehaviour
                 enemy_hp = enemy_life.max_hp * 1.25f;
             }
 
-            Debug.Log("Enemy hp: " + enemy_hp);
-
             enemy_inst.transform.GetChild(0).GetComponent<NavMeshAgent>().speed *= enemy_speed;
 
             enemy_life.max_hp = (int)enemy_hp;
@@ -139,20 +137,23 @@ public class Rounds : MonoBehaviour
         int total_probs = 0;
         for (int i = 0; i < enemy_list.Count; i++)
         {
-            EnemyLife ef = enemy_list[i].GetComponent<EnemyLife>();
+            EnemyLife ef = enemy_list[i].transform.GetComponentInChildren<EnemyLife>();
             frange[i] = total_probs + ef.probability;
             total_probs += ef.probability;
         }
         int rand_enemy = Random.Range(0, total_probs);
 
-        for (int i = 0; i < frange.Length; i++)
+        for (int i = 0, min = 0; i < frange.Length && i < enemy_list.Count; i++)
         {
-            if (rand_enemy < frange[i])
+            if (rand_enemy > min && rand_enemy < frange[i])
             {
                 rand_enemy = i;
                 break;
             }
+            if (min + frange[i] < frange[frange.Length - 1])
+                min += frange[i];
         }
+        Debug.Log("Enemy selected: " + rand_enemy);
 
         if (round >= 3) /// Hasta la ronda 3 no podrán aparecer enemigos especiales
         {

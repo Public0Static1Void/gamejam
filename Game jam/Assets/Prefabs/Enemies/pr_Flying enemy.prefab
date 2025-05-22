@@ -496,6 +496,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7116a89881f67c1469accd5e7e7aafab, type: 3}
   clip_growl: {fileID: 8300000, guid: 8c6bffc97b0a3a241827da1e8b4d8aff, type: 3}
   blood_explosion: {fileID: 8300000, guid: 158e1c912f63e034fbe52ee99b9baa4d, type: 3}
+  probability: 50
   particle_explosion: {fileID: 7637573092767477360, guid: 5c3adb5c97a56d44996a7e83fe2d670d, type: 3}
   particle_hit: {fileID: 7778511957972836761, guid: 72f119dd03395384cbb33ebbeafa3cd2, type: 3}
 --- !u!4 &2143835786586986575 stripped

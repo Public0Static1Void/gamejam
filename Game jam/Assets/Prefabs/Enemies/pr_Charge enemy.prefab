@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3842675257602000103, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: mass
-      value: 50
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6016196572322844253, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: m_RootOrder
@@ -94,11 +94,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6891500263985024543, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: hp
-      value: 50
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6891500263985024543, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: max_hp
-      value: 50
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6891500263985024543, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
+      propertyPath: probability
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7299681474393857685, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: m_Height
