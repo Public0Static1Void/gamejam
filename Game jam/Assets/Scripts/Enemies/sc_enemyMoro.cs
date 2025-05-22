@@ -32,6 +32,19 @@ public class sc_enemyMoro : MonoBehaviour
                     c.GetComponent<EnemyFollow>().AddForceToEnemy(dir.normalized * 5);
                 }
             }
+            
+             calls = Physics.OverlapSphere(transform.position, 29, player);
+            if (calls.Length > 0) 
+            {
+                foreach(Collider c in calls) 
+                {
+                    if (c.name.Contains("Player") == false) continue;
+                    Vector3 dir = c.transform.position - transform.position;
+                    PlayerMovement.instance.rb.AddForce(dir.normalized * 5, ForceMode.Impulse);
+                    c.gameObject.GetComponent<PlayerLife>().Damage(5);
+                    
+                }
+            }
             Destroy(gameObject);
             //Alluahakbar
         }
