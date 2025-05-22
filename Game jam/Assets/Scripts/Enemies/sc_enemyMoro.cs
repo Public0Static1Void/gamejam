@@ -24,12 +24,14 @@ public class sc_enemyMoro : MonoBehaviour
         {
             GameManager.gm.SpawnShpereRadius(gameObject.transform.position, 29, Color.yellow, true);
             Collider[] calls = Physics.OverlapSphere(transform.position, 29, enemy);
+            
             if (calls.Length > 0) 
             {
                 foreach(Collider c in calls) 
                 {
                     Vector3 dir = c.transform.position - transform.position;
                     c.GetComponent<EnemyFollow>().AddForceToEnemy(dir.normalized * 5);
+                    
                 }
             }
             
