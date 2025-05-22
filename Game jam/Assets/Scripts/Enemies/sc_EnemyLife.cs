@@ -16,6 +16,8 @@ public class EnemyLife : MonoBehaviour
     public List<AudioClip> clip_damaged;
     public AudioClip clip_growl, blood_explosion;
 
+    public int probability = 100;
+
     [Header("Particles")]
     public ParticleSystem particle_explosion;
     public ParticleSystem particle_hit;

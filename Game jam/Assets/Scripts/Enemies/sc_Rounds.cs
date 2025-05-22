@@ -107,16 +107,7 @@ public class Rounds : MonoBehaviour
                 randSpawn = Random.Range(0, SpawnPoint.Count);
             }
 
-            int rand_enemy = Random.Range(0, enemy_list.Count);
-            if (round >= 3) /// Hasta la ronda 3 no podrán aparecer enemigos especiales
-            {
-                enemy = enemy_list[rand_enemy];
-            }
-            else
-            {
-                enemy = enemy_list[0];
-            }
-            GameObject enemy_inst = Instantiate(enemy, SpawnPoint[randSpawn].position, transform.rotation);
+            GameObject enemy_inst = Instantiate(GetRandomEnemy(), SpawnPoint[randSpawn].position, transform.rotation);
             enemy_inst.name += " " + round.ToString() + " " + i.ToString();
             /// Suma vida a los enemigos tras cada ronda
             EnemyLife enemy_life = enemy_inst.transform.GetChild(0).GetComponent<EnemyLife>();
@@ -139,5 +130,39 @@ public class Rounds : MonoBehaviour
         round++;
 
         spawning = false;
+    }
+
+    private GameObject GetRandomEnemy()
+    {
+        GameObject result;
+        int[] frange = new int[enemy_list.Count];
+        int total_probs = 0;
+        for (int i = 0; i < enemy_list.Count; i++)
+        {
+            EnemyLife ef = enemy_list[i].GetComponent<EnemyLife>();
+            frange[i] = total_probs + ef.probability;
+            total_probs += ef.probability;
+        }
+        int rand_enemy = Random.Range(0, total_probs);
+
+        for (int i = 0; i < frange.Length; i++)
+        {
+            if (rand_enemy < frange[i])
+            {
+                rand_enemy = i;
+                break;
+            }
+        }
+
+        if (round >= 3) /// Hasta la ronda 3 no podrán aparecer enemigos especiales
+        {
+            result = enemy_list[rand_enemy];
+        }
+        else
+        {
+            result = enemy_list[0];
+        }
+
+        return result;
     }
 }
