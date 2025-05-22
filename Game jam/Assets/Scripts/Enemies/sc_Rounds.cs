@@ -21,7 +21,7 @@ public class Rounds : MonoBehaviour
     private int round = 0;
 
     float enemy_hp = 10;
-    float enemy_speed = 3.5f;
+    float enemy_speed = 1;
 
     private float timer = 0;
 
@@ -108,7 +108,7 @@ public class Rounds : MonoBehaviour
             }
 
             int rand_enemy = Random.Range(0, enemy_list.Count);
-            if (round > 5) /// Hasta la ronda 5 no podrá aparecer el boss
+            if (round >= 3) /// Hasta la ronda 3 no podrán aparecer enemigos especiales
             {
                 enemy = enemy_list[rand_enemy];
             }
@@ -118,7 +118,7 @@ public class Rounds : MonoBehaviour
             }
             GameObject enemy_inst = Instantiate(enemy, SpawnPoint[randSpawn].position, transform.rotation);
             enemy_inst.name += " " + round.ToString() + " " + i.ToString();
-
+            /// Suma vida a los enemigos tras cada ronda
             EnemyLife enemy_life = enemy_inst.transform.GetChild(0).GetComponent<EnemyLife>();
             if (round > 0 && enemy_life != null)
             {
@@ -127,7 +127,7 @@ public class Rounds : MonoBehaviour
 
             Debug.Log("Enemy hp: " + enemy_hp);
 
-            enemy_inst.transform.GetChild(0).GetComponent<NavMeshAgent>().speed = enemy_speed;
+            enemy_inst.transform.GetChild(0).GetComponent<NavMeshAgent>().speed *= enemy_speed;
 
             enemy_life.max_hp = (int)enemy_hp;
 

@@ -159,7 +159,17 @@ public class sc_EnemyCharger : MonoBehaviour
                         pl.Damage(charge_damage);
                     PlayerMovement pm = coll.GetComponent<PlayerMovement>();
                     if (pm != null)
-                        pm.rb.AddForce(Vector3.up * (enemyFollow.mass * 0.05f), ForceMode.Impulse);
+                        pm.rb.AddForce((Vector3.up + dir_player) * (enemyFollow.mass * 0.1f), ForceMode.Impulse);
+                }
+            }
+            collss = Physics.OverlapSphere(transform.position, collision_range, layer_collisions);
+            if (collss.Length > 0)
+            {
+                foreach (Collider coll in collss)
+                {
+                    EnemyFollow ef = coll.GetComponent<EnemyFollow>();
+                    if (ef != null)
+                        ef.AddForceToEnemy((Vector3.up + dir_player) * (enemyFollow.mass * 0.25f));
                 }
             }
 
