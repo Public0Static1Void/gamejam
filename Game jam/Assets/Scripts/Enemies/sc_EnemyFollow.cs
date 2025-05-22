@@ -15,6 +15,9 @@ public class EnemyFollow : MonoBehaviour
     public float speed;
     public float mass = 1;
 
+    public float attack_distance;
+    private bool attacking = false;
+
     public Rigidbody rb;
 
     private Collider collider;
@@ -102,7 +105,12 @@ public class EnemyFollow : MonoBehaviour
 
     private void Update()
     {
-        if (!can_move) return;
+        if (!can_move || !agent.enabled) return;
+
+        if (!attacking && Vector3.Distance(transform.position, target.transform.position) < attack_distance)
+        {
+            StartCoroutine(AttackRoutine());
+        }
 
         if (Vector3.Distance(transform.position, target.transform.position) <= 3)
         {
@@ -114,7 +122,7 @@ public class EnemyFollow : MonoBehaviour
             Debug.Log(Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer) > 0);
             Vector3 new_dir = (PlayerMovement.instance.transform.right * -Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer)
                                + directionAwayFromPlayer * 5);
-            transform.Translate(new_dir.normalized * Time.deltaTime * 12.5f);
+            transform.Translate(directionAwayFromPlayer * Time.deltaTime * 12.5f);
 
             relocate_timer += Time.deltaTime;
             if (relocate_timer > 0.25f)
@@ -126,8 +134,42 @@ public class EnemyFollow : MonoBehaviour
         }
         else if (PlayerMovement.instance.moving && Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 1.5f)
         {
-            directionAwayFromPlayer = (-transform.position + PlayerMovement.instance.transform.position).normalized;
+            directionAwayFromPlayer = (transform.position - PlayerMovement.instance.transform.position).normalized;
             relocating = true;
         }
+    }
+
+    private IEnumerator AttackRoutine()
+    {
+        Debug.Log("Attacking");
+        attacking = true;
+
+        agent.enabled = false;
+        rb.isKinematic = true;
+
+        Vector3 dir = (target.position - transform.position).normalized;
+        transform.rotation = Quaternion.LookRotation(dir);
+
+        float timer = 0;
+        while (timer < attack_distance)
+        {
+            Debug.DrawRay(transform.position, dir, Color.yellow);
+            transform.Translate(dir * Time.deltaTime * 2);
+            timer += Time.deltaTime * 2;
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(2); /// Esperarán 2 segundos antes de volver a atacar
+
+        agent.enabled = true;
+        rb.isKinematic = false;
+
+        attacking = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.gray;
+        Gizmos.DrawWireSphere(transform.position, attack_distance);
     }
 }

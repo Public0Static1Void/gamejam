@@ -44,21 +44,25 @@ PrefabInstance:
       propertyPath: mass
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 3842675257602000103, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
+      propertyPath: attack_distance
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6016196572322844253, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016196572322844253, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.22713
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016196572322844253, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.22894
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016196572322844253, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.9973607
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016196572322844253, guid: f12d9d83cd9b44345b480796a3020824, type: 3}
       propertyPath: m_LocalRotation.w

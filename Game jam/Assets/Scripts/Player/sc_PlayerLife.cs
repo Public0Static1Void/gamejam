@@ -240,7 +240,6 @@ public class PlayerLife : MonoBehaviour
         if (coll.transform.tag == "Enemy" && !damaged)
         {
             Vector3 dir = (transform.position - coll.transform.position).normalized;
-            Debug.Log(!(Vector3.Dot(transform.right, dir) > 0));
             SplashBloodOnScreen(!(Vector3.Dot(transform.right, dir) > 0));
 
             StartCoroutine(InstantiateDamageDirection(coll.transform.position));
