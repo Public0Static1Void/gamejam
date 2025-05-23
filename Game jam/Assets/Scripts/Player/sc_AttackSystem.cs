@@ -31,6 +31,8 @@ public class AttackSystem : MonoBehaviour
 
     private string last_controller = "";
 
+    private Animator anim;
+
     void Awake()
     {
         if (instance == null)
@@ -43,6 +45,7 @@ public class AttackSystem : MonoBehaviour
 
     void Start()
     {
+        anim = GetComponent<Animator>();
         abilities_order = new Ability[slots_abilities.Count];
 
         dir = new Vector2[slots_cooldowns.Count];
@@ -265,5 +268,10 @@ public class AttackSystem : MonoBehaviour
         }
 
         UpdateUI();
+    }
+
+    public void DisableAnimator()
+    {
+        anim.enabled = false;
     }
 }

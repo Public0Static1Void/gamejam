@@ -34,7 +34,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: swing
+    m_ConditionEvent: bat_attack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 2216665641075080904}
@@ -59,7 +59,7 @@ AnimatorController:
   m_Name: Right hand
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: swing
+  - m_Name: bat_attack
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0

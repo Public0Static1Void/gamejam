@@ -20,6 +20,8 @@ public class sc_bate : MonoBehaviour
 
     private List<string> hitted_gameobjects = new List<string>();
 
+    public string attack_name = "anim_player_bate_attack";
+
     private void Update()
     {
         if (isSwinging)
@@ -27,9 +29,9 @@ public class sc_bate : MonoBehaviour
             AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
             // Mira si la animación ha terminado
-            if (stateInfo.IsName("Swing") && stateInfo.normalizedTime >= 0.8f)
+            if (stateInfo.IsName(attack_name) && stateInfo.normalizedTime >= 0.8f)
             {
-                anim.SetBool("swing", false);
+                anim.SetBool("bat_attack", false);
 
                 hitted_gameobjects.Clear();
 
@@ -43,7 +45,7 @@ public class sc_bate : MonoBehaviour
         if (con.performed && gameObject.activeSelf && canSwing && !isSwinging && PlayerMovement.instance.current_stamina - PlayerMovement.instance.max_stamina * 0.1f > 0)
         {
             isSwinging = true;
-            anim.SetBool("swing", true);
+            anim.SetBool("bat_attack", true);
 
             Color col = PlayerMovement.instance.stamina_image.color;
             PlayerMovement.instance.stamina_image.color = new Color(col.r, col.g, col.b, 1);

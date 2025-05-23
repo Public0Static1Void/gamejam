@@ -18451,6 +18451,7 @@ MonoBehaviour:
   clip_swing: {fileID: 8300000, guid: 87465848556a39440bc5d5c5cfd920c9, type: 3}
   clip_hit: {fileID: 8300000, guid: 81f1dd7f4be9bf6499b6f6393b706a34, type: 3}
   canSwing: 1
+  attack_name: Swing
 --- !u!4 &1241772789
 Transform:
   m_ObjectHideFlags: 0
