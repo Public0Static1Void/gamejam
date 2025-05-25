@@ -55372,7 +55372,7 @@ MonoBehaviour:
   explosion_sound: {fileID: 8300000, guid: df91770e48f204945bdb26adf78a2678, type: 3}
   prefab_mine: {fileID: 3690719515193124413, guid: d325f05266f7cb54ea657ea28854bc4d, type: 3}
   prefab_hook: {fileID: 1518214880047292071, guid: fa312cb7577df0b4ea2a5622ae54f327, type: 3}
-  prefab_monkey: {fileID: 7240886563392230779, guid: 850eb793521b9c7479b18abcbf2bf5f1, type: 3}
+  prefab_monkey: {fileID: 9039450839084793410, guid: a2c9ec23bef76e847847aba90d0f5fe3, type: 3}
   clip_plant_mine: {fileID: 8300000, guid: 01af89733871bf2498c895a4e07ae859, type: 3}
   layer_enemy:
     serializedVersion: 2
