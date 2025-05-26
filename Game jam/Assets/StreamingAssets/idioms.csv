@@ -78,3 +78,7 @@ speed text;VELOCIDAD;SPEED
 Volume title;Volumen;Volume
 ;;
 Enter game title;Comenzar partida;Enter game
+;;
+ONGAME Buy Ability keyboard;Pulsa <color=yellow>F</color> para tirar de la caja (<color=blue>1000 score</color>);Press <color=yellow>F</color> to buy an ability (<color=blue>1000 score</color>)
+ONGAME Buy Ability gamepad PS;Pulsa <color=yellow>X</color> para tirar de la caja (<color=blue>1000 score</color>);Press <color=yellow>X</color> to buy an ability (<color=blue>1000 score</color>)
+ONGAME Buy Ability gamepad XB;Pulsa <color=yellow>A</color> para tirar de la caja (<color=blue>1000 score</color>);Press <color=yellow>A</color> to buy an ability (<color=blue>1000 score</color>)

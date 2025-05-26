@@ -155,7 +155,7 @@ public class Rounds : MonoBehaviour
         }
         Debug.Log("Enemy selected: " + rand_enemy);
 
-        if (round >= 3) /// Hasta la ronda 3 no podrán aparecer enemigos especiales
+        if (round >= 3 && rand_enemy < enemy_list.Count) /// Hasta la ronda 3 no podrán aparecer enemigos especiales
         {
             result = enemy_list[rand_enemy];
         }

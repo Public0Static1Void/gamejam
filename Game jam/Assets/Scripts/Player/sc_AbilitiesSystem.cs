@@ -655,6 +655,13 @@ public class AbilitiesSystem : MonoBehaviour
             GetRandomAbilities(); /// Cuando el jugador consiga suficiente experiencia conseguirá una habilidad
         }
     }
+    public Ability UnlockRandomAbility()
+    {
+        int rand_num = Random.Range(0, abilities.Count);
+        Ability ab = abilities[rand_num];
+        AddAbility(abilities[rand_num].name);
+        return ab;
+    }
 
     private IEnumerator ShowXPBar()
     {
