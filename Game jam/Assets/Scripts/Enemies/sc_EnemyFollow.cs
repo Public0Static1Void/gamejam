@@ -29,9 +29,11 @@ public class EnemyFollow : MonoBehaviour
 
     private float timer = 0;
 
-    float relocate_timer = 0;
+    private float relocate_timer = 0;
 
     public AudioSource audioSource;
+
+    private float last_distance = 0;
 
     void Start()
     {
@@ -43,6 +45,8 @@ public class EnemyFollow : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         original_position = transform.position;
+
+        last_distance = Vector3.Distance(transform.position, target.position);
     }
 
     public void AddForceToEnemy(Vector3 dir)
@@ -105,65 +109,84 @@ public class EnemyFollow : MonoBehaviour
 
     private void Update()
     {
-        if (!can_move || !agent.enabled) return;
+        if (!can_move) return;
 
         if (!attacking && Vector3.Distance(transform.position, target.transform.position) < attack_distance)
         {
             StartCoroutine(AttackRoutine());
         }
 
-        if (Vector3.Distance(transform.position, target.transform.position) <= 3)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(((target.position - Vector3.up / 2) - transform.position).normalized), Time.deltaTime);
-        }
+        // Aparta al enemigo del camino del jugador
+        Vector3 p_dir = PlayerMovement.instance.transform.position - transform.position;
+        Vector3 p_vel = PlayerMovement.instance.rb.velocity.normalized;
 
-        if (relocating && rb.velocity.magnitude < 0.01f && rb.velocity.magnitude > -0.01f)
+        float dot = Vector3.Dot(p_vel, -p_dir.normalized);
+        if (dot < 0)
         {
-            Debug.Log(Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer) > 0);
-            Vector3 new_dir = (PlayerMovement.instance.transform.right * -Vector3.Dot(PlayerMovement.instance.transform.right, directionAwayFromPlayer)
-                               + directionAwayFromPlayer * 5);
-            transform.Translate(directionAwayFromPlayer * Time.deltaTime * 12.5f);
-            relocate_timer += Time.deltaTime;
-            if (relocate_timer > 0.25f)
-            {
-                relocate_timer = 0;
-                relocating = false;
-            }
+            // El jugador se está alejando del enemigo
             return;
         }
-        else if (PlayerMovement.instance.moving && Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 1.5f)
+
+        if (!relocating && PlayerMovement.instance.moving && Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 1.5f)
         {
-            directionAwayFromPlayer = (-transform.position + PlayerMovement.instance.transform.position).normalized;
+            // Calcula la dirección para alejarse
+            directionAwayFromPlayer = (transform.position - PlayerMovement.instance.transform.position).normalized;
+
+            if (agent.enabled)
+                agent.enabled = false;
+
             relocating = true;
+            relocate_timer = 0;
+        }
+
+        // Aleja al enemigo del camino del jugador
+        if (relocating)
+        {
+            transform.Translate(directionAwayFromPlayer * Time.deltaTime * 4, Space.World);
+
+            relocate_timer += Time.deltaTime;
+            if (relocate_timer >= 0.25f)
+            {
+                relocating = false;
+                relocate_timer = 0f;
+
+                if (!agent.enabled)
+                    agent.enabled = true;
+
+                last_distance = Vector3.Distance(transform.position, target.position);
+            }
         }
     }
 
     private IEnumerator AttackRoutine()
     {
-        Debug.Log("Attacking");
-        attacking = true;
-
-        agent.enabled = false;
-        rb.isKinematic = true;
-
-        Vector3 dir = (target.position - transform.position).normalized;
-        transform.rotation = Quaternion.LookRotation(dir);
-
-        float timer = 0;
-        while (timer < attack_distance)
+        if (agent.enabled)
         {
-            Debug.DrawRay(transform.position, dir, Color.yellow);
-            transform.Translate(dir * Time.deltaTime * 2);
-            timer += Time.deltaTime * 2;
-            yield return null;
+            Debug.Log("Attacking");
+            attacking = true;
+
+            agent.enabled = false;
+            rb.isKinematic = true;
+
+            Vector3 dir = (target.position - transform.position).normalized;
+            transform.rotation = Quaternion.LookRotation(dir);
+
+            float timer = 0;
+            while (timer < attack_distance)
+            {
+                Debug.DrawRay(transform.position, dir, Color.yellow);
+                transform.Translate(dir * Time.deltaTime * 2);
+                timer += Time.deltaTime * 2;
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(2); /// Esperarán 2 segundos antes de volver a atacar
+
+            agent.enabled = true;
+            rb.isKinematic = false;
+
+            attacking = false;
         }
-
-        yield return new WaitForSeconds(2); /// Esperarán 2 segundos antes de volver a atacar
-
-        agent.enabled = true;
-        rb.isKinematic = false;
-
-        attacking = false;
     }
 
     private void OnDrawGizmos()
