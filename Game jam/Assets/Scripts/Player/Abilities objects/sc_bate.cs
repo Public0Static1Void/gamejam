@@ -16,6 +16,8 @@ public class sc_bate : MonoBehaviour
 
     private AudioSource audioSource;
 
+    public float z_rot;
+
     public bool canSwing = true;
 
     private List<string> hitted_gameobjects = new List<string>();
@@ -24,6 +26,13 @@ public class sc_bate : MonoBehaviour
 
     private float timer = 0;
     private bool cooldown = false;
+
+    CameraRotation cam_rot;
+
+    private void Start()
+    {
+        cam_rot = CameraRotation.instance;
+    }
 
     private void Update()
     {
@@ -38,6 +47,7 @@ public class sc_bate : MonoBehaviour
 
                 hitted_gameobjects.Clear();
 
+                cooldown = true;
                 isSwinging = false;
             }
         }
@@ -62,7 +72,6 @@ public class sc_bate : MonoBehaviour
             Color col = PlayerMovement.instance.stamina_image.color;
             PlayerMovement.instance.stamina_image.color = new Color(col.r, col.g, col.b, 1);
 
-
             PlayerMovement.instance.ChangeStaminaValue(PlayerMovement.instance.current_stamina - 1);
             if (PlayerMovement.instance.current_stamina < 0)
                 PlayerMovement.instance.current_stamina = 0;
@@ -73,7 +82,7 @@ public class sc_bate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy") && isSwinging && !hitted_gameobjects.Contains(other.transform.parent.name))
+        if (other.CompareTag("Enemy") && isSwinging && !hitted_gameobjects.Contains(other.transform.parent != null ? other.transform.parent.name : other.name))
         {
             Vector3 dir = (other.transform.position - player.position).normalized;
             Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
@@ -94,7 +103,7 @@ public class sc_bate : MonoBehaviour
                 audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
             }
 
-            hitted_gameobjects.Add(other.transform.parent.name);
+            hitted_gameobjects.Add(other.transform.parent != null ? other.transform.parent.name : other.name);
         }
     }
 }

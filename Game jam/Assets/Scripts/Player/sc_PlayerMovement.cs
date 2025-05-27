@@ -95,6 +95,10 @@ public class PlayerMovement : MonoBehaviour
         player_agent = GetComponent<NavMeshAgent>();
         player_agent.updatePosition = false;
         player_agent.updateRotation = false;
+
+        var unused = cameraRotation.transform.position;
+
+        SoundManager.instance.PlaySound(null);
     }
 
     private void FixedUpdate()
@@ -160,6 +164,9 @@ public class PlayerMovement : MonoBehaviour
 
             Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10); /// Movimiento de la cámara
 
+            if (cameraRotation.z < 1.5f)
+                cameraRotation.z += Time.deltaTime * 8;
+
 
             // Pérdida de velocidad y partículas
 
@@ -208,9 +215,11 @@ public class PlayerMovement : MonoBehaviour
             /// Cambia el volumen según la velocidad
             SoundManager.instance.audioSource.volume = 1 - (1 - (current_speed / speed));
         }
-        else if (Camera.main.transform.position != camera_original_position)
+        else if (cameraRotation.z > 0) /// Cambia la rotación de la cámara a 0
         {
-            //Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, camera_original_position, Time.deltaTime * 10);
+            cameraRotation.z -= Time.deltaTime * 5;
+            if (cameraRotation.z < 0)
+                cameraRotation.z = 0;
         }
         #endregion
 
@@ -237,6 +246,7 @@ public class PlayerMovement : MonoBehaviour
             transform.position = start_position;
             Debug.Log("The player teleported cause it's assumed to be outside of the map (>500 blocks away)");
         }
+
 
         if (sprinting || slide)
         {

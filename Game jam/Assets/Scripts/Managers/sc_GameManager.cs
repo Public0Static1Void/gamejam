@@ -138,9 +138,9 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.F))
         {
-            return;
             if (Physics.Raycast(PlayerMovement.instance.transform.position, Camera.main.transform.forward, out RaycastHit hit))
             {
                 plane_ob = hit.transform.gameObject;
@@ -178,6 +178,7 @@ public class GameManager : MonoBehaviour
 
             //PauseGame();
         }
+        */
         // Fade del texto
         if (show_announce)
         {
@@ -765,6 +766,19 @@ public class GameManager : MonoBehaviour
     public static float GetPercentage(float value, float min, float max)
     {
         return ((value - min) / max - min) * 100f;
+    }
+
+    public void LerpFloat(float value, float target_value, float speed)
+    {
+        StartCoroutine(LerpFloatCoroutine(value, target_value, speed));
+    }
+    private IEnumerator LerpFloatCoroutine(float value, float target_value, float speed)
+    {
+        while (value < target_value)
+        {
+            value += speed;
+            yield return null;
+        }
     }
     #endregion
 }

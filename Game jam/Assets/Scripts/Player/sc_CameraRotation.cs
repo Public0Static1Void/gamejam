@@ -17,7 +17,7 @@ public class CameraRotation : MonoBehaviour
     public float camera_breath_force;
     [HideInInspector]
     public float cameraSpeed_slide;
-    public float x, y;
+    public float x, y, z;
 
     [Header("References")]
     public float player_turn_speed;
@@ -133,7 +133,7 @@ public class CameraRotation : MonoBehaviour
 
         /// Rotación del jugador y la cámara
         player.rotation = Quaternion.Lerp(player.rotation, Quaternion.Euler(0, x, 0), Time.deltaTime * player_turn_speed);
-        transform.rotation = Quaternion.Euler(-y, x, 0);
+        transform.rotation = Quaternion.Euler(-y, x, z);
 
         /// Movimiento de los elementos de la UI con la cámara
         for (int i = 0; i < UIElements_to_move.Count; i++)

@@ -51,8 +51,7 @@ public class Hook : MonoBehaviour
         ob_renderer = transform.GetChild(0).GetComponent<MeshRenderer>();
         ob_renderer.enabled = false;
 
-        Debug.Log("[sc_Hook.cs] Remember to put the left hand of the player as the second child");
-        anim = ReturnScript.instance.transform.GetChild(1).GetComponent<Animator>();
+        anim = ReturnScript.instance.transform.GetComponent<Animator>();
 
         playerLife = ReturnScript.instance.gameObject.GetComponent<PlayerLife>();
     }
@@ -89,7 +88,8 @@ public class Hook : MonoBehaviour
         audioSource = SoundManager.instance.InstantiateSound(clip_chainmoving, transform.position);
         audioSource.loop = true;
 
-        anim.SetBool("Launch", true);
+        // Empieza la animación de lanzar
+        anim.SetBool("Hook", true);
 
         ob_renderer.enabled = true;
         enemy_hooked = false;
@@ -228,7 +228,7 @@ public class Hook : MonoBehaviour
         // El jugador tiene una ventana de tiempo para atacar sin hacerse daño
         playerLife.Invulnerable();
 
-        anim.SetBool("Launch", false);
+        anim.SetBool("Hook", false);
 
         if (enemyFollow != null)
         {
