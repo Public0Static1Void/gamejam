@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -35,9 +36,13 @@ public class EnemyFollow : MonoBehaviour
 
     private float last_distance = 0;
 
+    PlayerMovement pm;
+
     void Start()
     {
-        target = PlayerMovement.instance.transform;
+        pm = PlayerMovement.instance;
+        target = pm.transform;
+
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         collider = GetComponent<Collider>();
@@ -111,26 +116,25 @@ public class EnemyFollow : MonoBehaviour
     {
         if (!can_move) return;
 
-        if (!attacking && Vector3.Distance(transform.position, target.transform.position) < attack_distance)
-        {
-            StartCoroutine(AttackRoutine());
-        }
 
         // Aparta al enemigo del camino del jugador
-        Vector3 p_dir = PlayerMovement.instance.transform.position - transform.position;
-        Vector3 p_vel = PlayerMovement.instance.rb.velocity.normalized;
+        Vector3 p_dir = target.position - transform.position;
+        Vector3 p_vel = pm.rb.velocity.normalized;
 
         float dot = Vector3.Dot(p_vel, -p_dir.normalized);
-        if (dot < 0)
+        if (dot < 0 || pm.slide)
         {
             // El jugador se está alejando del enemigo
+            relocating = false;
             return;
         }
 
-        if (!relocating && PlayerMovement.instance.moving && Vector3.Distance(transform.position, PlayerMovement.instance.transform.position) < 1.5f)
+        if (!relocating && pm.moving && Vector3.Distance(transform.position, target.position) < 1.5f)
         {
             // Calcula la dirección para alejarse
-            directionAwayFromPlayer = (transform.position - PlayerMovement.instance.transform.position).normalized;
+            directionAwayFromPlayer = (transform.position - target.position).normalized;
+
+            directionAwayFromPlayer += target.transform.right * Vector3.Dot(-p_dir.normalized, target.right) * 1.5f;
 
             if (agent.enabled)
                 agent.enabled = false;
@@ -155,6 +159,11 @@ public class EnemyFollow : MonoBehaviour
 
                 last_distance = Vector3.Distance(transform.position, target.position);
             }
+        }
+
+        if (!relocating && !attacking && Vector3.Distance(transform.position, target.position) < attack_distance)
+        {
+            StartCoroutine(AttackRoutine());
         }
     }
 

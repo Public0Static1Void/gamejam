@@ -22,6 +22,9 @@ public class sc_bate : MonoBehaviour
 
     public string attack_name = "anim_player_bate_attack";
 
+    private float timer = 0;
+    private bool cooldown = false;
+
     private void Update()
     {
         if (isSwinging)
@@ -38,11 +41,20 @@ public class sc_bate : MonoBehaviour
                 isSwinging = false;
             }
         }
+        else if (cooldown)
+        {
+            timer += Time.deltaTime;
+            if (timer > 1.5f)
+            {
+                cooldown = false;
+                timer = 0;
+            }
+        }
     }
 
     public void OnSwing(InputAction.CallbackContext con)
     {
-        if (con.performed && gameObject.activeSelf && canSwing && !isSwinging && PlayerMovement.instance.current_stamina - PlayerMovement.instance.max_stamina * 0.1f > 0)
+        if (!cooldown && con.performed && gameObject.activeSelf && canSwing && !isSwinging && PlayerMovement.instance.current_stamina - PlayerMovement.instance.max_stamina * 0.1f > 0)
         {
             isSwinging = true;
             anim.SetBool("bat_attack", true);
@@ -70,6 +82,8 @@ public class sc_bate : MonoBehaviour
             other.GetComponent<EnemyLife>().Damage((int)(ReturnScript.instance.damage * 0.5f));
 
             ScoreManager.instance.InstantiateText("-" + (ReturnScript.instance.damage * 0.5f).ToString("F0"),Camera.main.transform.position + Camera.main.transform.forward * 0.25f, dir, 65, 3, Color.red);
+
+            GameManager.gm.ShakeController(0.1f, 0.05f, 1);
 
             if (audioSource == null)
             {
