@@ -60,6 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     private float slide_timer = 0;
 
+    private float stamina_timer = 0;
 
     private SphereCollider[] colliders = new SphereCollider[2];
 
@@ -125,7 +126,11 @@ public class PlayerMovement : MonoBehaviour
                     stamina_image.color = col;
                 }
                 stamina_image.fillAmount = 1 - (1 - (current_stamina / max_stamina));
-                stamina_image_bg.fillAmount = stamina_image.fillAmount + 0.05f;
+                stamina_timer += Time.deltaTime;
+                if (stamina_timer > 0.5f)
+                {
+                    stamina_image_bg.fillAmount -= Time.fixedDeltaTime / max_stamina;
+                }
 
                 // Resta de stamina mientras corres
                 current_stamina -= Time.fixedDeltaTime;
@@ -315,6 +320,9 @@ public class PlayerMovement : MonoBehaviour
                 {
                     audio_source.pitch = 1;
                 }
+
+                stamina_timer = 0;
+                stamina_image_bg.fillAmount = stamina_image.fillAmount;
             }
         }
     }
