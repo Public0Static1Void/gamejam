@@ -257,19 +257,24 @@ public class PlayerLife : MonoBehaviour
         parent.SetAsFirstSibling();
 
         Vector3 point = Camera.main.WorldToViewportPoint(pos);
-        Vector2 ui_pos = new Vector2(point.x - 0.5f, point.z - 0.5f).normalized;
-
-        float angleDeg = Vector3.SignedAngle((pos - transform.position).normalized, Camera.main.transform.forward, Vector3.up);
-
-        parent.transform.localRotation = Quaternion.Euler(0, 0, angleDeg);
-
-        parent.gameObject.SetActive(true);
-
-        while (im.color.a > 0)
+        if (point.z < 0)
         {
-            im.color = new Color(im.color.r, im.color.g, im.color.b, im.color.a - Time.deltaTime * 2);
-            yield return null;
+            Vector2 ui_pos = new Vector2(point.x - 0.5f, point.z - 0.5f).normalized;
+
+            float angleDeg = Vector3.SignedAngle((pos - transform.position).normalized, Camera.main.transform.forward, Vector3.up);
+
+            parent.transform.localRotation = Quaternion.Euler(0, 0, angleDeg);
+            Debug.Log(angleDeg);
+
+            parent.gameObject.SetActive(true);
+
+            while (im.color.a > 0)
+            {
+                im.color = new Color(im.color.r, im.color.g, im.color.b, im.color.a - Time.deltaTime * 2);
+                yield return null;
+            }
         }
+        
 
         Destroy(parent.gameObject);
     }
