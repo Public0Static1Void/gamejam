@@ -74,14 +74,17 @@ public class EnemyFollow : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(transform.position, Vector3.down, out hit))
             {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true;
-                if (agent != null)
-                    agent.enabled = true;
-                collider.isTrigger = true;
+                if (hit.distance < transform.localScale.y + 1)
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    rb.isKinematic = true;
+                    if (agent != null)
+                        agent.enabled = true;
+                    collider.isTrigger = true;
 
-                timer = 0;
+                    timer = 0;
+                }
             }
             else
             {
