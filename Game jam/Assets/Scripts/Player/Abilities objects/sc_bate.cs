@@ -54,7 +54,7 @@ public class sc_bate : MonoBehaviour
         else if (cooldown)
         {
             timer += Time.deltaTime;
-            if (timer > 1.5f)
+            if (timer > 0.5f)
             {
                 cooldown = false;
                 timer = 0;

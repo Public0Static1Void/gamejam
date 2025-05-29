@@ -428,7 +428,7 @@ MonoBehaviour:
   can_move: 1
   speed: 100
   mass: 1
-  attack_distance: 2
+  attack_distance: 3
   rb: {fileID: 0}
   audioSource: {fileID: 1050810483304101536}
 --- !u!136 &7299681474393857685
