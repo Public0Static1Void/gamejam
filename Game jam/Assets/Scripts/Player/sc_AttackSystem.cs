@@ -27,7 +27,8 @@ public class AttackSystem : MonoBehaviour
     public Sprite spr_left_click;
     public Sprite spr_R2;
     public Sprite spr_RT;
-    Vector2[] dir;
+    Vector2[] pos_start;
+    Vector2[] size_start;
 
     private string last_controller = "";
 
@@ -48,7 +49,8 @@ public class AttackSystem : MonoBehaviour
         anim = GetComponent<Animator>();
         abilities_order = new Ability[slots_abilities.Count];
 
-        dir = new Vector2[slots_cooldowns.Count];
+        pos_start = new Vector2[slots_cooldowns.Count];
+        size_start = new Vector2[slots_cooldowns.Count];
 
         for (int i = 0; i < slots_cooldowns.Count; i++)
         {
@@ -59,13 +61,14 @@ public class AttackSystem : MonoBehaviour
             slots_cooldowns[i].color = new Color(col.r, col.g, col.b, 0);
         }
 
-        for (int i = 0; i < dir.Length; i++)
+        for (int i = 0; i < pos_start.Length; i++)
         {
             int target = i + 1;
-            if (target >= dir.Length)
+            if (target >= pos_start.Length)
                 target = 0;
 
-            dir[i] = (ui_positions[target] - ui_positions[i]).normalized;
+            pos_start[i] = slots_cooldowns[i].rectTransform.position;
+            size_start[i] = slots_cooldowns[i].rectTransform.localScale;
         }
 
         im_attack_icon.gameObject.SetActive(false);
@@ -103,48 +106,55 @@ public class AttackSystem : MonoBehaviour
     {
         moving_ui = true;
 
-        Vector2[] sizes = new Vector2[slots_cooldowns.Count];
+        int count = slots_cooldowns.Count;
 
-        for (int i = 0; i < sizes.Length; i++)
+        Vector2[] startPositions = new Vector2[count];
+        Vector2[] targetPositions = new Vector2[count];
+
+        Vector2[] startSize = new Vector2[count];
+        Vector2[] targetSize = new Vector2[count];
+        // Recoge la posición de inicio y el target
+        for (int i = 0; i < count; i++)
         {
-            sizes[i] = slots_cooldowns[i].rectTransform.localScale;
+            startPositions[i] = slots_cooldowns[i].rectTransform.position;
+            startSize[i] = slots_cooldowns[i].rectTransform.localScale;
+            int target = (i + 1) % count;
+            targetPositions[i] = pos_start[target];
+            targetSize[i] = size_start[target];
         }
 
+        float duration = 0.3f;
         float timer = 0;
-        while (true)
-        {
-            for (int i = 0; i < slots_cooldowns.Count; i++)
-            {
-                int target = i + 1;
-                if (target >= dir.Length)
-                    target = 0;
-                slots_cooldowns[i].rectTransform.localScale = Vector2.Lerp(slots_cooldowns[i].rectTransform.localScale, sizes[target], Time.deltaTime);
 
-                slots_cooldowns[i].rectTransform.anchoredPosition += dir[i] * Time.deltaTime * 100;
+        while (timer < duration)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                slots_cooldowns[i].rectTransform.position = Vector2.Lerp(startPositions[i], targetPositions[i], timer / duration);
+                slots_cooldowns[i].rectTransform.localScale = Vector2.Lerp(startSize[i], targetSize[i], timer / duration);
             }
 
             timer += Time.deltaTime;
-            if (timer > 1)
-            {
-                break;
-            }
-
             yield return null;
         }
 
-        List<UnityEngine.UI.Image> copy = new List<UnityEngine.UI.Image>(slots_cooldowns);
-        for (int i = 0; i < dir.Length; i++)
+        // Pone cada slot en su posición final
+        for (int i = 0; i < count; i++)
         {
-            int t = i + 1;
-            if (t >= dir.Length)
-                t = 0;
-            slots_cooldowns[i] = copy[t];
+            int target = (i + 1) % count;
+            slots_cooldowns[i].rectTransform.position = pos_start[target];
+            slots_cooldowns[i].rectTransform.localScale = size_start[target];
         }
 
-        if (GetCurrentAbility().current_cooldown >= GetCurrentAbility().cooldown)
+        Vector2 first = pos_start[0];
+        Vector2 first_size = size_start[0];
+        for (int i = 0; i < count - 1; i++)
         {
-            slots_cooldowns[0].fillAmount = 1;
+            pos_start[i] = pos_start[i + 1];
+            size_start[i] = size_start[i + 1];
         }
+        pos_start[count - 1] = first;
+        size_start[count - 1] = first_size;
 
         moving_ui = false;
     }

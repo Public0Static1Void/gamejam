@@ -14,6 +14,8 @@ public class PlayerLife : MonoBehaviour
     private Image bg_life_amount;
     public AudioSource hearth_beat_as;
 
+    public Image im_red;
+
     public RectTransform main_canvas;
     public List<Sprite> blood_splashes;
 
@@ -99,11 +101,19 @@ public class PlayerLife : MonoBehaviour
         if (damaged)
         {
             timer += Time.deltaTime;
+            if (im_red.color.a < 0.25f)
+            {
+                im_red.color = new Color(im_red.color.r, im_red.color.g, im_red.color.b, im_red.color.a + Time.deltaTime * 6);
+            }
             if (timer >= invunerable_time)
             {
                 damaged = false;
                 timer = 0;
             }
+        }
+        else if (im_red.color.a > 0)
+        {
+            im_red.color = new Color(im_red.color.r, im_red.color.g, im_red.color.b, im_red.color.a - Time.deltaTime * 5);
         }
 
         if (Input.GetKeyDown(KeyCode.G))

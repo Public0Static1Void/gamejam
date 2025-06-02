@@ -99,7 +99,7 @@ public class ReturnScript : MonoBehaviour
         {
             // La posición de la cámara se pasa al punto donde volverás en el tiempo para dar una vista aérea
             Camera.main.transform.parent = null;
-            Camera.main.transform.localPosition = new Vector3(past_positions[0].x, past_positions[0].y + 4, past_positions[0].z);
+            Camera.main.transform.localPosition = new Vector3(past_positions[0].x, past_positions[0].y + 3, past_positions[0].z);
 
             /// Calcula la distancia hasta el último punto en un rango de 1 a 0
             cooldown_image.fillAmount = 1 - (1 - (Vector3.Distance(transform.position, past_positions[0]) / Vector3.Distance(past_positions[0], past_positions[past_positions.Count - 1])));

@@ -74,14 +74,17 @@ public class EnemyFollow : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(transform.position, Vector3.down, out hit))
             {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.isKinematic = true;
-                if (agent != null)
-                    agent.enabled = true;
-                collider.isTrigger = true;
+                if (hit.distance < transform.localScale.y + 1)
+                {
+                    rb.velocity = Vector3.zero;
+                    rb.angularVelocity = Vector3.zero;
+                    rb.isKinematic = true;
+                    if (agent != null)
+                        agent.enabled = true;
+                    collider.isTrigger = true;
 
-                timer = 0;
+                    timer = 0;
+                }
             }
             else
             {
@@ -126,14 +129,15 @@ public class EnemyFollow : MonoBehaviour
         Vector3 p_vel = pm.rb.velocity.normalized;
 
         float dot = Vector3.Dot(p_vel, -p_dir.normalized);
-        if (dot < 0 || pm.slide)
+        if (dot < -0.3f || pm.slide)
         {
             // El jugador se está alejando del enemigo
             relocating = false;
             return;
         }
 
-        if (!relocating && pm.moving && Vector3.Distance(transform.position, target.position) < 1.5f)
+        // Comprueba si se tiene que alejar del camino del jugador
+        if (!attacking && !relocating && pm.moving && Vector3.Distance(transform.position, target.position) < 1.5f)
         {
             // Calcula la dirección para alejarse
             directionAwayFromPlayer = (transform.position - target.position).normalized;
@@ -188,7 +192,7 @@ public class EnemyFollow : MonoBehaviour
             while (timer < attack_distance)
             {
                 Debug.DrawRay(transform.position, dir, Color.yellow);
-                transform.Translate(dir * Time.deltaTime * 2);
+                transform.Translate(transform.forward * Time.deltaTime * 3);
                 timer += Time.deltaTime * 2;
                 yield return null;
             }
