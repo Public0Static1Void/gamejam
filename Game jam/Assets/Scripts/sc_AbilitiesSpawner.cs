@@ -68,6 +68,8 @@ public class sc_AbilitiesSpawner : MonoBehaviour
                 /// Desbloquea una habilidad random
                 Ability ab = AbilitiesSystem.instance.UnlockRandomAbility();
 
+                if (ab == null) return;
+
                 // Muestra la habilidad desbloqueada
                 /// Crea el objeto
                 Vector3 dir_player = (PlayerMovement.instance.transform.position - spawn_positions[current_pos].position).normalized;

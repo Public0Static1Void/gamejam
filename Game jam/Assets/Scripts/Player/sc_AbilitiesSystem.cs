@@ -14,6 +14,7 @@ public class AbilitiesSystem : MonoBehaviour
 
     public List<Ability> abilities = new List<Ability>();
     public List<Ability> abilities_log;
+    public List<string> abilities_names = new List<string>();
     public List<Ability> abilities_equipped = new List<Ability>();
     List<int> rand_abilities_index = new List<int>();
 
@@ -139,7 +140,7 @@ public class AbilitiesSystem : MonoBehaviour
         PlayerData pd = sm.LoadSaveData();
 
         Ability[] abs_level = sm.LoadAbilitiesData();
-        if (abs_level != null)
+        if (abs_level == null)
         {
             abs_level = new Ability[(int)Abilities.LAST_NO_USE];
             for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
@@ -156,8 +157,11 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = IdiomManager.instance.GetKeyText("Levitate description");
         ab.icon = sprite_levitate;
         ab.rarity = AbilityType.ULTIMATE;
-
+        ab.unlocked = true;
+        
         abilities.Add(ab);
+
+        abilities_names.Add("Levitate");
 
         // Exploding path ability
         ab = new Ability();
@@ -166,8 +170,11 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = IdiomManager.instance.GetKeyText("Exploding description");
         ab.icon = sprite_explodepath;
         ab.rarity = AbilityType.ULTIMATE;
+        ab.unlocked = true;
 
         abilities.Add(ab);
+
+        abilities_names.Add("Exploding");
 
         // Group ability
         ab = new Ability();
@@ -176,8 +183,11 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = IdiomManager.instance.GetKeyText("Group description");
         ab.icon = sprite_group;
         ab.rarity = AbilityType.ULTIMATE;
+        ab.unlocked = abs_level[(int)Abilities.GROUP].unlocked;
 
         abilities.Add(ab);
+
+        abilities_names.Add("Group");
 
         // Plant mine ability
         ab = new Ability();
@@ -186,8 +196,11 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = IdiomManager.instance.GetKeyText("Mine description");
         ab.icon = sprite_mine;
         ab.rarity = AbilityType.ULTIMATE;
+        ab.unlocked = abs_level[(int)Abilities.MINE].unlocked;
 
         abilities.Add(ab);
+
+        abilities_names.Add("Mine");
 
         // Hook
         ab = new Ability();
@@ -197,8 +210,11 @@ public class AbilitiesSystem : MonoBehaviour
         ab.icon = sprite_hook;
         ab.rarity = AbilityType.BASIC;
         ab.cooldown = 5;
+        ab.unlocked = abs_level[(int)Abilities.HOOK].unlocked;
 
         abilities.Add(ab);
+
+        abilities_names.Add("Hook");
 
         // Stomp
         ab = new Ability();
@@ -208,18 +224,24 @@ public class AbilitiesSystem : MonoBehaviour
         ab.icon = sprite_stomp;
         ab.rarity = AbilityType.BASIC;
         ab.cooldown = 5;
+        ab.unlocked = true;
 
         abilities.Add(ab);
+
+        abilities_names.Add("Stomp");
 
         // Hit N' Byebye
         ab = new Ability();
 
-        ab.name = IdiomManager.instance.GetKeyText("HitNBye name");
-        ab.description = IdiomManager.instance.GetKeyText("HitNBye description");
+        ab.name = IdiomManager.instance.GetKeyText("Hit N' Bye name");
+        ab.description = IdiomManager.instance.GetKeyText("Hit N' Bye description");
         ab.icon = sprite_byebye;
         ab.rarity = AbilityType.PASSIVE;
+        ab.unlocked = abs_level[(int)Abilities.BYEBYE].unlocked;
 
         abilities.Add(ab);
+
+        abilities_names.Add("HitNBye");
 
         // Bloodthirsty
         ab = new Ability();
@@ -228,8 +250,11 @@ public class AbilitiesSystem : MonoBehaviour
         ab.description = IdiomManager.instance.GetKeyText("Bloodthirsty description");
         ab.icon = sprite_bloodthirsty;
         ab.rarity = AbilityType.PASSIVE;
+        ab.unlocked = true;
 
         abilities.Add(ab);
+
+        abilities_names.Add("Bloodthirsty");
 
         // Hologram body
         ab = new Ability();
@@ -239,8 +264,11 @@ public class AbilitiesSystem : MonoBehaviour
         ab.icon = sprite_hologram;
         ab.rarity = AbilityType.BASIC;
         ab.cooldown = 10;
+        ab.unlocked = abs_level[(int)Abilities.HOLOGRAM_BODY].unlocked;
 
         abilities.Add(ab);
+
+        abilities_names.Add("Hologram");
 
         // Monkey bait
         ab = new Ability();
@@ -250,19 +278,26 @@ public class AbilitiesSystem : MonoBehaviour
         ab.icon = sprite_monkey;
         ab.rarity = AbilityType.BASIC;
         ab.cooldown = 15;
+        ab.unlocked = abs_level[(int)Abilities.MONKEY_BAIT].unlocked;
 
         abilities.Add(ab);
-        
+
+        abilities_names.Add("Monkey");
+
         // Kill N Speed
         ab = new Ability();
 
-        ab.name = IdiomManager.instance.GetKeyText("KillNSpeed name");
-        ab.description = IdiomManager.instance.GetKeyText("KillNSpeed description");
+        ab.name = IdiomManager.instance.GetKeyText("Kill n' speed name");
+        ab.description = IdiomManager.instance.GetKeyText("Kill n' speed description");
         ab.icon = sprite_killnspeed;
         ab.rarity = AbilityType.PASSIVE;
         ab.cooldown = 0;
+        ab.unlocked = true;
+        ab.unlocked = abs_level[(int)Abilities.KILLNSPEED].unlocked;
 
         abilities.Add(ab);
+
+        abilities_names.Add("KillNSpeed");
 
         // Recharge
         ab = new Ability();
@@ -272,15 +307,18 @@ public class AbilitiesSystem : MonoBehaviour
         ab.icon = sprite_recharge;
         ab.rarity = AbilityType.PASSIVE;
         ab.cooldown = 0;
+        ab.unlocked = abs_level[(int)Abilities.RECHARGE].unlocked;
 
         abilities.Add(ab);
+
+        abilities_names.Add("Recharge");
 
 
         /// ¡¡ Recuerda añadir la nueva habilidad al enum !! -------------------------------------------------------------
 
 
         // Asigna la información loopeable
-        for (int i = 0; i < (int)Abilities.LAST_NO_USE; i++)
+        for (int i = 0; i < abilities.Count; i++)
         {
             abilities[i].id = i;
             if (methods_abilities.Count > 0 && i < methods_abilities.Count)
@@ -372,7 +410,7 @@ public class AbilitiesSystem : MonoBehaviour
             int rand = Random.Range(0, abilities.Count);
             attempts++;
 
-            if (usedIndexes.Contains(rand) || abilities_equipped.Exists(a => a.id == abilities[rand].id))
+            if (usedIndexes.Contains(rand) || abilities_equipped.Exists(a => a.id == abilities[rand].id) || !abilities[rand].unlocked)
                 continue;
 
             // Marca la habilidad como usada
@@ -658,7 +696,18 @@ public class AbilitiesSystem : MonoBehaviour
     public Ability UnlockRandomAbility()
     {
         int rand_num = Random.Range(0, abilities.Count);
+        int loops = 0;
+        while (!abilities[rand_num].unlocked && loops < 1000)
+        {
+            loops++;
+            rand_num = Random.Range(0, abilities.Count);
+        }
+
         Ability ab = abilities[rand_num];
+
+        if (!ab.unlocked)
+            return null;
+
         AddAbility(abilities[rand_num].name);
         return ab;
     }

@@ -102,7 +102,7 @@ public class sc_ShowText : MonoBehaviour
                 timer = 0;
             }
 
-            if (im_text_bg.color.a < 0.75f)
+            if (im_text_bg.color.a < 200)
             {
                 Color col = im_text_bg.color;
                 im_text_bg.color = new Color(col.r, col.g, col.b, im_text_bg.color.a + Time.deltaTime);

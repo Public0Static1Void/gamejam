@@ -1,4 +1,6 @@
 Key;Spanish;English
+Idiom;Español;English
+;;
 Levitate name;Flotación;Levitate
 Levitate description;Volviendo en el tiempo, todos los enemigos que toques empezarán a levitar para segundos después ser estrellados contra el suelo.;When you are returning in time, all the enemies that you touch will start to levitate and crushed on the ground when you finish returning.
 Exploding name;Senda explosiva;Exploding path
@@ -76,6 +78,10 @@ stamina text;ESTAMINA;STAMINA
 damage text;DAÑO;DAMAGE
 speed text;VELOCIDAD;SPEED
 Volume title;Volumen;Volume
+Idiom title;Idioma;Language
+Selected language text;Idioma seleccionado: {i};Selected idiom: {i} 
+Ability upgrade text;<size=9><color=yellow>Pulsa para mejorar!</color></size>\n\nNivel: 0\nSkill points: 1;<size=9><color=yellow>Press to upgrade!</color></size>\nCurrent level: 0\nSkill points: 1
+Ability unlock text;<size=9><color=yellow>Pulsa para desbloquear!</color></size>\n\nCoste: <color=blue>1</color> skill points\nSkill points: 0;<size=9><color=yellow>Press to unlock!</color></size>\n\nCost: <color=blue>1</color> skill points\nSkill points: 0
 ;;
 Enter game title;Comenzar partida;Enter game
 ;;

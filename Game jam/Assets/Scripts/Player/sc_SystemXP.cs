@@ -22,6 +22,8 @@ public class Ability
 
     public bool onCooldown = false;
     public bool onExecution = false;
+
+    public bool unlocked = false;
 }
 
 public class Player : MonoBehaviour

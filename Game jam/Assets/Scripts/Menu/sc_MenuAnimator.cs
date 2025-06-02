@@ -195,7 +195,7 @@ public class sc_MenuAnimator : MonoBehaviour
     {
         if (options_menu.activeSelf && con.performed)
         {
-            menu_anim.Play("anim_play_menu_still");
+            menu_anim.Play("anim_close_settings");
             //RewindAnimation("anim_open_settings");
             btn_play.Select();
         }
