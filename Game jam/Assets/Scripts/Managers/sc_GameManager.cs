@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        /*
+        
         if (Input.GetKeyDown(KeyCode.F))
         {
             if (Physics.Raycast(PlayerMovement.instance.transform.position, Camera.main.transform.forward, out RaycastHit hit))
@@ -173,12 +173,12 @@ public class GameManager : MonoBehaviour
             //uv_pos = hit.textureCoord;
             Debug.Log($"UV Pos = {uv_pos}");
 
-            StampTexture(mainTex, stamp, uv_pos, 6);
+            StampTexture(mainTex, stamp, hit.textureCoord, 20);
 
 
             //PauseGame();
         }
-        */
+        
         // Fade del texto
         if (show_announce)
         {

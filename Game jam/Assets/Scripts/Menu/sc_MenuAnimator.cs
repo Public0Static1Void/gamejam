@@ -250,7 +250,7 @@ public class sc_MenuAnimator : MonoBehaviour
     {
         while (Vector2.Distance(image.rectTransform.sizeDelta, new_size) > 0.1f)
         {
-            image.rectTransform.sizeDelta = Vector2.Lerp(image.rectTransform.sizeDelta, new_size, Time.deltaTime * 2);
+            image.rectTransform.sizeDelta = Vector2.Lerp(image.rectTransform.sizeDelta, new_size, Time.deltaTime * 6);
             yield return null;
         }
     }

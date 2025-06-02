@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(EnemyFollow))]
@@ -15,6 +16,8 @@ public class EnemyLife : MonoBehaviour
     private EnemyFollow enemyFollow;
     public List<AudioClip> clip_damaged;
     public AudioClip clip_growl, blood_explosion;
+
+    public Texture2D stamp;
 
     public int probability = 100;
 
@@ -80,6 +83,112 @@ public class EnemyLife : MonoBehaviour
         StartCoroutine(ActivateKinematic());
     }
 
+
+    void StampOnGround()
+    {
+        Vector3 forward = transform.forward;
+        Vector3[] dirs =
+        {
+            transform.forward,
+            transform.right,
+            -transform.right,
+            -transform.forward,
+            transform.up,
+            -transform.up
+        };
+        GameObject target = null;
+        RaycastHit hit = new RaycastHit();
+
+        for (int i = 0; i < dirs.Length; i++)
+        {
+            if (Physics.Raycast(transform.position, dirs[i], out hit))
+            {
+                target = hit.transform.gameObject;
+                Debug.Log($"Name: {hit.transform.name}");
+            }
+        }
+        
+        if (target == null) return;
+
+        stamp = ConvertToEditable(stamp);
+        Material mat = target.GetComponent<MeshRenderer>().material;
+
+        if (mat == null) return;
+
+        Vector2 tiling = mat.mainTextureScale;
+        Vector2 offset = mat.mainTextureOffset;
+
+        Texture2D mainTex = ConvertToEditable((Texture2D)mat.GetTexture("_DecalTexture"));
+        mat.SetTexture("_DecalTexture", mainTex);
+
+        Bounds bounds = target.GetComponent<MeshRenderer>().bounds;
+
+        Vector3 localPlayerPos = hit.point;
+
+        Vector2 uv_pos = new Vector2(
+            1 - (localPlayerPos.x - bounds.min.x) / bounds.size.x * tiling.x + offset.x,
+            1 - (localPlayerPos.z - bounds.min.z) / bounds.size.z * tiling.y + offset.y
+        );
+
+        uv_pos.x /= tiling.x;
+        uv_pos.y /= tiling.y;
+
+        uv_pos.x += offset.x;
+        uv_pos.y += offset.y;
+
+        //uv_pos = hit.textureCoord;
+        Debug.Log($"UV Pos = {uv_pos}");
+
+        StampTexture(mainTex, stamp, hit.textureCoord, 10);
+    }
+    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int size)
+    {
+        int x = (int)(uv.x * main_texture.width) - size / 2;
+        int y = (int)(uv.y * main_texture.height) - size / 2;
+
+        Debug.Log("Size: " + size);
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                int stampX = (int)((float)i / size * stamp_texture.width);
+                int stampY = (int)((float)j / size * stamp_texture.height);
+
+                if (x + i < 0 || x + i >= main_texture.width || y + j < 0 || y + j >= main_texture.height)
+                    continue;
+
+                Color stampColor = stamp_texture.GetPixel(stampX, stampY);
+                Color baseColor = main_texture.GetPixel(x + i, y + j);
+                Color blended = Color.Lerp(baseColor, stampColor, stampColor.a); // Alpha blending
+                main_texture.SetPixel(x + i, y + j, blended);
+            }
+        }
+
+        main_texture.Apply();
+    }
+
+    Texture2D ConvertToEditable(Texture2D source)
+    {
+        // Create a new Texture2D in a compatible format
+        Texture2D copy = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
+
+        // Copy pixels from source texture
+        RenderTexture tmpRT = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
+        Graphics.Blit(source, tmpRT);
+
+        RenderTexture previous = RenderTexture.active;
+        RenderTexture.active = tmpRT;
+
+        copy.ReadPixels(new Rect(0, 0, tmpRT.width, tmpRT.height), 0, 0);
+        copy.Apply();
+
+        RenderTexture.active = previous;
+        RenderTexture.ReleaseTemporary(tmpRT);
+
+        return copy;
+    }
+
+
     private IEnumerator DestroyCooldown()
     {
         SkinnedMeshRenderer mesh_r = GetComponentInChildren<SkinnedMeshRenderer>();
@@ -120,6 +229,8 @@ public class EnemyLife : MonoBehaviour
         Instantiate(particle_explosion, transform.position, particle_explosion.transform.rotation);
         // Genera un sonido de explosión
         SoundManager.instance.InstantiateSound(blood_explosion, transform.position, 0.2f);
+
+        StampOnGround();
 
         Destroy(gameObject);
     }
