@@ -21,6 +21,10 @@ public class EnemyLife : MonoBehaviour
 
     public int probability = 100;
 
+    public List<Texture2D> stamps;
+
+    public GameObject cube;
+
     [Header("Particles")]
     public ParticleSystem particle_explosion;
     public ParticleSystem particle_hit;
@@ -89,60 +93,75 @@ public class EnemyLife : MonoBehaviour
         Vector3 forward = transform.forward;
         Vector3[] dirs =
         {
-            transform.forward,
-            transform.right,
-            -transform.right,
-            -transform.forward,
-            transform.up,
-            -transform.up
+            Vector3.forward,
+            Vector3.right,
+            -Vector3.right,
+            -Vector3.forward,
+            Vector3.up,
+            -Vector3.up
         };
         GameObject target = null;
         RaycastHit hit = new RaycastHit();
 
         for (int i = 0; i < dirs.Length; i++)
         {
-            if (Physics.Raycast(transform.position, dirs[i], out hit))
+            if (Physics.Raycast(transform.position, dirs[i], out hit, 5))
             {
                 target = hit.transform.gameObject;
-                Debug.Log($"Name: {hit.transform.name}");
+                //Destroy(Instantiate(cube, hit.point, Quaternion.identity), 15);
+
+                if (target == null) return;
+
+                Texture2D rand_stamp = stamps[Random.Range(0, stamps.Count)];
+
+                rand_stamp = ConvertToEditable(rand_stamp);
+
+                MeshCollider meshCollider = hit.collider as MeshCollider;
+                if (meshCollider == null) return;
+
+                Mesh mesh = meshCollider.sharedMesh;
+                Material mat = target.GetComponent<MeshRenderer>().material;
+
+                Texture2D mainTex = ConvertToEditable((Texture2D)mat.GetTexture("_DecalTexture"));
+                mat.SetTexture("_DecalTexture", mainTex);
+
+                // Triangle info
+                int triIndex = hit.triangleIndex;
+                int[] triangles = mesh.triangles;
+                Vector3[] vertices = mesh.vertices;
+                Vector2[] uvs = mesh.uv;
+
+                int i0 = triangles[triIndex * 3 + 0];
+                int i1 = triangles[triIndex * 3 + 1];
+                int i2 = triangles[triIndex * 3 + 2];
+
+                Transform t = target.transform;
+                Vector3 p0 = t.TransformPoint(vertices[i0]);
+                Vector3 p1 = t.TransformPoint(vertices[i1]);
+                Vector3 p2 = t.TransformPoint(vertices[i2]);
+
+                Vector2 uv0 = uvs[i0];
+                Vector2 uv1 = uvs[i1];
+                Vector2 uv2 = uvs[i2];
+
+                float worldEdge = (Vector3.Distance(p0, p1) + Vector3.Distance(p1, p2) + Vector3.Distance(p2, p0)) / 3f;
+                float uvEdge = (Vector2.Distance(uv0, uv1) + Vector2.Distance(uv1, uv2) + Vector2.Distance(uv2, uv0)) / 3f;
+
+                float uvPerWorldUnit = uvEdge / worldEdge;
+
+                float worldStampSize = 5; /// tamaño del stamp
+                float uvSize = worldStampSize * uvPerWorldUnit;
+
+                // Convierte la UV size a pixeles
+                int stampPixelSize = Mathf.RoundToInt(mainTex.width * uvSize * 4);
+
+
+                GameManager.gm.StampTexture(mainTex, rand_stamp, hit.textureCoord, stampPixelSize / 4, stampPixelSize);
             }
         }
         
-        if (target == null) return;
-
-        stamp = ConvertToEditable(stamp);
-        Material mat = target.GetComponent<MeshRenderer>().material;
-
-        if (mat == null) return;
-
-        Vector2 tiling = mat.mainTextureScale;
-        Vector2 offset = mat.mainTextureOffset;
-
-        Texture2D mainTex = ConvertToEditable((Texture2D)mat.GetTexture("_DecalTexture"));
-        mat.SetTexture("_DecalTexture", mainTex);
-
-        Bounds bounds = target.GetComponent<MeshRenderer>().bounds;
-
-        Vector3 localPlayerPos = hit.point;
-
-        Vector2 uv_pos = new Vector2(
-            1 - (localPlayerPos.x - bounds.min.x) / bounds.size.x * tiling.x + offset.x,
-            1 - (localPlayerPos.z - bounds.min.z) / bounds.size.z * tiling.y + offset.y
-        );
-
-        // Compensation for non-uniform scale:
-        float aspect = bounds.size.z / bounds.size.x; // Or scale.x / scale.z
-
-        uv_pos.x /= tiling.x;
-        uv_pos.y /= tiling.y;
-
-        uv_pos.x += offset.x;
-        uv_pos.y += offset.y;
-
-        //uv_pos = hit.textureCoord;
-        Debug.Log($"UV Pos = {uv_pos}");
-
-        StampTexture(mainTex, stamp, hit.textureCoord, 10, aspect);
+        
+        //StampTexture(mainTex, stamp, hit.textureCoord, 10, aspect);
     }
     public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int size, float aspect = 1)
     {

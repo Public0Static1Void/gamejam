@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     public int damage_recieved = 0;
     public int damage_healed = 0;
 
-
+    public float stamp_size;
 
     public SaveManager saveManager;
 
@@ -141,6 +141,7 @@ public class GameManager : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.F))
         {
+            return;
             if (Physics.Raycast(PlayerMovement.instance.transform.position, Camera.main.transform.forward, out RaycastHit hit))
             {
                 plane_ob = hit.transform.gameObject;
@@ -148,41 +149,50 @@ public class GameManager : MonoBehaviour
             }
 
             stamp = ConvertToEditable(stamp);
+
+            MeshCollider meshCollider = hit.collider as MeshCollider;
+            Mesh mesh = meshCollider.sharedMesh;
             Material mat = plane_ob.GetComponent<MeshRenderer>().material;
-            Vector2 tiling = mat.mainTextureScale;
-            Vector2 offset = mat.mainTextureOffset;
 
             Texture2D mainTex = ConvertToEditable((Texture2D)mat.GetTexture("_DecalTexture"));
             mat.SetTexture("_DecalTexture", mainTex);
 
-            Bounds bounds = plane_ob.GetComponent<MeshRenderer>().bounds;
+            // Triangle info
+            int triIndex = hit.triangleIndex;
+            int[] triangles = mesh.triangles;
+            Vector3[] vertices = mesh.vertices;
+            Vector2[] uvs = mesh.uv;
 
-            Vector3 localPlayerPos = hit.point;
+            int i0 = triangles[triIndex * 3 + 0];
+            int i1 = triangles[triIndex * 3 + 1];
+            int i2 = triangles[triIndex * 3 + 2];
 
-            Vector2 uv_pos = new Vector2(
-                1 - (localPlayerPos.x - bounds.min.x) / bounds.size.x * tiling.x + offset.x,
-                1 - (localPlayerPos.z - bounds.min.z) / bounds.size.z * tiling.y + offset.y
-            );
+            Transform t = plane_ob.transform;
+            Vector3 p0 = t.TransformPoint(vertices[i0]);
+            Vector3 p1 = t.TransformPoint(vertices[i1]);
+            Vector3 p2 = t.TransformPoint(vertices[i2]);
 
-            // Compensation for non-uniform scale:
-            float aspect = bounds.size.z / bounds.size.x; // Or scale.x / scale.z
+            Vector2 uv0 = uvs[i0];
+            Vector2 uv1 = uvs[i1];
+            Vector2 uv2 = uvs[i2];
 
-            uv_pos.x /= tiling.x;
-            uv_pos.y /= tiling.y;
+            float worldEdge = (Vector3.Distance(p0, p1) + Vector3.Distance(p1, p2) + Vector3.Distance(p2, p0)) / 3f;
+            float uvEdge = (Vector2.Distance(uv0, uv1) + Vector2.Distance(uv1, uv2) + Vector2.Distance(uv2, uv0)) / 3f;
 
-            uv_pos.x += offset.x;
-            uv_pos.y += offset.y;
+            float uvPerWorldUnit = uvEdge / worldEdge;
 
-            //uv_pos = hit.textureCoord;
-            Debug.Log($"UV Pos = {uv_pos}");
-            Debug.Log("Size x: " + hit.transform.localScale.x);
+            float worldStampSize = 2.5f;
+            float uvSize = worldStampSize * uvPerWorldUnit;
 
-            StampTexture(mainTex, stamp, hit.textureCoord, 20, 2);
+            int stampPixelSize = Mathf.RoundToInt(mainTex.width * uvSize);
+
+
+            StampTexture(mainTex, stamp, hit.textureCoord, stampPixelSize / (int)stamp_size, stampPixelSize);
 
 
             //PauseGame();
         }
-        
+
         // Fade del texto
         if (show_announce)
         {
@@ -408,31 +418,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int size, float aspect = 1)
+    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int width, int height)
     {
-        int x = (int)(uv.x * main_texture.width) - size / 2;
-        int y = (int)(uv.y * main_texture.height) - size / 2;
+        int x = Mathf.RoundToInt(uv.x * main_texture.width) - width / 2;
+        int y = Mathf.RoundToInt(uv.y * main_texture.height) - height / 2;
 
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < height; j++)
             {
-                int stampX = (int)((float)i / size * stamp_texture.width);
-                int stampY = (int)((float)j / size * stamp_texture.height);
+                int stampX = i * stamp_texture.width / width;
+                int stampY = j * stamp_texture.height / height;
 
-                if (x + i < 0 || x + i >= main_texture.width || y + j < 0 || y + j >= main_texture.height)
+                int pixelX = x + i;
+                int pixelY = y + j;
+
+                if (pixelX < 0 || pixelX >= main_texture.width || pixelY < 0 || pixelY >= main_texture.height)
                     continue;
 
-                Color stampColor = stamp_texture.GetPixel((int)(stampX * aspect), stampY);
-                Color baseColor = main_texture.GetPixel(x + i, y + j);
-                Color blended = Color.Lerp(baseColor, stampColor, stampColor.a); // Alpha blending
-                main_texture.SetPixel(x + i, y + j, blended);
+                Color stampColor = stamp_texture.GetPixel(stampX, stampY);
+                Color baseColor = main_texture.GetPixel(pixelX, pixelY);
+                Color blended = Color.Lerp(baseColor, stampColor, stampColor.a);
+                main_texture.SetPixel(pixelX, pixelY, blended);
             }
         }
 
         main_texture.Apply();
     }
-
     // Pausa -------------------------------------------------------------------------------------------------------------
     public void ResumeGame()
     {
