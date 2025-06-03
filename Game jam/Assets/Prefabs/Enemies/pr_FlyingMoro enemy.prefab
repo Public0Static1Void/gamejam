@@ -531,6 +531,8 @@ MonoBehaviour:
   stamps:
   - {fileID: 2800000, guid: 14a3ab49214fbf64d90e481d36e5a59e, type: 3}
   - {fileID: 2800000, guid: de068d6656b276742bf276c17baa8b5a, type: 3}
+  - {fileID: 2800000, guid: 71944df03e417bc42a300337bb3e6221, type: 3}
+  cube: {fileID: 0}
   particle_explosion: {fileID: 7637573092767477360, guid: 5c3adb5c97a56d44996a7e83fe2d670d, type: 3}
   particle_hit: {fileID: 7778511957972836761, guid: 72f119dd03395384cbb33ebbeafa3cd2, type: 3}
 --- !u!114 &2572318337310694397
