@@ -88,7 +88,7 @@ public class Rounds : MonoBehaviour
         float wait_time = 12.5f - round * 0.25f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
         if (wait_time < 3) wait_time = 3;
 
-        yield return new WaitForSeconds(wait_time);
+        yield return new WaitForSeconds(0);
 
         // Muestra en texto por que ronda vas y suena un sonido para indicar la nueva ronda
         txt_round.text = (round + 1).ToString();
@@ -102,7 +102,7 @@ public class Rounds : MonoBehaviour
         for (int i = 0; i < enemyRound; i++)
         {
             int randSpawn = Random.Range(0, SpawnPoint.Count); /// No aparecerán enemigos en la cara del player
-            while (Vector3.Distance(PlayerMovement.instance.transform.position, SpawnPoint[randSpawn].position) < 10)
+            while (Vector3.Distance(PlayerMovement.instance.transform.position, SpawnPoint[randSpawn].position) < 15)
             {
                 randSpawn = Random.Range(0, SpawnPoint.Count);
             }

@@ -418,33 +418,56 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int width, int height)
+    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int width, int height, float angleDegrees = 0f)
     {
-        int x = Mathf.RoundToInt(uv.x * main_texture.width) - width / 2;
-        int y = Mathf.RoundToInt(uv.y * main_texture.height) - height / 2;
+        int xStart = Mathf.RoundToInt(uv.x * main_texture.width) - width / 2;
+        int yStart = Mathf.RoundToInt(uv.y * main_texture.height) - height / 2;
+
+        float angleRad = angleDegrees * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(angleRad);
+        float sin = Mathf.Sin(angleRad);
+
+        float stampHalfWidth = width / 2f;
+        float stampHalfHeight = height / 2f;
 
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                int stampX = i * stamp_texture.width / width;
-                int stampY = j * stamp_texture.height / height;
+                // Coordinates relative to stamp center
+                float u = i - stampHalfWidth;
+                float v = j - stampHalfHeight;
 
-                int pixelX = x + i;
-                int pixelY = y + j;
+                // Apply rotation
+                float ru = u * cos - v * sin;
+                float rv = u * sin + v * cos;
 
-                if (pixelX < 0 || pixelX >= main_texture.width || pixelY < 0 || pixelY >= main_texture.height)
+                // Map rotated coordinates to stamp texture
+                int stampX = Mathf.RoundToInt((ru + stampHalfWidth) / width * stamp_texture.width);
+                int stampY = Mathf.RoundToInt((rv + stampHalfHeight) / height * stamp_texture.height);
+
+                int px = xStart + i;
+                int py = yStart + j;
+
+                // Skip if outside main texture bounds
+                if (px < 0 || px >= main_texture.width || py < 0 || py >= main_texture.height)
+                    continue;
+
+                // Skip if outside rotated stamp bounds
+                if (stampX < 0 || stampX >= stamp_texture.width || stampY < 0 || stampY >= stamp_texture.height)
                     continue;
 
                 Color stampColor = stamp_texture.GetPixel(stampX, stampY);
-                Color baseColor = main_texture.GetPixel(pixelX, pixelY);
+                Color baseColor = main_texture.GetPixel(px, py);
                 Color blended = Color.Lerp(baseColor, stampColor, stampColor.a);
-                main_texture.SetPixel(pixelX, pixelY, blended);
+                main_texture.SetPixel(px, py, blended);
             }
         }
 
         main_texture.Apply();
     }
+    
+    
     // Pausa -------------------------------------------------------------------------------------------------------------
     public void ResumeGame()
     {

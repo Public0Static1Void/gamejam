@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class ReturnScript : MonoBehaviour
 {
@@ -65,8 +66,13 @@ public class ReturnScript : MonoBehaviour
 
     private bool afterImage_attack = false;
 
-    private bool position_fixed = true;
+    public bool position_fixed = true;
 
+    private LineRenderer lineRenderer;
+    Vector3[] line_pos;
+
+
+    private bool relocating_line = false;
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -89,6 +95,15 @@ public class ReturnScript : MonoBehaviour
         {
             transform.rotation
         };
+
+        lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.widthMultiplier = 1;
+
+        line_pos = new Vector3[past_positions.Count];
+        lineRenderer.positionCount = line_pos.Length;
+
+        lineRenderer.SetPosition(0, ob_AfterImage.transform.position);
+        lineRenderer.SetPosition(line_pos.Length - 1, transform.position - transform.forward);
     }
 
     void Update()
@@ -190,6 +205,14 @@ public class ReturnScript : MonoBehaviour
                     {
                         ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, past_positions[0], Time.deltaTime * 1.25f);
                         ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, q_rotations[0], Time.deltaTime);
+
+                        Vector3[] positions = new Vector3[lineRenderer.positionCount];
+                        lineRenderer.GetPositions(positions);
+                        for (int i = 0; i < lineRenderer.positionCount; i++)
+                        {
+                            positions[i] = Vector3.Lerp(positions[i], past_positions[i], Time.deltaTime * 1.25f);
+                        }
+                        lineRenderer.SetPositions(positions);
 
                         // Si está muy cerca del jugador se desvanecerá
                         if (Vector3.Distance(ob_AfterImage.transform.position, transform.position) < 1)
@@ -367,7 +390,9 @@ public class ReturnScript : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// Actualiza la lista de posiciones
+    /// </summary>
     private void UpdateReturnList()
     {
         if (past_positions.Count > 0)
@@ -381,6 +406,10 @@ public class ReturnScript : MonoBehaviour
             past_positions.Add(transform.position);
             past_rotations.Add(new Vector2(cameraRotation.x, cameraRotation.y));
             q_rotations.Add(transform.rotation);
+
+            line_pos = new Vector3[past_positions.Count];
+            
+            lineRenderer.positionCount = line_pos.Length;
         }
     }
     private void ClearReturnLists()
@@ -392,8 +421,33 @@ public class ReturnScript : MonoBehaviour
         past_positions.Add(transform.position);
         past_rotations.Add(new Vector2(cameraRotation.x, cameraRotation.y));
         q_rotations.Add(transform.rotation);
+
+        lineRenderer.positionCount = past_positions.Count;
     }
 
+    private IEnumerator SetLinePositions()
+    {
+        int count = lineRenderer.positionCount;
+        lineRenderer.GetPositions(line_pos);
+
+        while (true)
+        {
+            if (lineRenderer.positionCount > 0)
+            {
+                for (int i = 0; i < lineRenderer.positionCount && i < past_positions.Count; i++)
+                {
+                    line_pos[i] = Vector3.Lerp(line_pos[i], past_positions[i], Time.deltaTime * 3);
+                }
+
+                line_pos[line_pos.Length - 1] = transform.position - transform.forward;
+                line_pos[0] = ob_AfterImage.transform.position;
+
+                lineRenderer.SetPositions(line_pos);
+            }
+
+            yield return null;
+        }
+    }
 
     private IEnumerator AfterImageAttack()
     {
@@ -405,7 +459,7 @@ public class ReturnScript : MonoBehaviour
         int curr_pos = positions.Count - 1;
 
         // Cuánta más distancia recorra la imagen más daño hará
-        float scaled_damage = (Vector3.Distance(positions[curr_pos], positions[0]) * (damage * 0.025f));
+        float scaled_damage = (Vector3.Distance(positions[curr_pos], positions[0]) * (damage * 0.1f));
 
         ob_AfterImage.transform.position = transform.position;
         ob_AfterImage.transform.rotation = transform.rotation;
@@ -429,7 +483,7 @@ public class ReturnScript : MonoBehaviour
             if (curr_pos >= 0)
             {
                 // Movimiento del objeto
-                ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, positions[curr_pos], Time.deltaTime * (return_speed * 2));
+                ob_AfterImage.transform.position = Vector3.Lerp(ob_AfterImage.transform.position, positions[curr_pos], Time.deltaTime * (return_speed));
                 ob_AfterImage.transform.rotation = Quaternion.Lerp(ob_AfterImage.transform.rotation, rotations[curr_pos], Time.deltaTime * return_speed);
 
 

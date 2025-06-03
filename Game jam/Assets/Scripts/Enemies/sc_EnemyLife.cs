@@ -94,11 +94,11 @@ public class EnemyLife : MonoBehaviour
         Vector3[] dirs =
         {
             Vector3.forward,
+            Vector3.back,
             Vector3.right,
-            -Vector3.right,
-            -Vector3.forward,
+            Vector3.left,
             Vector3.up,
-            -Vector3.up
+            Vector3.down
         };
         GameObject target = null;
         RaycastHit hit = new RaycastHit();
@@ -122,6 +122,8 @@ public class EnemyLife : MonoBehaviour
                 Mesh mesh = meshCollider.sharedMesh;
                 Material mat = target.GetComponent<MeshRenderer>().material;
 
+                if (!mat.shader.name.Contains("sh_Stamp")) continue;
+
                 Texture2D mainTex = ConvertToEditable((Texture2D)mat.GetTexture("_DecalTexture"));
                 mat.SetTexture("_DecalTexture", mainTex);
 
@@ -144,19 +146,33 @@ public class EnemyLife : MonoBehaviour
                 Vector2 uv1 = uvs[i1];
                 Vector2 uv2 = uvs[i2];
 
+                // Estimate UV-to-world scale in both U and V directions
+                float avgWorldDist = (Vector3.Distance(p0, p1) + Vector3.Distance(p1, p2) + Vector3.Distance(p2, p0)) / 3f;
+                float avgUvDist = (Vector2.Distance(uv0, uv1) + Vector2.Distance(uv1, uv2) + Vector2.Distance(uv2, uv0)) / 3f;
+
+                float uvPerWorldUnit = avgUvDist / avgWorldDist;
+                /*
                 float worldEdge = (Vector3.Distance(p0, p1) + Vector3.Distance(p1, p2) + Vector3.Distance(p2, p0)) / 3f;
                 float uvEdge = (Vector2.Distance(uv0, uv1) + Vector2.Distance(uv1, uv2) + Vector2.Distance(uv2, uv0)) / 3f;
 
                 float uvPerWorldUnit = uvEdge / worldEdge;
+                */
 
-                float worldStampSize = 5; /// tamaño del stamp
+                float worldStampSize = Random.Range(2, 4); /// tamaño del stamp
+                worldStampSize *= 2 - (1 - (hit.distance / 5));
                 float uvSize = worldStampSize * uvPerWorldUnit;
 
                 // Convierte la UV size a pixeles
                 int stampPixelSize = Mathf.RoundToInt(mainTex.width * uvSize * 4);
 
+                int multiplier = 4;
+                if (dirs[i] == Vector3.down)
+                {
+                    multiplier = 1;
+                    stampPixelSize /= 2;
+                }
 
-                GameManager.gm.StampTexture(mainTex, rand_stamp, hit.textureCoord, stampPixelSize / 4, stampPixelSize);
+                GameManager.gm.StampTexture(mainTex, rand_stamp, hit.textureCoord, stampPixelSize / multiplier, stampPixelSize, Random.Range(0, 360));
             }
         }
         

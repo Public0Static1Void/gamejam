@@ -8,6 +8,8 @@ public class sc_bate : MonoBehaviour
 
     public Transform player;
 
+    public LayerMask enemy_Layer;
+
     public bool isSwinging = false;
 
     public Animator anim;
@@ -50,6 +52,15 @@ public class sc_bate : MonoBehaviour
                 cooldown = true;
                 isSwinging = false;
             }
+
+            Collider[] colls = Physics.OverlapSphere(player.position + player.forward, 1, enemy_Layer);
+            if (colls.Length > 0)
+            {
+                for (int i = 0; i < colls.Length; i++)
+                {
+                    AttackEnemy(colls[i]);
+                }
+            }
         }
         else if (cooldown)
         {
@@ -82,28 +93,38 @@ public class sc_bate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy") && isSwinging && !hitted_gameobjects.Contains(other.transform.parent != null ? other.transform.parent.name : other.name))
+        if (other.CompareTag("Enemy"))
         {
-            Vector3 dir = (other.transform.position - player.position).normalized;
-            Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
-
-            other.GetComponent<EnemyFollow>().AddForceToEnemy(forceDir * 10f);
-            other.GetComponent<EnemyLife>().Damage((int)(ReturnScript.instance.damage * 0.5f));
-
-            ScoreManager.instance.InstantiateText("-" + (ReturnScript.instance.damage * 0.5f).ToString("F0"),Camera.main.transform.position + Camera.main.transform.forward * 0.25f, dir, 65, 3, Color.red);
-
-            GameManager.gm.ShakeController(0.1f, 0.05f, 1);
-
-            if (audioSource == null)
-            {
-                audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
-            }
-            else if (!audioSource.isPlaying)
-            {
-                audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
-            }
-
-            hitted_gameobjects.Add(other.transform.parent != null ? other.transform.parent.name : other.name);
+            AttackEnemy(other);
         }
+    }
+
+    /// <summary>
+    /// Ataca al collider indicado
+    /// </summary>
+    void AttackEnemy(Collider other)
+    {
+        if (!isSwinging || hitted_gameobjects.Contains(other.transform.parent != null ? other.transform.parent.name : other.name)) return;
+
+        Vector3 dir = (other.transform.position - player.position).normalized;
+        Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
+
+        other.GetComponent<EnemyFollow>().AddForceToEnemy(forceDir * 8.5f);
+        other.GetComponent<EnemyLife>().Damage((int)(ReturnScript.instance.damage * 0.5f));
+
+        ScoreManager.instance.InstantiateText("-" + (ReturnScript.instance.damage * 0.5f).ToString("F0"), Camera.main.transform.position + Camera.main.transform.forward * 0.25f, dir, 65, 3, Color.red);
+
+        GameManager.gm.ShakeController(0.1f, 0.05f, 1);
+
+        if (audioSource == null)
+        {
+            audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
+        }
+        else if (!audioSource.isPlaying)
+        {
+            audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
+        }
+
+        hitted_gameobjects.Add(other.transform.parent != null ? other.transform.parent.name : other.name);
     }
 }
