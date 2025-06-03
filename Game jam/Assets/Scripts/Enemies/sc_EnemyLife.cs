@@ -130,6 +130,9 @@ public class EnemyLife : MonoBehaviour
             1 - (localPlayerPos.z - bounds.min.z) / bounds.size.z * tiling.y + offset.y
         );
 
+        // Compensation for non-uniform scale:
+        float aspect = bounds.size.z / bounds.size.x; // Or scale.x / scale.z
+
         uv_pos.x /= tiling.x;
         uv_pos.y /= tiling.y;
 
@@ -139,9 +142,9 @@ public class EnemyLife : MonoBehaviour
         //uv_pos = hit.textureCoord;
         Debug.Log($"UV Pos = {uv_pos}");
 
-        StampTexture(mainTex, stamp, hit.textureCoord, 10);
+        StampTexture(mainTex, stamp, hit.textureCoord, 10, aspect);
     }
-    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int size)
+    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int size, float aspect = 1)
     {
         int x = (int)(uv.x * main_texture.width) - size / 2;
         int y = (int)(uv.y * main_texture.height) - size / 2;
@@ -151,7 +154,7 @@ public class EnemyLife : MonoBehaviour
         {
             for (int j = 0; j < size; j++)
             {
-                int stampX = (int)((float)i / size * stamp_texture.width);
+                int stampX = (int)((float)i / size * stamp_texture.width * aspect);
                 int stampY = (int)((float)j / size * stamp_texture.height);
 
                 if (x + i < 0 || x + i >= main_texture.width || y + j < 0 || y + j >= main_texture.height)
