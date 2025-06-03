@@ -13158,12 +13158,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410738748}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.412, z: 0.124}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.18200006, z: 0.124001056}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1836626140}
+  m_Father: {fileID: 963194228}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &410738750
@@ -28686,6 +28686,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1445067972}
+  - {fileID: 410738749}
   m_Father: {fileID: 1836626140}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -57151,7 +57152,6 @@ Transform:
   - {fileID: 137611625}
   - {fileID: 437133220}
   - {fileID: 612465425}
-  - {fileID: 410738749}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: -101.181, z: 0}
@@ -57664,7 +57664,7 @@ MonoBehaviour:
   cooldown: 0
   color_cooldown_ready: {r: 0.7294118, g: 0.7647059, b: 0.8, a: 1}
   color_on_cooldown: {r: 0.37255248, g: 0.45684788, b: 0.49056602, a: 1}
-  position_fixed: 1
+  position_fixed: 0
 --- !u!114 &1836626148
 MonoBehaviour:
   m_ObjectHideFlags: 0
