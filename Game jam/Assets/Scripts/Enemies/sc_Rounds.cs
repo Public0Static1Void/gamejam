@@ -15,6 +15,8 @@ public class Rounds : MonoBehaviour
     [HideInInspector]
     public List<EnemyFollow> enemies_follow;
 
+    public UnityEngine.UI.Image im_timer;
+
     public float enemyRound;
 
     private bool spawning = false;
@@ -23,7 +25,7 @@ public class Rounds : MonoBehaviour
     float enemy_hp = 10;
     float enemy_speed = 1;
 
-    private float timer = 0;
+    private float timer = 0, rounds_timer = 0;
 
     private bool onRound = false;
 
@@ -35,12 +37,18 @@ public class Rounds : MonoBehaviour
     [Header("References")]
     public TMP_Text txt_round;
 
+    private int secs = 0;
+    private bool counter = false;
+    private float wait_time = 12.5f;
+
     void Start()
     {
         if (instance == null) instance = this;
         else Destroy(this);
 
         enemies_follow = new List<EnemyFollow>();
+
+        secs = Mathf.Clamp(30 - round, 10, 30);
 
         if (TutorialManager.instance != null) Destroy(gameObject);
     }
@@ -52,16 +60,25 @@ public class Rounds : MonoBehaviour
             StartRound();
         }
 
-        timer += Time.deltaTime;
-
-        if (onRound && !spawning)
+        if (counter)
         {
-            if (timer > Mathf.Clamp(30 - round, 10, 30))
+            rounds_timer += Time.deltaTime;
+            im_timer.fillAmount = 1 - (rounds_timer / (secs + wait_time));
+        }
+
+        timer += Time.deltaTime;
+        if (!spawning)
+        {
+            if (onRound)
             {
-                StartRound();
-                timer = 0;
+                if (timer > secs)
+                {
+                    StartRound();
+                    timer = 0;
+                }
             }
         }
+        
         
         if (timer >= 60)
         {
@@ -76,6 +93,13 @@ public class Rounds : MonoBehaviour
         enemyRound *= 1.25f;
         enemy_speed *= 1.05f;
         AbilitiesSystem.instance.UnlockAbility();
+
+        counter = false;
+        im_timer.fillAmount = 1;
+        rounds_timer = 0;
+
+        secs = Mathf.Clamp(30 - round, 10, 30);
+
         StartCoroutine(SpawnLine());
     }
 
@@ -85,14 +109,16 @@ public class Rounds : MonoBehaviour
 
         //AbilitiesSystem.instance.GetRandomAbilities(); Ahora se consiguen habilidades llenando la barra de experiencia
 
-        float wait_time = 12.5f - round * 0.25f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
+        wait_time = 12.5f - round * 0.25f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
         if (wait_time < 3) wait_time = 3;
 
         yield return new WaitForSeconds(wait_time);
 
+        counter = true;
+
         // Muestra en texto por que ronda vas y suena un sonido para indicar la nueva ronda
         txt_round.text = (round + 1).ToString();
-        GameManager.gm.ShowText(string.Format("Round {0}", round + 1));
+        GameManager.gm.ShowText(string.Format("Round {0}", round + 1), 3);
 
 
         // Hace sonar el sonido de inicio de ronda

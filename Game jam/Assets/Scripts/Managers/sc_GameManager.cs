@@ -600,7 +600,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ShowText(string text, int show_speed = 3)
+    public void ShowText(string text, int show_speed)
     {
         message_text.text = text;
         txt_show_speed = show_speed;

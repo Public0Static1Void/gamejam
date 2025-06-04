@@ -526,6 +526,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7116a89881f67c1469accd5e7e7aafab, type: 3}
   clip_growl: {fileID: 8300000, guid: 8c6bffc97b0a3a241827da1e8b4d8aff, type: 3}
   blood_explosion: {fileID: 8300000, guid: 158e1c912f63e034fbe52ee99b9baa4d, type: 3}
+  clip_last_hit: {fileID: 8300000, guid: b890c6eddaffc3744b7d0b83cd2c2f81, type: 3}
   stamp: {fileID: 2800000, guid: 9c9b5bf3b07ab4840b8e3ddbd8c279a8, type: 3}
   probability: 30
   stamps:
@@ -535,6 +536,7 @@ MonoBehaviour:
   cube: {fileID: 0}
   particle_explosion: {fileID: 7637573092767477360, guid: 5c3adb5c97a56d44996a7e83fe2d670d, type: 3}
   particle_hit: {fileID: 7778511957972836761, guid: 72f119dd03395384cbb33ebbeafa3cd2, type: 3}
+  particle_diehit: {fileID: 719668728366305791, guid: 47dbb1eade357b3489eece1e9799554e, type: 3}
 --- !u!114 &2572318337310694397
 MonoBehaviour:
   m_ObjectHideFlags: 0

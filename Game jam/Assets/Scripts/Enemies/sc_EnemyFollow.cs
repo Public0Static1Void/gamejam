@@ -8,7 +8,9 @@ using UnityEngine.AI;
 [RequireComponent(typeof(AudioSource))]
 public class EnemyFollow : MonoBehaviour
 {
+    [Header("References")]
     public Transform target;
+    public LayerMask layer_player;
     public NavMeshAgent agent;
 
     public bool can_move = true;
@@ -21,14 +23,12 @@ public class EnemyFollow : MonoBehaviour
 
     public Rigidbody rb;
 
-    private Collider collider;
-
     private Vector3 original_position;
 
     private bool relocating = false;
     private Vector3 directionAwayFromPlayer;
 
-    private float timer = 0;
+    private float timer = 0, enabled_timer = 0;
 
     private float relocate_timer = 0;
 
@@ -38,6 +38,8 @@ public class EnemyFollow : MonoBehaviour
 
     PlayerMovement pm;
 
+
+    private Animator anim;
     void Start()
     {
         pm = PlayerMovement.instance;
@@ -45,9 +47,10 @@ public class EnemyFollow : MonoBehaviour
 
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
-        collider = GetComponent<Collider>();
 
         audioSource = GetComponent<AudioSource>();
+
+        anim = GetComponent<Animator>();
 
         original_position = transform.position;
 
@@ -58,19 +61,23 @@ public class EnemyFollow : MonoBehaviour
     {
         if (rb == null) return;
 
+        anim.SetBool("_Attack", false);
+
         rb.isKinematic = false;
         rb.freezeRotation = false;
         rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.None;
 
         if (agent != null)
             agent.enabled = false;
-        collider.isTrigger = false;
+
         rb.velocity = dir / mass;
     }
 
     private void FixedUpdate()
     {
-        if (relocating || !can_move) return;
+        Debug.Log("Attacking: " + attacking);
+        if (relocating || !can_move || attacking) return;
 
         if (rb.IsSleeping())
         {
@@ -84,7 +91,6 @@ public class EnemyFollow : MonoBehaviour
                     rb.isKinematic = true;
                     if (agent != null)
                         agent.enabled = true;
-                    collider.isTrigger = true;
 
                     timer = 0;
                 }
@@ -115,6 +121,15 @@ public class EnemyFollow : MonoBehaviour
             if (timer > 20)
             {
                 Destroy(this.gameObject);
+            }
+        }
+        else if (!agent.enabled && !rb.isKinematic)
+        {
+            enabled_timer += Time.deltaTime;
+            if (enabled_timer > 5)
+            {
+                agent.enabled = true;
+                enabled_timer = 0;
             }
         }
 
@@ -184,9 +199,11 @@ public class EnemyFollow : MonoBehaviour
         {
             Debug.Log("Attacking");
             attacking = true;
+            anim.SetBool("_Attack", true);
 
             agent.enabled = false;
             rb.isKinematic = false;
+            rb.constraints |= RigidbodyConstraints.FreezePositionY;
 
             Vector3 dir = (target.position - transform.position).normalized;
             transform.rotation = Quaternion.LookRotation(dir);
@@ -194,24 +211,38 @@ public class EnemyFollow : MonoBehaviour
             rb.freezeRotation = true;
 
             float timer = 0;
+
+            // Va hacia adelante
+            rb.AddForce(dir * 6, ForceMode.VelocityChange);
             while (timer < attack_distance)
             {
                 Debug.DrawRay(transform.position, dir, Color.yellow);
+                Collider[] colls = Physics.OverlapSphere(transform.position, transform.localScale.y + 0.1f, layer_player);
+                if (colls.Length > 0)
+                {
+                    break;
+                }
                 //transform.Translate(transform.forward * Time.fixedDeltaTime * 2);
-                rb.AddForce(dir * Time.fixedDeltaTime * 2, ForceMode.Acceleration);
-                timer += Time.deltaTime * 2;
+                timer += Time.deltaTime * 3;
                 yield return null;
             }
 
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+
             timer = 0;
+            // Vuelve para atrás
+            rb.AddForce(-dir * 2, ForceMode.VelocityChange);
             while (timer < 1.5f)
             {
-                rb.AddForce(-dir * Time.fixedDeltaTime * 3, ForceMode.Acceleration);
                 //transform.Translate(-transform.forward * Time.fixedDeltaTime * 2);
                 timer += Time.deltaTime;
             }
 
-            yield return new WaitForSeconds(3); /// Esperarán 2 segundos antes de volver a atacar
+            rb.constraints = RigidbodyConstraints.None;
+
+            anim.SetBool("_Attack", false);
+
+            yield return new WaitForSeconds(2.5f); /// Esperarán 2.5f segundos antes de volver a atacar
 
             agent.enabled = true;
             rb.isKinematic = false;

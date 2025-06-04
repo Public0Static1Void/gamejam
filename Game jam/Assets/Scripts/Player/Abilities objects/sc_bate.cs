@@ -5,21 +5,22 @@ using UnityEngine.InputSystem;
 
 public class sc_bate : MonoBehaviour
 {
-
+    [Header("Referencias")]
     public Transform player;
-
     public LayerMask enemy_Layer;
 
     public bool isSwinging = false;
 
     public Animator anim;
+    private TrailRenderer trailRenderer;
 
+    [Header("Sonido")]
     public AudioClip clip_swing, clip_hit;
 
     private AudioSource audioSource;
 
     public float z_rot;
-
+    [Header("Stats")]
     public bool canSwing = true;
 
     private List<string> hitted_gameobjects = new List<string>();
@@ -33,10 +34,13 @@ public class sc_bate : MonoBehaviour
 
     private Rigidbody rb;
 
+
     private void Start()
     {
         cam_rot = CameraRotation.instance;
         rb = PlayerMovement.instance.gameObject.GetComponent<Rigidbody>();
+
+        trailRenderer = GetComponentInChildren<TrailRenderer>();
     }
 
     private void Update()
@@ -49,6 +53,7 @@ public class sc_bate : MonoBehaviour
             if (stateInfo.IsName(attack_name) && stateInfo.normalizedTime >= 0.8f)
             {
                 anim.SetBool("bat_attack", false);
+                trailRenderer.emitting = false;
 
                 hitted_gameobjects.Clear();
 
@@ -82,6 +87,7 @@ public class sc_bate : MonoBehaviour
         {
             isSwinging = true;
             anim.SetBool("bat_attack", true);
+            trailRenderer.emitting = true;
 
             Color col = PlayerMovement.instance.stamina_image.color;
             PlayerMovement.instance.stamina_image.color = new Color(col.r, col.g, col.b, 1);
@@ -122,7 +128,7 @@ public class sc_bate : MonoBehaviour
 
         GameManager.gm.ShakeController(0.1f, 0.05f, 1);
 
-        CameraRotation.instance.ShakeCamera(0.25f, 0.05f);
+        CameraRotation.instance.ShakeCamera(0.15f, 0.05f);
 
         if (audioSource == null)
         {

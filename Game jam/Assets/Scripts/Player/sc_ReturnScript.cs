@@ -273,10 +273,16 @@ public class ReturnScript : MonoBehaviour
             {
                 childs_mesh[i] = mr;
             }
+            else
+            {
+                MeshRenderer mrr = ob.transform.GetChild(i).GetComponentInChildren<MeshRenderer>();
+                if (mrr != null)
+                    childs_mesh[i] = mrr;
+            }
         }
 
         float alpha = mesh_r.materials[0].GetFloat("_Alpha");
-        while (alpha > 0)
+        while (alpha > 0.1f)
         {
             alpha -= Time.deltaTime * 0.5f;
             mesh_r.materials[0].SetFloat("_Alpha", alpha);

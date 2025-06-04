@@ -16,6 +16,7 @@ public class EnemyLife : MonoBehaviour
     private EnemyFollow enemyFollow;
     public List<AudioClip> clip_damaged;
     public AudioClip clip_growl, blood_explosion;
+    public AudioClip clip_last_hit;
 
     public Texture2D stamp;
 
@@ -25,9 +26,11 @@ public class EnemyLife : MonoBehaviour
 
     public GameObject cube;
 
+
     [Header("Particles")]
     public ParticleSystem particle_explosion;
     public ParticleSystem particle_hit;
+    public ParticleSystem particle_diehit;
 
     float random_pitch = 0;
     private void Start()
@@ -67,9 +70,9 @@ public class EnemyLife : MonoBehaviour
 
 
             // Añade el multiplicador
-            ScoreManager.instance.AddMultiplier(0.1f);
+            ScoreManager.instance.AddMultiplier(0.2f);
             // Suma la score
-            ScoreManager.instance.ChangeScore(amount, transform.position, true);
+            ScoreManager.instance.ChangeScore(amount * max_hp, transform.position, true);
             // Añade xp al morirse
             if (TutorialManager.instance == null)
                 AbilitiesSystem.instance.AddXP(max_hp * 0.05f);
@@ -81,6 +84,9 @@ public class EnemyLife : MonoBehaviour
             sc_Abilities.instance.KillNSpeed(100);
             // Suma estamina si puede
             sc_Abilities.instance.Recharge();
+
+            Destroy(Instantiate(particle_diehit, transform.position, Quaternion.LookRotation(dir, Vector3.up)), 10);
+            SoundManager.instance.InstantiateSound(clip_last_hit, transform.position, 0.75f);
 
             StartCoroutine(DestroyCooldown());
         }
@@ -105,14 +111,16 @@ public class EnemyLife : MonoBehaviour
 
         for (int i = 0; i < dirs.Length; i++)
         {
-            if (Physics.Raycast(transform.position, dirs[i], out hit, 5))
+            if (Physics.Raycast(transform.position, dirs[i], out hit, 3))
             {
                 target = hit.transform.gameObject;
                 //Destroy(Instantiate(cube, hit.point, Quaternion.identity), 15);
 
                 if (target == null) return;
 
-                Texture2D rand_stamp = stamps[Random.Range(0, stamps.Count)];
+                Texture2D rand_stamp = stamps[Random.Range(1, stamps.Count)];
+                if (hit.distance < 1)
+                    rand_stamp = stamps[0];
 
                 rand_stamp = ConvertToEditable(rand_stamp);
 
