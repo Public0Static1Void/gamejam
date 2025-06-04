@@ -43,6 +43,8 @@ public class PlayerLife : MonoBehaviour
 
     public bool god_mode = false;
 
+    private bool really_damaged = false;
+
     void Start()
     {
         if (damage_clips.Count <= 0) Debug.LogWarning("Remember to add the damage sounds to the player!!");
@@ -101,19 +103,20 @@ public class PlayerLife : MonoBehaviour
         if (damaged)
         {
             timer += Time.deltaTime;
-            if (im_red.color.a < 0.25f)
+            if (really_damaged && im_red.color.a < 0.25f)
             {
                 im_red.color = new Color(im_red.color.r, im_red.color.g, im_red.color.b, im_red.color.a + Time.deltaTime * 6);
             }
             if (timer >= invunerable_time)
             {
                 damaged = false;
+                really_damaged = false;
                 timer = 0;
             }
         }
         else if (im_red.color.a > 0)
         {
-            im_red.color = new Color(im_red.color.r, im_red.color.g, im_red.color.b, im_red.color.a - Time.deltaTime * 5);
+            im_red.color = new Color(im_red.color.r, im_red.color.g, im_red.color.b, im_red.color.a - Time.deltaTime * 6);
         }
 
         if (Input.GetKeyDown(KeyCode.G))
@@ -137,8 +140,10 @@ public class PlayerLife : MonoBehaviour
 
     public void Damage(int value)
     {
-        if ((ReturnScript.instance.returning && value > 0) || PlayerMovement.instance.slide)
+        if ((ReturnScript.instance.returning && value > 0) || PlayerMovement.instance.slide || damaged)
             return;
+
+        really_damaged = true;
 
         bg_life_amount.fillAmount = life_amount.fillAmount;
 
@@ -247,7 +252,7 @@ public class PlayerLife : MonoBehaviour
 
     private void OnTriggerEnter(Collider coll)
     {
-        if (coll.transform.tag == "Enemy" && !damaged)
+        if (!damaged && coll.transform.tag == "Enemy")
         {
             Vector3 dir = (transform.position - coll.transform.position).normalized;
             SplashBloodOnScreen(!(Vector3.Dot(transform.right, dir) > 0));

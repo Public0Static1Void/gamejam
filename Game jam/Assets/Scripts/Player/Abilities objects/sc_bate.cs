@@ -31,9 +31,12 @@ public class sc_bate : MonoBehaviour
 
     CameraRotation cam_rot;
 
+    private Rigidbody rb;
+
     private void Start()
     {
         cam_rot = CameraRotation.instance;
+        rb = PlayerMovement.instance.gameObject.GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -53,7 +56,7 @@ public class sc_bate : MonoBehaviour
                 isSwinging = false;
             }
 
-            Collider[] colls = Physics.OverlapSphere(player.position + player.forward, 1, enemy_Layer);
+            Collider[] colls = Physics.OverlapSphere(player.position, 2, enemy_Layer);
             if (colls.Length > 0)
             {
                 for (int i = 0; i < colls.Length; i++)
@@ -88,6 +91,8 @@ public class sc_bate : MonoBehaviour
                 PlayerMovement.instance.current_stamina = 0;
 
             SoundManager.instance.InstantiateSound(clip_swing, transform.position);
+
+            rb.AddForce(-player.forward * 2, ForceMode.Acceleration);
         }
     }
 
@@ -110,13 +115,14 @@ public class sc_bate : MonoBehaviour
         Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
 
         other.GetComponent<EnemyFollow>().AddForceToEnemy(forceDir * 8.5f);
+        other.GetComponent<Rigidbody>().AddTorque(forceDir * 2);
         other.GetComponent<EnemyLife>().Damage((int)(ReturnScript.instance.damage * 0.5f));
 
         ScoreManager.instance.InstantiateText("-" + (ReturnScript.instance.damage * 0.5f).ToString("F0"), Camera.main.transform.position + Camera.main.transform.forward * 0.25f, dir, 65, 3, Color.red);
 
         GameManager.gm.ShakeController(0.1f, 0.05f, 1);
 
-        CameraRotation.instance.ShakeCamera(0.5f, 0.5f);
+        CameraRotation.instance.ShakeCamera(0.25f, 0.1f);
 
         if (audioSource == null)
         {
@@ -128,5 +134,10 @@ public class sc_bate : MonoBehaviour
         }
 
         hitted_gameobjects.Add(other.transform.parent != null ? other.transform.parent.name : other.name);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(player.position, 1);
     }
 }

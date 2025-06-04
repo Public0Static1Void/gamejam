@@ -175,34 +175,6 @@ public class EnemyLife : MonoBehaviour
                 GameManager.gm.StampTexture(mainTex, rand_stamp, hit.textureCoord, stampPixelSize / multiplier, stampPixelSize, Random.Range(0, 360));
             }
         }
-        
-        
-        //StampTexture(mainTex, stamp, hit.textureCoord, 10, aspect);
-    }
-    public void StampTexture(Texture2D main_texture, Texture2D stamp_texture, Vector2 uv, int size, float aspect = 1)
-    {
-        int x = (int)(uv.x * main_texture.width) - size / 2;
-        int y = (int)(uv.y * main_texture.height) - size / 2;
-
-        Debug.Log("Size: " + size);
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
-            {
-                int stampX = (int)((float)i / size * stamp_texture.width * aspect);
-                int stampY = (int)((float)j / size * stamp_texture.height);
-
-                if (x + i < 0 || x + i >= main_texture.width || y + j < 0 || y + j >= main_texture.height)
-                    continue;
-
-                Color stampColor = stamp_texture.GetPixel(stampX, stampY);
-                Color baseColor = main_texture.GetPixel(x + i, y + j);
-                Color blended = Color.Lerp(baseColor, stampColor, stampColor.a); // Alpha blending
-                main_texture.SetPixel(x + i, y + j, blended);
-            }
-        }
-
-        main_texture.Apply();
     }
 
     Texture2D ConvertToEditable(Texture2D source)
@@ -251,7 +223,7 @@ public class EnemyLife : MonoBehaviour
         {
             mesh_r.material.color = Color.Lerp(mesh_r.material.color, col[curr_color], Time.deltaTime * 3);
 
-            transform.Rotate(Random.Range(0, 50) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime);
+            transform.Rotate(Random.Range(0, 60) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime);
 
             global_timer += Time.deltaTime * 5;
             timer += Time.deltaTime;
@@ -260,6 +232,7 @@ public class EnemyLife : MonoBehaviour
                 curr_color++;
                 timer = 0;
             }
+            rb.velocity *= 0.75f;
             yield return null;
         }
 
@@ -292,5 +265,7 @@ public class EnemyLife : MonoBehaviour
         enemyFollow.audioSource.loop = true;
         enemyFollow.audioSource.Play();
         rb.isKinematic = true;
+        rb.freezeRotation = false;
+        rb.useGravity = true;
     }
 }

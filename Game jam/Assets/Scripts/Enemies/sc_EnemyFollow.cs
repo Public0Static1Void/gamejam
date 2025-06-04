@@ -59,6 +59,9 @@ public class EnemyFollow : MonoBehaviour
         if (rb == null) return;
 
         rb.isKinematic = false;
+        rb.freezeRotation = false;
+        rb.useGravity = true;
+
         if (agent != null)
             agent.enabled = false;
         collider.isTrigger = false;
@@ -69,12 +72,12 @@ public class EnemyFollow : MonoBehaviour
     {
         if (relocating || !can_move) return;
 
-        if (rb.velocity.magnitude > -0.1f && rb.velocity.magnitude < 0.1f)
+        if (rb.IsSleeping())
         {
             RaycastHit hit;
             if (Physics.Raycast(transform.position, Vector3.down, out hit))
             {
-                if (hit.distance < transform.localScale.y + 1)
+                if (hit.distance < transform.localScale.y + 1 && !rb.isKinematic)
                 {
                     rb.velocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;
@@ -109,7 +112,7 @@ public class EnemyFollow : MonoBehaviour
         if (!agent.isOnNavMesh)
         {
             timer += Time.deltaTime;
-            if (timer > 15 || rb.isKinematic) /// Si pasa cierto tiempo sin estar en la navmesh o es kinematic sin estar en ella se destruye
+            if (timer > 20)
             {
                 Destroy(this.gameObject);
             }
@@ -183,21 +186,32 @@ public class EnemyFollow : MonoBehaviour
             attacking = true;
 
             agent.enabled = false;
-            rb.isKinematic = true;
+            rb.isKinematic = false;
 
             Vector3 dir = (target.position - transform.position).normalized;
             transform.rotation = Quaternion.LookRotation(dir);
+
+            rb.freezeRotation = true;
 
             float timer = 0;
             while (timer < attack_distance)
             {
                 Debug.DrawRay(transform.position, dir, Color.yellow);
-                transform.Translate(transform.forward * Time.deltaTime * 3);
+                //transform.Translate(transform.forward * Time.fixedDeltaTime * 2);
+                rb.AddForce(dir * Time.fixedDeltaTime * 2, ForceMode.Acceleration);
                 timer += Time.deltaTime * 2;
                 yield return null;
             }
 
-            yield return new WaitForSeconds(2); /// Esperarán 2 segundos antes de volver a atacar
+            timer = 0;
+            while (timer < 1.5f)
+            {
+                rb.AddForce(-dir * Time.fixedDeltaTime * 3, ForceMode.Acceleration);
+                //transform.Translate(-transform.forward * Time.fixedDeltaTime * 2);
+                timer += Time.deltaTime;
+            }
+
+            yield return new WaitForSeconds(3); /// Esperarán 2 segundos antes de volver a atacar
 
             agent.enabled = true;
             rb.isKinematic = false;

@@ -177,8 +177,9 @@ public class CameraRotation : MonoBehaviour
             float x = Random.Range(-1, 1) * force;
             float y = Random.Range(-1, 1) * force;
 
-            transform.localPosition = Vector3.Lerp(original_position, original_position + new Vector3(x, y, 0), Time.deltaTime);
-            
+            //transform.localPosition = Vector3.Lerp(original_position, original_position + new Vector3(x, y, 0), Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(-y, x, z), Time.deltaTime * (1 + force));
+
             yield return null;
         }
 

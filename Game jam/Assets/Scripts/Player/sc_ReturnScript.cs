@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public class ReturnScript : MonoBehaviour
 {
@@ -102,8 +101,7 @@ public class ReturnScript : MonoBehaviour
         line_pos = new Vector3[past_positions.Count];
         lineRenderer.positionCount = line_pos.Length;
 
-        lineRenderer.SetPosition(0, ob_AfterImage.transform.position);
-        lineRenderer.SetPosition(line_pos.Length - 1, transform.position - transform.forward);
+        lineRenderer.SetPosition(0, transform.position - transform.forward);
     }
 
     void Update()
@@ -210,7 +208,7 @@ public class ReturnScript : MonoBehaviour
                         lineRenderer.GetPositions(positions);
                         for (int i = 0; i < lineRenderer.positionCount; i++)
                         {
-                            positions[i] = Vector3.Lerp(positions[i], past_positions[i], Time.deltaTime * 1.25f);
+                            positions[i] = Vector3.Lerp(positions[i], past_positions[i], Time.deltaTime * 2);
                         }
                         lineRenderer.SetPositions(positions);
 
@@ -408,8 +406,12 @@ public class ReturnScript : MonoBehaviour
             q_rotations.Add(transform.rotation);
 
             line_pos = new Vector3[past_positions.Count];
-            
             lineRenderer.positionCount = line_pos.Length;
+            Vector3[] pos = new Vector3[line_pos.Length];
+            lineRenderer.GetPositions(pos);
+            if (lineRenderer.GetPosition(lineRenderer.positionCount - 1) == Vector3.zero)
+                lineRenderer.SetPosition(lineRenderer.positionCount - 1, pos.Length >= 2 ? pos[pos.Length - 2] : ob_AfterImage.transform.position);
+            lineRenderer.GetPositions(pos);
         }
     }
     private void ClearReturnLists()
@@ -423,6 +425,7 @@ public class ReturnScript : MonoBehaviour
         q_rotations.Add(transform.rotation);
 
         lineRenderer.positionCount = past_positions.Count;
+        lineRenderer.SetPosition(lineRenderer.positionCount - 1, ob_AfterImage.transform.position);
     }
 
     private IEnumerator SetLinePositions()
