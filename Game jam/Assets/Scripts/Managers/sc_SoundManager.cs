@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -15,6 +16,8 @@ public class SoundManager : MonoBehaviour
     [Header("References")]
     public Slider slider_volume;
     public Slider slider_sfx_volume;
+    public TMP_Text txt_master_value;
+    public TMP_Text txt_sfx_value;
 
     public bool funnySounds;
 
@@ -114,12 +117,12 @@ public class SoundManager : MonoBehaviour
     public void SetVolume()
     {
         audioMixerGroup.audioMixer.SetFloat("MasterVolume", slider_volume.value);
-        if (CameraRotation.instance != null)
-            GameManager.ChangeUIPosition(slider_volume.handleRect.anchoredPosition, CameraRotation.instance.ui_sensivity_value_image.rectTransform, CameraRotation.instance.ui_sensivity_value.rectTransform);
+        txt_master_value.text = GameManager.ConvertToNewScale(slider_volume.value, -60, 20, 0, 10).ToString("F0");
     }
     public void SetSFXVolume()
     {
         audioMixerGroup.audioMixer.SetFloat("SFXVolume", slider_sfx_volume.value);
+        txt_sfx_value.text = GameManager.ConvertToNewScale(slider_sfx_volume.value, -60, 20, 0, 10).ToString("F0");
     }
 
     public void SetHighPassEffect(float cutoff_freq)

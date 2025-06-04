@@ -65,9 +65,10 @@ public class CameraRotation : MonoBehaviour
             entry.callback.AddListener((data) => { UI_HideImage(); });
             trigger.triggers.Add(entry);
 
+            /*
             Color col = ui_sensivity_value_image.color;
             ui_sensivity_value_image.color = new Color(col.r, col.g, col.b, 0);
-            ui_sensivity_value.text = "";
+            ui_sensivity_value.text = "";*/
         }
 
 
@@ -219,5 +220,11 @@ public class CameraRotation : MonoBehaviour
     {
         /// Esconde la imagen con el texto que muestra el valor de cameraSpeed
         StartCoroutine(GameManager.gm.HideImage(2, ui_sensivity_value_image, ui_sensivity_value));
+    }
+
+    public void SetSensivity()
+    {
+        cameraSpeed = ui_sensivity_slider.value;
+        ui_sensivity_value.text = cameraSpeed.ToString();
     }
 }

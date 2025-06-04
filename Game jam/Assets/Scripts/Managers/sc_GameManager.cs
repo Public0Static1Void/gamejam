@@ -564,6 +564,7 @@ public class GameManager : MonoBehaviour
     {
         Application.targetFrameRate = (int)fps_slider.value;
     }
+    
 
     public void ShowGameObject(GameObject ob)
     {
@@ -824,6 +825,12 @@ public class GameManager : MonoBehaviour
             value += speed;
             yield return null;
         }
+    }
+
+    public static float ConvertToNewScale(float value, float oldMin, float oldMax, float newMin, float newMax)
+    {
+        float scaledValue = (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
+        return scaledValue;
     }
     #endregion
 }
