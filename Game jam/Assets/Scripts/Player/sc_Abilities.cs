@@ -435,6 +435,15 @@ public class sc_Abilities : MonoBehaviour
 
         StartCoroutine(HologramBodyRoutine(material));
     }
+    private void ApplyMaterial(Material mat, GameObject ob)
+    {
+        Renderer[] renderers = ob.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material = mat;
+        }
+    }
     private IEnumerator HologramBodyRoutine(Material material)
     {
         active_hologram = true;
