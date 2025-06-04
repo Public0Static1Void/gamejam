@@ -29,20 +29,6 @@ public class sc_shop : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-    public void Buy_ExplosionRange()
-    {
-        if(ScoreManager.instance.score >= er_cost) 
-        {
-            ScoreManager.instance.ChangeScore(-er_cost, transform.position, false);
-            ReturnScript.instance.explosion_range += 2;
-        }
-    }
-    
-    public void Buy_stamina()
-    {
-        
-    }
-
     public void Buy(InputAction.CallbackContext context)
     {
         if (context.performed)
