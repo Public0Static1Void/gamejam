@@ -240,7 +240,8 @@ public class EnemyLife : MonoBehaviour
                 curr_color++;
                 timer = 0;
             }
-            rb.velocity *= 0.75f;
+            if (!rb.isKinematic)
+                rb.velocity *= 0.75f;
             yield return null;
         }
 

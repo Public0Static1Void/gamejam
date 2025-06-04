@@ -80,8 +80,9 @@ public class AbilitiesSystem : MonoBehaviour
         else
             Destroy(this);
 
+        abilities_log = new List<Ability>();
+
         LoadAbilitiesData();
-        abilities_log = new List<Ability>(abilities); /// Copia la lista
     }
 
     void Start()
@@ -160,6 +161,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = true;
         
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Levitate");
 
@@ -173,6 +175,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = true;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Exploding");
 
@@ -186,6 +189,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = abs_level[(int)Abilities.GROUP].unlocked;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Group");
 
@@ -199,6 +203,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = abs_level[(int)Abilities.MINE].unlocked;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Mine");
 
@@ -213,6 +218,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = abs_level[(int)Abilities.HOOK].unlocked;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Hook");
 
@@ -227,6 +233,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = true;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Stomp");
 
@@ -240,6 +247,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = abs_level[(int)Abilities.BYEBYE].unlocked;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("HitNBye");
 
@@ -253,6 +261,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = true;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Bloodthirsty");
 
@@ -267,6 +276,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = abs_level[(int)Abilities.HOLOGRAM_BODY].unlocked;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Hologram");
 
@@ -281,6 +291,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = abs_level[(int)Abilities.MONKEY_BAIT].unlocked;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Monkey");
 
@@ -296,6 +307,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = abs_level[(int)Abilities.KILLNSPEED].unlocked;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("KillNSpeed");
 
@@ -310,6 +322,7 @@ public class AbilitiesSystem : MonoBehaviour
         ab.unlocked = abs_level[(int)Abilities.RECHARGE].unlocked;
 
         abilities.Add(ab);
+        abilities_log.Add(ab);
 
         abilities_names.Add("Recharge");
 
@@ -635,19 +648,23 @@ public class AbilitiesSystem : MonoBehaviour
 
     public void AddAbility(string name)
     {
-        for (int i = 0; i < abilities.Count; i++)
+        for (int i = 0; i < abilities_log.Count; i++)
         {
-            if (name == abilities[i].name)
+            if (name == abilities_log[i].name)
             {
-                abilities_equipped.Add(abilities[i]);
+                abilities_equipped.Add(abilities_log[i]);
 
                 // Añade la habilidad
-                InitAbility(abilities[i]);
-
-
-                abilities.RemoveAt(i); /// Elimina la habilidad para que no pueda volver a tocar
+                InitAbility(abilities_log[i]);
             }
         }
+    }
+    public void AddAbility(Ability ab)
+    {
+        abilities_equipped.Add(ab);
+
+        // Añade la habilidad
+        InitAbility(ab);
     }
 
     public void CloseGamblingMenu(AbilityType selected_type = AbilityType.LAST_NO_USE)

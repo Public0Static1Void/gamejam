@@ -76,7 +76,6 @@ public class EnemyFollow : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log("Attacking: " + attacking);
         if (relocating || !can_move || attacking) return;
 
         if (rb.IsSleeping())

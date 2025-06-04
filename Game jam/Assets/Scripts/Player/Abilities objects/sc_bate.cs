@@ -41,6 +41,8 @@ public class sc_bate : MonoBehaviour
         rb = PlayerMovement.instance.gameObject.GetComponent<Rigidbody>();
 
         trailRenderer = GetComponentInChildren<TrailRenderer>();
+
+        anim.SetBool("has_bat", canSwing);
     }
 
     private void Update()
@@ -140,6 +142,12 @@ public class sc_bate : MonoBehaviour
         }
 
         hitted_gameobjects.Add(other.transform.parent != null ? other.transform.parent.name : other.name);
+    }
+
+    public void SetSwing(bool value)
+    {
+        canSwing = value;
+        anim.SetBool("has_bat", canSwing);
     }
 
     private void OnDrawGizmos()
