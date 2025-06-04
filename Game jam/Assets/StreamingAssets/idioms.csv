@@ -44,6 +44,7 @@ Tutorial HOLO_ATTACK;Tu <color=yellow>holograma arrasará con los enemigos</colo
 Tutorial ATTACK_AB keyboard;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>click derecho</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>right click</color> to use them.
 Tutorial ATTACK_AB gamepad PS;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>L1</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>L1</color> to use them.
 Tutorial ATTACK_AB gamepad XB;<size=90><b><color=yellow>Habilidades de ataque</color></b></size>\nPuedes tener hasta dos equipadas. Pulsa <color=yellow>LB</color> para usarlas.;<size=90><b><color=yellow>Attack abilities</color></b></size>\nYou can equip 2 attack abilities. Press <color=yellow>LB</color> to use them.
+Tutorial BUY AB;Puedes comprar habilidades desbloqueadas en cofres, mejóralas en el menú!;You can buy unlocked abilities in chests, upgrade them on the menu!
 ;;
 Tutorial DESCEND;<color=red>Desciende a tu miseria</color>;<color=red>Descend to your misery</color>
 ;;
