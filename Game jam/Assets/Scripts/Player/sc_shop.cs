@@ -6,7 +6,16 @@ using UnityEngine.InputSystem;
 public class sc_shop : MonoBehaviour
 {
     public static sc_shop instance {  get; private set; }
+
+    public InputAction buy;
+
+    private bool canBuyJ = false;
+    private bool canBuySpeed = false;
+    private bool canBuyDmg = false;
+
     public int speed_cost;
+    public int hp_cost;
+    public int dmg_cost;
     public int er_cost;
     public int stamina_cost;
 
@@ -20,15 +29,6 @@ public class sc_shop : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-    public void Buy_speed()
-    {
-        if (ScoreManager.instance.score >= speed_cost)
-        {
-            ScoreManager.instance.ChangeScore(-speed_cost, transform.position, false);
-            PlayerMovement.instance.speed += 2;
-        }
-    }
-
     public void Buy_ExplosionRange()
     {
         if(ScoreManager.instance.score >= er_cost) 
@@ -40,28 +40,66 @@ public class sc_shop : MonoBehaviour
     
     public void Buy_stamina()
     {
-        if(ScoreManager.instance.score >= stamina_cost)
-        {
-            ScoreManager.instance.ChangeScore(-stamina_cost, transform.position, false);
-            PlayerMovement.instance.max_stamina += 2;
-        }
+        
     }
 
-    public void OpenCloseShop(InputAction.CallbackContext context)
+    public void Buy(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            shop_object.SetActive(!shop_object.activeSelf);
-            if (shop_object.activeSelf)
+            if(canBuyJ)
             {
-                UnityEngine.Cursor.lockState = CursorLockMode.None;
-                UnityEngine.Cursor.visible = true;
+                if (ScoreManager.instance.score >= hp_cost)
+                {
+                    ScoreManager.instance.ChangeScore(-hp_cost, transform.position, false);
+                    GetComponent<PlayerLife>().max_hp += 2;
+                }
             }
-            else
+
+            if(canBuySpeed)
             {
-                UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-                UnityEngine.Cursor.visible = false;
+                if (ScoreManager.instance.score >= speed_cost)
+                {
+                    ScoreManager.instance.ChangeScore(-speed_cost, transform.position, false);
+                    PlayerMovement.instance.speed += 2;
+                }
             }
+
+            if(canBuyDmg)
+            {
+                if (ScoreManager.instance.score >= dmg_cost)
+                {
+                    ScoreManager.instance.ChangeScore(-dmg_cost, transform.position, false);
+                    //No se en que script esta
+                }
+            }
+            
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Jugger"))
+        {
+            canBuyJ = true;
+        }
+
+        if (collision.collider.CompareTag("Stamina"))
+        {
+            canBuySpeed = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.CompareTag("Jagger"))
+        {
+            canBuyJ = false;
+        }
+
+        if(collision.collider.CompareTag("StaminUp"))
+        {
+            canBuySpeed = false;
         }
     }
 }

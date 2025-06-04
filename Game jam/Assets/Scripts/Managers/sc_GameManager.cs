@@ -612,6 +612,12 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(ShowTextCoroutine(screen_texts[(int)text_position], text,  showspeed));
     }
+    
+    public void ShowText(string text)
+    {
+        text = IdiomManager.instance.GetKeyText(text);  
+        StartCoroutine(ShowTextCoroutine(screen_texts[(int)TextPositions.CENTER_LOWER], text,  10));
+    }
 
     public void ColorPulse(UnityEngine.UI.Image im, Color pulse_color, float pulse_speed)
     {
