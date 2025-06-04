@@ -125,7 +125,7 @@ public class EnemyLife : MonoBehaviour
                 rand_stamp = ConvertToEditable(rand_stamp);
 
                 MeshCollider meshCollider = hit.collider as MeshCollider;
-                if (meshCollider == null) return;
+                if (meshCollider == null) continue;
 
                 Mesh mesh = meshCollider.sharedMesh;
                 Material mat = target.GetComponent<MeshRenderer>().material;
