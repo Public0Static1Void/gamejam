@@ -45,6 +45,9 @@ public class SoundManager : MonoBehaviour
 
             buffer_audiosources.Add(audio);
         }
+
+        txt_master_value.text = GameManager.ConvertToNewScale(slider_volume.value, -60, 20, 0, 10).ToString("F1");
+        txt_sfx_value.text = GameManager.ConvertToNewScale(slider_sfx_volume.value, -60, 20, 0, 10).ToString("F1");
     }
     private void Awake()
     {
@@ -117,12 +120,12 @@ public class SoundManager : MonoBehaviour
     public void SetVolume()
     {
         audioMixerGroup.audioMixer.SetFloat("MasterVolume", slider_volume.value);
-        txt_master_value.text = GameManager.ConvertToNewScale(slider_volume.value, -60, 20, 0, 10).ToString("F0");
+        txt_master_value.text = GameManager.ConvertToNewScale(slider_volume.value, -60, 20, 0, 10).ToString("F1");
     }
     public void SetSFXVolume()
     {
         audioMixerGroup.audioMixer.SetFloat("SFXVolume", slider_sfx_volume.value);
-        txt_sfx_value.text = GameManager.ConvertToNewScale(slider_sfx_volume.value, -60, 20, 0, 10).ToString("F0");
+        txt_sfx_value.text = GameManager.ConvertToNewScale(slider_sfx_volume.value, -60, 20, 0, 10).ToString("F1");
     }
 
     public void SetHighPassEffect(float cutoff_freq)

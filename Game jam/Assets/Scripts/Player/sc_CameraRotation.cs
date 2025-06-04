@@ -50,7 +50,8 @@ public class CameraRotation : MonoBehaviour
         if (ui_sensivity_slider != null)
         {
             ui_sensivity_slider.value = cameraSpeed;
-
+            ui_sensivity_value.text = cameraSpeed.ToString();
+            /*
             EventTrigger trigger = ui_sensivity_slider.gameObject.GetComponent<EventTrigger>();
             if (trigger == null)
                 trigger = ui_sensivity_slider.gameObject.AddComponent<EventTrigger>();
@@ -65,7 +66,7 @@ public class CameraRotation : MonoBehaviour
             entry.callback.AddListener((data) => { UI_HideImage(); });
             trigger.triggers.Add(entry);
 
-            /*
+            
             Color col = ui_sensivity_value_image.color;
             ui_sensivity_value_image.color = new Color(col.r, col.g, col.b, 0);
             ui_sensivity_value.text = "";*/
