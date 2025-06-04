@@ -447,11 +447,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 28c719df51be88e4e85565fb6d7d2813, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.46379557
+      value: 0.47817326
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 28c719df51be88e4e85565fb6d7d2813, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.39717162
+      value: 0.45909068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 28c719df51be88e4e85565fb6d7d2813, type: 3}
       propertyPath: m_LocalPosition.x
@@ -459,11 +459,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 28c719df51be88e4e85565fb6d7d2813, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.4048
+      value: -0.3576
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 28c719df51be88e4e85565fb6d7d2813, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -115.2036
+      value: -114.8375
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 28c719df51be88e4e85565fb6d7d2813, type: 3}
       propertyPath: m_LocalRotation.w
@@ -17558,7 +17558,7 @@ GameObject:
   - component: {fileID: 524849442}
   m_Layer: 0
   m_Name: Jagger (2)
-  m_TagString: Jugger
+  m_TagString: DmG
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37319,7 +37319,7 @@ GameObject:
   - component: {fileID: 1193713626}
   m_Layer: 0
   m_Name: Jagger (1)
-  m_TagString: Untagged
+  m_TagString: StaminUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43584,7 +43584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buy:
-    m_Name: 
+    m_Name: Buy
     m_Type: 0
     m_ExpectedControlType: 
     m_Id: 43324d20-f3b5-47e1-ac49-66295ae118e3
