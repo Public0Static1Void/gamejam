@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(EnemyFollow))]
+
 public class EnemyLife : MonoBehaviour
 {
     public bool invulnerable = false;
@@ -34,11 +33,15 @@ public class EnemyLife : MonoBehaviour
 
     private Rigidbody[] rbs;
 
+    private SkinnedMeshRenderer mesh_r;
+
     float random_pitch = 0;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         enemyFollow = GetComponent<EnemyFollow>();
+
+        mesh_r = GetComponentInChildren<SkinnedMeshRenderer>();
 
         hp = max_hp;
 
@@ -65,7 +68,9 @@ public class EnemyLife : MonoBehaviour
 
         GameManager.gm.damage_done += amount;
 
-        
+        StartCoroutine(ChangeColor());
+
+        // El enemigo ha muerto
         if (hp <= 0)
         {
             GameManager.gm.enemies_killed++;
@@ -105,6 +110,25 @@ public class EnemyLife : MonoBehaviour
         StartCoroutine(ActivateKinematic());
     }
 
+    private IEnumerator ChangeColor()
+    {
+        float blend = 0;
+        while (blend < 1)
+        {
+            blend += Time.deltaTime * 8;
+            mesh_r.material.SetFloat("_BlendAmount", blend);
+
+            yield return null;
+        }
+        while (blend > 0)
+        {
+            blend -= Time.deltaTime * 8;
+            mesh_r.material.SetFloat("_BlendAmount", blend);
+
+            yield return null;
+        }
+
+    }
 
     void StampOnGround()
     {
@@ -130,9 +154,9 @@ public class EnemyLife : MonoBehaviour
 
                 if (target == null) return;
 
-                Texture2D rand_stamp = stamps[Random.Range(1, stamps.Count)];
+                Texture2D rand_stamp = stamps[Random.Range(2, stamps.Count)];
                 if (hit.distance < 1)
-                    rand_stamp = stamps[0];
+                    rand_stamp = stamps[Random.Range(0, 2)];
 
                 rand_stamp = ConvertToEditable(rand_stamp);
 
@@ -166,7 +190,6 @@ public class EnemyLife : MonoBehaviour
                 Vector2 uv1 = uvs[i1];
                 Vector2 uv2 = uvs[i2];
 
-                // Estimate UV-to-world scale in both U and V directions
                 float avgWorldDist = (Vector3.Distance(p0, p1) + Vector3.Distance(p1, p2) + Vector3.Distance(p2, p0)) / 3f;
                 float avgUvDist = (Vector2.Distance(uv0, uv1) + Vector2.Distance(uv1, uv2) + Vector2.Distance(uv2, uv0)) / 3f;
 
@@ -271,12 +294,14 @@ public class EnemyLife : MonoBehaviour
 
         Destroy(gameObject, 15);
         */
+
         while (true)
         {
             foreach(Rigidbody rb in rbs)
             {
-                rb.velocity *= 0.9f;
+                rb.velocity *= 0.75f;
             }
+
             yield return null;
         }
     }
@@ -306,7 +331,8 @@ public class EnemyLife : MonoBehaviour
         colls = GetComponentsInChildren<Collider>();
         foreach (Collider coll in colls)
         {
-            coll.enabled = true;
+            if (coll.name != name)
+                coll.enabled = true;
         }
 
         StartCoroutine(DestroyCooldown());
@@ -330,8 +356,11 @@ public class EnemyLife : MonoBehaviour
         enemyFollow.audioSource.clip = clip_growl;
         enemyFollow.audioSource.loop = true;
         enemyFollow.audioSource.Play();
-        rb.isKinematic = true;
-        rb.freezeRotation = false;
-        rb.useGravity = true;
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.freezeRotation = false;
+            rb.useGravity = true;
+        }
     }
 }
