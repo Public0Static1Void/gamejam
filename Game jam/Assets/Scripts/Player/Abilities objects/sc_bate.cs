@@ -68,7 +68,8 @@ public class sc_bate : MonoBehaviour
             {
                 for (int i = 0; i < colls.Length; i++)
                 {
-                    AttackEnemy(colls[i]);
+                    if (colls[i] != null)
+                        AttackEnemy(colls[i]);
                 }
             }
         }
@@ -130,7 +131,7 @@ public class sc_bate : MonoBehaviour
 
         GameManager.gm.ShakeController(0.1f, 0.05f, 1);
 
-        CameraRotation.instance.ShakeCamera(0.15f, 0.05f);
+        CameraRotation.instance.ShakeCamera(0.5f, 0.05f);
 
         if (audioSource == null)
         {

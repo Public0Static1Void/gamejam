@@ -32,6 +32,8 @@ public class EnemyLife : MonoBehaviour
     public ParticleSystem particle_hit;
     public ParticleSystem particle_diehit;
 
+    private Rigidbody[] rbs;
+
     float random_pitch = 0;
     private void Start()
     {
@@ -88,7 +90,17 @@ public class EnemyLife : MonoBehaviour
             Destroy(Instantiate(particle_diehit, transform.position, Quaternion.LookRotation(dir, Vector3.up)), 10);
             SoundManager.instance.InstantiateSound(clip_last_hit, transform.position, 0.75f);
 
-            StartCoroutine(DestroyCooldown());
+            // Instancia las partículas de muerte
+            Instantiate(particle_explosion, transform.position, particle_explosion.transform.rotation);
+            // Genera un sonido de explosión
+            SoundManager.instance.InstantiateSound(blood_explosion, transform.position, 0.2f);
+
+            StampOnGround();
+
+            Destroy(gameObject, 15);
+
+            ActivateRagdoll();
+            //StartCoroutine(DestroyCooldown());
         }
         StartCoroutine(ActivateKinematic());
     }
@@ -209,8 +221,10 @@ public class EnemyLife : MonoBehaviour
 
     private IEnumerator DestroyCooldown()
     {
+        /*
         SkinnedMeshRenderer mesh_r = GetComponentInChildren<SkinnedMeshRenderer>();
 
+        
         Color[] col = new Color[8];
         for (int i = 0; i < col.Length; i++)
         {
@@ -226,12 +240,12 @@ public class EnemyLife : MonoBehaviour
 
         int curr_color = 0;
         float timer = 0;
-        float global_timer = 1;
+        float global_timer = 2;
         while (curr_color < col.Length)
         {
-            mesh_r.material.color = Color.Lerp(mesh_r.material.color, col[curr_color], Time.deltaTime * 3);
+            mesh_r.material.color = Color.Lerp(mesh_r.material.color, col[curr_color], Time.deltaTime * 16);
 
-            transform.Rotate(Random.Range(0, 60) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime);
+            transform.Rotate(Random.Range(-80, 80) * global_timer * Time.deltaTime, Random.Range(-80, 80) * global_timer * Time.deltaTime, Random.Range(0, 50) * global_timer * Time.deltaTime);
 
             global_timer += Time.deltaTime * 5;
             timer += Time.deltaTime;
@@ -244,6 +258,9 @@ public class EnemyLife : MonoBehaviour
                 rb.velocity *= 0.75f;
             yield return null;
         }
+        
+
+
 
         // Instancia las partículas de muerte
         Instantiate(particle_explosion, transform.position, particle_explosion.transform.rotation);
@@ -252,7 +269,47 @@ public class EnemyLife : MonoBehaviour
 
         StampOnGround();
 
-        Destroy(gameObject);
+        Destroy(gameObject, 15);
+        */
+        while (true)
+        {
+            foreach(Rigidbody rb in rbs)
+            {
+                rb.velocity *= 0.9f;
+            }
+            yield return null;
+        }
+    }
+
+    private void ActivateRagdoll()
+    {
+        SkinnedMeshRenderer mesh_r = GetComponentInChildren<SkinnedMeshRenderer>();
+        mesh_r.material.color = Color.red;
+
+        enemyFollow.enabled = false;
+
+        enemyFollow.agent.enabled = false;
+        Collider[] colls = GetComponents<Collider>();
+        foreach (Collider coll in colls)
+        {
+            coll.enabled = false;
+        }
+        GetComponent<Animator>().enabled = false;
+
+        rbs = GetComponentsInChildren<Rigidbody>();
+        foreach (Rigidbody ch_rb in rbs)
+        {
+            ch_rb.isKinematic = false;
+            ch_rb.velocity = rb.velocity;
+        }
+
+        colls = GetComponentsInChildren<Collider>();
+        foreach (Collider coll in colls)
+        {
+            coll.enabled = true;
+        }
+
+        StartCoroutine(DestroyCooldown());
     }
 
     private void OnDestroy()

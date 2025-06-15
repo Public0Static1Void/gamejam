@@ -169,6 +169,8 @@ public class PlayerMovement : MonoBehaviour
 
             Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10); /// Movimiento de la cámara
 
+            CameraRotation.instance.ShakeCamera(0.01f, 0.001f);
+
             if (cameraRotation.z < 1.5f)
                 cameraRotation.z += Time.deltaTime * 8;
 

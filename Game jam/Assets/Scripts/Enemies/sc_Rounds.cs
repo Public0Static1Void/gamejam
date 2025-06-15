@@ -128,7 +128,7 @@ public class Rounds : MonoBehaviour
         for (int i = 0; i < enemyRound; i++)
         {
             int randSpawn = Random.Range(0, SpawnPoint.Count); /// No aparecerán enemigos en la cara del player
-            while (Vector3.Distance(PlayerMovement.instance.transform.position, SpawnPoint[randSpawn].position) < 15)
+            while (Vector3.Distance(PlayerMovement.instance.transform.position, SpawnPoint[randSpawn].position) < 10)
             {
                 randSpawn = Random.Range(0, SpawnPoint.Count);
             }
