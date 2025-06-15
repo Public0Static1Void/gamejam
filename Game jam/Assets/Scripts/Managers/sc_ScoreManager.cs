@@ -41,6 +41,15 @@ public class ScoreManager : MonoBehaviour
     public Transform current_door;
 
 
+    [HideInInspector]
+    public bool can_buy_perk = false;
+    [HideInInspector]
+    private float jugg_cost;
+    [HideInInspector]
+    private float staminUP_cost;
+
+
+
     private float multiplier_timer = 0, timer = 0;
 
     void Awake()
@@ -284,4 +293,16 @@ public class ScoreManager : MonoBehaviour
 
         Destroy(ob);
     }
+
+    //public void BuyPerk(InputAction.CallbackContext con)
+    //{
+    //    if (con.performed && can_buy_perk)
+    //    {
+    //        if (score >= door_cost)
+    //        {
+    //            ChangeScore(-jugger_cost, transform.position, true);
+              
+    //        }
+    //    }
+    //}
 }

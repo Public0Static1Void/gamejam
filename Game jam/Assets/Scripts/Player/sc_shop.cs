@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Windows;
 
 public class sc_shop : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class sc_shop : MonoBehaviour
     public InputAction buy;
 
     private bool canBuyJ = false;
-    private bool canBuySpeed = false;
+    private bool canBuySpeed;
     private bool canBuyDmg = false;
 
     public int speed_cost;
@@ -21,12 +22,45 @@ public class sc_shop : MonoBehaviour
 
     public GameObject shop_object;
 
-    private void Awake()
+    void Update()
     {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(this.gameObject);
+        //if (Vector3.Distance(transform.position, player.position) < range_interaction)
+        //{
+        //    player_on_range = true;
+        //    ScoreManager.instance.can_buy_door = true;
+        //    ScoreManager.instance.current_door = this.transform;
+        //    ScoreManager.instance.door_cost = door_cost;
+
+        //    // Muestra el texto de compra
+        //    string door_text = "Press F to buy";
+        //    if (pInput.currentControlScheme == "Gamepad")
+        //    {
+        //        if (Gamepad.current != null)
+        //        {
+        //            string controller_name = Gamepad.current.device.displayName;
+        //            if (controller_name.ToLower().Contains("dualshock") || controller_name.ToLower().Contains("dualsense"))
+        //            {
+        //                door_text = "Press X to buy";
+        //            }
+        //            else if (controller_name.ToLower().Contains("xbox") || controller_name.ToLower().Contains("xinput"))
+        //            {
+        //                door_text = "Press A to buy";
+        //            }
+        //        }
+        //    }
+        //    door_text += $" ({door_cost} cost)";
+        //    GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, door_text, 1);
+        //    text_shown = true;
+        //}
+        //else if (player_on_range)
+        //{
+        //    ScoreManager.instance.can_buy_door = false;
+        //    // Esconde el texto de compra
+        //    Debug.Log("Hiding text");
+        //    GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, "", -15);
+        //    text_shown = false;
+        //    player_on_range = false;
+        //}
     }
 
     public void Buy(InputAction.CallbackContext context)
@@ -63,27 +97,17 @@ public class sc_shop : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.CompareTag("Jugger"))
-        {
-            canBuyJ = true;
-        }
-
-        if (collision.collider.CompareTag("Stamina"))
-        {
-            canBuySpeed = true;
-        }
+        if(other.CompareTag("StaminUp"))
+          canBuySpeed = true;
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OntriggerExit(Collider collision)
     {
-        if (collision.collider.CompareTag("Jagger"))
-        {
-            canBuyJ = false;
-        }
+        
 
-        if(collision.collider.CompareTag("StaminUp"))
+        if(collision.CompareTag("StaminUp"))
         {
             canBuySpeed = false;
         }
