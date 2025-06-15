@@ -100,6 +100,8 @@ public class PlayerMovement : MonoBehaviour
         var unused = cameraRotation.transform.position;
 
         SoundManager.instance.PlaySound(null);
+
+
     }
 
     private void FixedUpdate()
@@ -233,7 +235,7 @@ public class PlayerMovement : MonoBehaviour
         // Aplicación del movimiento
         if (moving || slide)
         {
-            Vector3 d = (((transform.forward * dir.y) + (transform.right * dir.x)) * current_speed) * Time.fixedDeltaTime;
+            Vector3 d = (((transform.forward * dir.y) + (transform.right * dir.x)) * current_speed) * Time.deltaTime;
             Vector3 with_y_speed = new Vector3(d.x, rb.velocity.y, d.z);
             rb.velocity = with_y_speed;
         }

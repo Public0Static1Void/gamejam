@@ -131,7 +131,7 @@ public class sc_bate : MonoBehaviour
 
         GameManager.gm.ShakeController(0.1f, 0.05f, 1);
 
-        CameraRotation.instance.ShakeCamera(0.5f, 0.05f);
+        CameraRotation.instance.ShakeCamera(0.5f, 1);
 
         if (audioSource == null)
         {

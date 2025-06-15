@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
 public class EnemyFollow : MonoBehaviour
 {
@@ -244,7 +243,8 @@ public class EnemyFollow : MonoBehaviour
             yield return new WaitForSeconds(2.5f); /// Esperarán 2.5f segundos antes de volver a atacar
 
             agent.enabled = true;
-            rb.isKinematic = false;
+            if (rb != null)
+                rb.isKinematic = false;
 
             attacking = false;
         }
