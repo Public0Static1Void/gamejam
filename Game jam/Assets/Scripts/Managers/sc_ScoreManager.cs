@@ -20,12 +20,15 @@ public class ScoreManager : MonoBehaviour
     public TMP_Text ui_plus_scoretext;
     public Image ui_multiplier_timer;
     public TMP_Text ui_multiplier_text;
+    public PlayerLife playerLife;
 
     public Transform ui_canvas;
     public AudioSource score_audioSource;
 
     public List<TMP_Text> plus_scoretext_list;
     private int current_text;
+
+    public sc_shop sc_shop;
 
     [Header("Colors")]
     public Color color_base_score;
@@ -44,11 +47,13 @@ public class ScoreManager : MonoBehaviour
     [HideInInspector]
     public bool can_buy_perk = false;
     [HideInInspector]
-    private float jugg_cost;
-    [HideInInspector]
+    
+    
+    
     private float staminUP_cost;
 
-
+    public float speed_cost;
+    public float jugg_cost;
 
     private float multiplier_timer = 0, timer = 0;
 
@@ -270,6 +275,30 @@ public class ScoreManager : MonoBehaviour
             }
         }
     }
+
+    public void Buy(InputAction.CallbackContext context)
+    {
+        if (context.performed && sc_shop.canBuySpeed)
+        {
+                if (score >= speed_cost)
+                {
+                    ChangeScore(-speed_cost, transform.position, true);
+                    PlayerMovement.instance.speed += 2;
+                }
+
+        }
+
+        if (context.performed && sc_shop.canBuyJ)
+        {
+            if (score >= jugg_cost)
+            {
+                ChangeScore(-jugg_cost, transform.position, true);
+                playerLife.hp += 2;
+                playerLife.max_hp += 2;
+            }
+
+        }
+    }
     private IEnumerator OpenDoor(GameObject door)
     {
         GameObject ob = door;
@@ -293,16 +322,4 @@ public class ScoreManager : MonoBehaviour
 
         Destroy(ob);
     }
-
-    //public void BuyPerk(InputAction.CallbackContext con)
-    //{
-    //    if (con.performed && can_buy_perk)
-    //    {
-    //        if (score >= door_cost)
-    //        {
-    //            ChangeScore(-jugger_cost, transform.position, true);
-              
-    //        }
-    //    }
-    //}
 }
