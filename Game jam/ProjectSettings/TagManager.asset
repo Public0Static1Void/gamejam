@@ -8,6 +8,7 @@ TagManager:
   - Jugger
   - StaminUp
   - DmG
+  - Box
   layers:
   - Default
   - TransparentFX

@@ -25,6 +25,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: d1384899fbff5cd4a88b761883d5f7a2, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -49,9 +53,10 @@ Material:
     - _BUILTIN_SrcBlend: 5
     - _BUILTIN_Surface: 1
     - _BUILTIN_ZTest: 4
-    - _BUILTIN_ZWrite: 0
-    - _BUILTIN_ZWriteControl: 2
+    - _BUILTIN_ZWrite: 1
+    - _BUILTIN_ZWriteControl: 1
     - _BlendAmount: 0
+    - _EmissionStrength: 0
     - _MetallicStrength: 1
     - _NormalStrength: 1
     m_Colors:

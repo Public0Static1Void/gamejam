@@ -194,6 +194,11 @@ public class CameraRotation : MonoBehaviour
         x = x_rotation;
         y = y_rotation;
     }
+    public void AddRotation(float x_rotation, float y_rotation)
+    {
+        x += x_rotation;
+        y += y_rotation;
+    }
 
     public void ChangeCameraSpeed()
     {
