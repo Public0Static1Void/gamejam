@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4815118245784106859}
   - component: {fileID: 719668728366305791}
   - component: {fileID: 8704354782528998180}
+  - component: {fileID: 8759256762059272758}
   m_Layer: 0
   m_Name: pr_Die hit
   m_TagString: Untagged
@@ -4886,3 +4887,20 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &8759256762059272758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4033971237788600613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00bdf4923db6d02469e9c88e5d8149ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stamps:
+  - {fileID: 2800000, guid: 8a897d15e59c2b749bfc108a39f7e0e3, type: 3}
+  - {fileID: 2800000, guid: 71944df03e417bc42a300337bb3e6221, type: 3}
+  - {fileID: 2800000, guid: de068d6656b276742bf276c17baa8b5a, type: 3}
+  - {fileID: 2800000, guid: 29988fb6de5ed3548b7e953969e267bc, type: 3}

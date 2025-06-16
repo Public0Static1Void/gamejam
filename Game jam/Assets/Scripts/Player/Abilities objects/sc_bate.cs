@@ -14,6 +14,8 @@ public class sc_bate : MonoBehaviour
     public Animator anim;
     private TrailRenderer trailRenderer;
 
+    public ParticleSystem ps_Hit;
+
     [Header("Sonido")]
     public AudioClip clip_swing, clip_hit;
 
@@ -121,7 +123,9 @@ public class sc_bate : MonoBehaviour
         if (!isSwinging || hitted_gameobjects.Contains(other.transform.parent != null ? other.transform.parent.name : other.name)) return;
 
         Vector3 dir = (other.transform.position - player.position).normalized;
-        Vector3 forceDir = new Vector3(dir.x, 0.5f, dir.z);
+        Vector3 forceDir = new Vector3(dir.x, Random.Range(0.25f, 0.5f), dir.z);
+
+        Destroy(Instantiate(ps_Hit, other.ClosestPoint(transform.position), Quaternion.LookRotation(-dir)), 5);
 
         other.GetComponent<EnemyFollow>().AddForceToEnemy(forceDir * 8.5f);
         other.GetComponent<Rigidbody>().AddTorque(forceDir * 2);
@@ -131,15 +135,19 @@ public class sc_bate : MonoBehaviour
 
         GameManager.gm.ShakeController(0.1f, 0.05f, 1);
 
-        CameraRotation.instance.ShakeCamera(0.5f, 1);
+        CameraRotation.instance.ShakeCamera(0.15f, 1);
+        PlayerMovement.instance.rb.AddForce(-player.forward * ReturnScript.instance.damage, ForceMode.Impulse);
+
+        // Random pitch para variar el sonido de golpeo
+        float rand_pitch = Random.Range(0.75f, 1.26f);
 
         if (audioSource == null)
         {
-            audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
+            audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position, 0.5f, null, true, rand_pitch);
         }
         else if (!audioSource.isPlaying)
         {
-            audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position);
+            audioSource = SoundManager.instance.InstantiateSound(clip_hit, transform.position, 0.5f, null, true, rand_pitch);
         }
 
         hitted_gameobjects.Add(other.transform.parent != null ? other.transform.parent.name : other.name);

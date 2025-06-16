@@ -102,8 +102,6 @@ public class EnemyLife : MonoBehaviour
 
             StampOnGround();
 
-            Destroy(gameObject, 15);
-
             ActivateRagdoll();
             //StartCoroutine(DestroyCooldown());
         }
@@ -115,14 +113,16 @@ public class EnemyLife : MonoBehaviour
         float blend = 0;
         while (blend < 1)
         {
-            blend += Time.deltaTime * 8;
+            blend += Time.deltaTime * 64;
             mesh_r.material.SetFloat("_BlendAmount", blend);
 
             yield return null;
         }
         while (blend > 0)
         {
-            blend -= Time.deltaTime * 8;
+            blend -= Time.deltaTime * 32;
+            if (blend < 0)
+                blend = 0;
             mesh_r.material.SetFloat("_BlendAmount", blend);
 
             yield return null;
@@ -295,15 +295,35 @@ public class EnemyLife : MonoBehaviour
         Destroy(gameObject, 15);
         */
 
-        while (true)
+        float alpha = mesh_r.material.GetFloat("_Alpha");
+        float blend = 0;
+        mesh_r.material.SetFloat("_BlendAmount", 0);
+        mesh_r.material.SetColor("_BlendColor", Color.gray);
+
+        while (alpha > 0)
         {
             foreach(Rigidbody rb in rbs)
             {
-                rb.velocity *= 0.75f;
+                if (!rb.isKinematic)
+                {
+                    rb.velocity *= 0.75f;
+                    if (rb.velocity.magnitude < 0.05f)
+                    {
+                        rb.gameObject.GetComponent<Collider>().enabled = false;
+                    }
+                }
             }
+
+            alpha -= Time.deltaTime * 0.5f;
+            mesh_r.material.SetFloat("_Alpha", alpha);
+
+            blend += Time.deltaTime * 0.15f;
+            mesh_r.material.SetFloat("_BlendAmount", blend);
 
             yield return null;
         }
+
+        Destroy(gameObject);
     }
 
     private void ActivateRagdoll()

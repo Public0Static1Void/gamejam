@@ -89,7 +89,7 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// Hace sonar un audioClip en la posición indicada
     /// </summary>
-    public AudioSource InstantiateSound(AudioClip clip, Vector3 position, float volume = 0.5f, AudioMixerGroup mixer = null, bool play_on_creation = true)
+    public AudioSource InstantiateSound(AudioClip clip, Vector3 position, float volume = 0.5f, AudioMixerGroup mixer = null, bool play_on_creation = true, float pitch = 1)
     {
         AudioSource curr = buffer_audiosources[current_audiosource];
 
@@ -98,6 +98,7 @@ public class SoundManager : MonoBehaviour
         curr.outputAudioMixerGroup = mixer ?? audioMixerGroup; /// Si mixer no se pasa como parámetro se usará audioMixerGroup
         curr.volume = volume;
         curr.loop = false;
+        curr.pitch = pitch;
         if (play_on_creation)
             curr.Play();
 

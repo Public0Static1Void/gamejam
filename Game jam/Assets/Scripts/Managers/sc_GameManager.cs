@@ -8,6 +8,7 @@ using UnityEngine.Rendering.HighDefinition.Attributes;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(SaveManager))]
 public class GameManager : MonoBehaviour
@@ -831,6 +832,12 @@ public class GameManager : MonoBehaviour
     {
         float scaledValue = (value - oldMin) / (oldMax - oldMin) * (newMax - newMin) + newMin;
         return scaledValue;
+    }
+
+    public bool IsNavMeshReady()
+    {
+        NavMeshHit hit;
+        return NavMesh.SamplePosition(Vector3.zero, out hit, 1000, NavMesh.AllAreas);
     }
     #endregion
 }

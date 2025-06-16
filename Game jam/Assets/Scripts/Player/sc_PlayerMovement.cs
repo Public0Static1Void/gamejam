@@ -171,7 +171,6 @@ public class PlayerMovement : MonoBehaviour
 
             Camera.main.transform.localPosition = Vector3.Lerp(Camera.main.transform.localPosition, slide_camera_offset, Time.deltaTime * 10); /// Movimiento de la cámara
 
-            CameraRotation.instance.ShakeCamera(0.01f, 0.001f);
 
             if (cameraRotation.z < 1.5f)
                 cameraRotation.z += Time.deltaTime * 8;
@@ -186,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
             ParticleSystem.MainModule main_m = particle_slide.main;
             main_m.startSpeed = slide_particle_speed;
 
-            slide_particle_amount = (current_speed * 0.1f);
+            slide_particle_amount = (current_speed * 0.25f);
 
             ParticleSystem.EmissionModule emission_m = particle_slide.emission;
             emission_m.rateOverTime = slide_particle_amount;
@@ -214,7 +213,8 @@ public class PlayerMovement : MonoBehaviour
 
                 /// Asegura que el jugador mantiene su posición después de activar el agente
                 Vector3 pos = transform.position;
-                player_agent.enabled = true;
+                if (GameManager.gm.IsNavMeshReady())
+                    player_agent.enabled = true;
                 transform.position = pos;
 
                 current_speed = target_speed;
