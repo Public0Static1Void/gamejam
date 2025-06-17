@@ -33,7 +33,7 @@ public class EnemyLife : MonoBehaviour
 
     private Rigidbody[] rbs;
 
-    private SkinnedMeshRenderer mesh_r;
+    private MeshRenderer mesh_r;
 
     float random_pitch = 0;
     private void Start()
@@ -41,7 +41,7 @@ public class EnemyLife : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         enemyFollow = GetComponent<EnemyFollow>();
 
-        mesh_r = GetComponentInChildren<SkinnedMeshRenderer>();
+        mesh_r = GetComponentInChildren<MeshRenderer>();
 
         hp = max_hp;
 
@@ -302,16 +302,9 @@ public class EnemyLife : MonoBehaviour
 
         while (alpha > 0)
         {
-            foreach(Rigidbody rb in rbs)
+            if (!rb.isKinematic)
             {
-                if (!rb.isKinematic)
-                {
-                    rb.velocity *= 0.75f;
-                    if (rb.velocity.magnitude < 0.05f)
-                    {
-                        rb.gameObject.GetComponent<Collider>().enabled = false;
-                    }
-                }
+                rb.velocity *= 0.75f;
             }
 
             alpha -= Time.deltaTime * 0.5f;
@@ -328,32 +321,12 @@ public class EnemyLife : MonoBehaviour
 
     private void ActivateRagdoll()
     {
-        SkinnedMeshRenderer mesh_r = GetComponentInChildren<SkinnedMeshRenderer>();
+        MeshRenderer mesh_r = GetComponentInChildren<MeshRenderer>();
         mesh_r.material.color = Color.red;
 
         enemyFollow.enabled = false;
 
         enemyFollow.agent.enabled = false;
-        Collider[] colls = GetComponents<Collider>();
-        foreach (Collider coll in colls)
-        {
-            coll.enabled = false;
-        }
-        GetComponent<Animator>().enabled = false;
-
-        rbs = GetComponentsInChildren<Rigidbody>();
-        foreach (Rigidbody ch_rb in rbs)
-        {
-            ch_rb.isKinematic = false;
-            ch_rb.velocity = rb.velocity;
-        }
-
-        colls = GetComponentsInChildren<Collider>();
-        foreach (Collider coll in colls)
-        {
-            if (coll.name != name)
-                coll.enabled = true;
-        }
 
         StartCoroutine(DestroyCooldown());
     }
