@@ -27,6 +27,13 @@ public class sc_EnemyCharger : MonoBehaviour
     public AudioClip clip_stomp_heavy;
 
 
+    private Animator anim;
+
+    private void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
+
     void Update()
     {
         if (!on_charge && !on_cooldown)
@@ -57,6 +64,7 @@ public class sc_EnemyCharger : MonoBehaviour
         if (!on_charge && enemyFollow.agent.isOnNavMesh)
         {
             on_charge = true;
+            anim.SetBool("Charge", true);
             SoundManager.instance.InstantiateSound(clip_scream, transform.position, 1);
 
             float start_speed = enemyFollow.agent.speed;
@@ -182,6 +190,9 @@ public class sc_EnemyCharger : MonoBehaviour
 
             enemyFollow.rb.freezeRotation = false;
             enemyFollow.agent.enabled = true;
+
+
+            anim.SetBool("Charge", false);
 
             on_charge = false;
             on_cooldown = true;
