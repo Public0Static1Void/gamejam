@@ -111,16 +111,16 @@ public class EnemyLife : MonoBehaviour
     private IEnumerator ChangeColor()
     {
         float blend = 0;
-        while (blend < 1)
+        while (blend < 20)
         {
-            blend += Time.deltaTime * 64;
+            blend += Time.deltaTime * 64 * 20;
             mesh_r.material.SetFloat("_BlendAmount", blend);
 
             yield return null;
         }
         while (blend > 0)
         {
-            blend -= Time.deltaTime * 32;
+            blend -= Time.deltaTime * 32 * 20;
             if (blend < 0)
                 blend = 0;
             mesh_r.material.SetFloat("_BlendAmount", blend);
