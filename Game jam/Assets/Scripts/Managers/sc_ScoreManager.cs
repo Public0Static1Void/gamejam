@@ -46,10 +46,11 @@ public class ScoreManager : MonoBehaviour
 
     [HideInInspector]
     public bool can_buy_perk = false;
-    [HideInInspector]
-    
-    
-    
+
+    public AudioClip clip_purchase;
+
+
+
     private float staminUP_cost;
 
     public float speed_cost;
@@ -67,6 +68,7 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
+        playerLife = ReturnScript.instance.gameObject.GetComponent<PlayerLife>();
         plus_scoretext_list = new List<TMP_Text>();
         for (int i = 0; i < 50; i++)
         {
@@ -284,6 +286,9 @@ public class ScoreManager : MonoBehaviour
                 {
                     ChangeScore(-speed_cost, transform.position, true);
                     PlayerMovement.instance.speed += 2;
+                    SoundManager.instance.InstantiateSound(clip_purchase, playerLife.transform.position);
+
+
                 }
 
         }
@@ -295,6 +300,8 @@ public class ScoreManager : MonoBehaviour
                 ChangeScore(-jugg_cost, transform.position, true);
                 playerLife.hp += 2;
                 playerLife.max_hp += 2;
+
+                SoundManager.instance.InstantiateSound(clip_purchase, playerLife.transform.position);
             }
 
         }
@@ -305,17 +312,14 @@ public class ScoreManager : MonoBehaviour
 
         ob.GetComponent<Collider>().enabled = false;
 
-        Material[] m_ob = ob.GetComponent<MeshRenderer>().materials;
-        Color m_color = m_ob[0].color;
+        MeshRenderer m_ob = ob.GetComponent<MeshRenderer>();
 
-        float alpha = m_ob[0].color.a;
+        float alpha = m_ob.material.GetFloat("_Alpha");
 
-        while (m_ob[0].color.a > 0)
+        while (alpha > 0)
         {
-            ob.transform.Translate(Vector3.up * 2 * Time.deltaTime);
-
-            alpha -= Time.deltaTime;
-            m_ob[0].color = new Color(m_color.r, m_color.g, m_color.b, alpha);
+            alpha -= Time.deltaTime * 5;
+            m_ob.material.SetFloat("_Alpha", alpha);
 
             yield return null;
         }

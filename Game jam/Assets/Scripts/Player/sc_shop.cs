@@ -14,7 +14,7 @@ public class sc_shop : MonoBehaviour
     public Transform perkStam;
     public Transform perkJugg;
 
-    private float range_interaction = 3;
+    public float range_interaction = 3;
 
     private bool player_on_rangee = false;
 
@@ -31,10 +31,19 @@ public class sc_shop : MonoBehaviour
 
     public GameObject shop_object;
 
+    string jugg_phrase = "";
+    string stam_phrase = "";
+
     PlayerInput pInput;
     private void Start()
     {
         pInput = PlayerMovement.instance.GetComponent<PlayerInput>();
+
+        jugg_phrase = IdiomManager.instance.GetKeyText("Jugger text");
+        stam_phrase = IdiomManager.instance.GetKeyText("Stam text");
+
+        Debug.Log(jugg_phrase);
+        Debug.Log(stam_phrase);
     }
     void Update()
     {
@@ -42,33 +51,15 @@ public class sc_shop : MonoBehaviour
         {
             player_on_rangee = true;
             canBuyJ = true;
-            //ScoreManager.instance.door_cost = door_cost;
 
-            //// Muestra el texto de compra
-            //string door_text = "Press F to buy";
-            //if (pInput.currentControlScheme == "Gamepad")
-            //{
-            //    if (Gamepad.current != null)
-            //    {
-            //        string controller_name = Gamepad.current.device.displayName;
-            //        if (controller_name.ToLower().Contains("dualshock") || controller_name.ToLower().Contains("dualsense"))
-            //        {
-            //            door_text = "Press X to buy";
-            //        }
-            //        else if (controller_name.ToLower().Contains("xbox") || controller_name.ToLower().Contains("xinput"))
-            //        {
-            //            door_text = "Press A to buy";
-            //        }
-            //    }
-            //}
-            //door_text += $" ({door_cost} cost)";
-            //GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, door_text, 1);
-            //text_shown = true;
+            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, jugg_phrase, 1);
         }
-        else if(Vector3.Distance(perkJugg.transform.position, player.position) < range_interaction)
+        else if (Vector3.Distance(perkJugg.transform.position, player.position) < range_interaction)
         {
             player_on_rangee = true;
             canBuySpeed = true;
+
+            GameManager.gm.ShowText(GameManager.TextPositions.CENTER_LOWER, stam_phrase, 1);
         }
         else if (player_on_rangee)
         {

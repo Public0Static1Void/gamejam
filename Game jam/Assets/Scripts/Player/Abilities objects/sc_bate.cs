@@ -137,12 +137,25 @@ public class sc_bate : MonoBehaviour
             Rigidbody rbs = other.GetComponent<Rigidbody>();
             if (rbs != null)
             {
+                SoundManager.instance.InstantiateSound(clip_PlasticHit, other.transform.position);
+
                 Vector3 dir = (other.transform.position - transform.position).normalized;
-                rbs.AddForce(dir * (big_attack ? 10 : 5), ForceMode.Impulse);
+                rbs.AddForce(dir * (big_attack ? 20 : 5), ForceMode.Impulse);
+                if (big_attack)
+                {
+                    Collider[] colls = Physics.OverlapSphere(transform.position, 2);
+                    for (int i = 0; i < colls.Length; i++)
+                    {
+                        if (colls[i].tag == "Box")
+                        {
+                            colls[i].GetComponent<Rigidbody>().AddExplosionForce(20, transform.position, 2);
+                            SoundManager.instance.InstantiateSound(clip_PlasticHit, colls[i].transform.position, 0.75f, null, true, Random.Range(0.5f, 0.75f));
+                        }
+                    }
+                }
 
-                SoundManager.instance.InstantiateSound(clip_PlasticHit, transform.position);
 
-                rb.AddForce(-player.forward * (big_attack ? 2 : 1), ForceMode.Impulse);
+                rb.AddForce(-player.forward * (big_attack ? 3 : 1), ForceMode.Impulse);
             }
         }
     }

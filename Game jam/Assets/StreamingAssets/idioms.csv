@@ -93,3 +93,7 @@ ONGAME Buy Ability gamepad XB;Pulsa <color=yellow>A</color> para tirar de la caj
 Settings title;Opciones;Settings
 Volume master text;Volumen global;Master Volume
 Volume sfx text;Volumen SFX;SFX Volume
+;;
+;;
+Jugger text;Pulsa <color=yellow>F</color> para comprar vida (1000);Press <color=yellow>F</color> to buy life (1000)
+Stam text;Pulsa <color=yellow>F</color> para comprar speed (1000); Press <color=yellow>F</color> to buy speed (1000)

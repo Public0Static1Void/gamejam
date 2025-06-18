@@ -38,6 +38,8 @@ public class sc_AbilitiesSpawner : MonoBehaviour
         buy_phrase = IdiomManager.instance.GetKeyText(buy_phrase);
 
         buy_phrase = Regex.Replace(buy_phrase, @"\d+", buy_cost.ToString());
+
+        spawn_positions[current_pos].gameObject.SetActive(true);
     }
 
     // Update is called once per frame

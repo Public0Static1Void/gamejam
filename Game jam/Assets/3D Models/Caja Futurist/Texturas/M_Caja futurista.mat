@@ -30,7 +30,8 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -69,7 +70,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
-        m_Texture: {fileID: 2800000, guid: ec695a13b767cdb42a5f0318942f634f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 364ea85d1e0c7834e9eb4708f6c00d86, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -77,11 +78,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicMap:
-        m_Texture: {fileID: 2800000, guid: 90e7f4ad71f7d5a45b0a563ecc1c1663, type: 3}
+        m_Texture: {fileID: 2800000, guid: c5908362cdf43de48925ba64d1166303, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 516624e9de69eb148af829b710ef6bed, type: 3}
+        m_Texture: {fileID: 2800000, guid: ddbc6346594444643a77290bb2cd76f7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -98,12 +99,23 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Alpha: 1
+    - _BUILTIN_AlphaClip: 0
+    - _BUILTIN_Blend: 0
+    - _BUILTIN_CullMode: 2
+    - _BUILTIN_DstBlend: 0
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
+    - _BUILTIN_SrcBlend: 1
+    - _BUILTIN_Surface: 0
+    - _BUILTIN_ZTest: 4
+    - _BUILTIN_ZWrite: 1
+    - _BUILTIN_ZWriteControl: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EmissionStrength: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
