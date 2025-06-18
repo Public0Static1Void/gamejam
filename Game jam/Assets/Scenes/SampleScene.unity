@@ -15368,6 +15368,7 @@ MonoBehaviour:
   enemyRound: 1
   clip_roundstart: {fileID: 8300000, guid: 947e275716657e74d816fdd0506cf4da, type: 3}
   txt_round: {fileID: 664061370}
+  pr_Particles: {fileID: 6547629990077514693, guid: b698a8d63227247489f53acf102967ad, type: 3}
 --- !u!4 &843739052
 Transform:
   m_ObjectHideFlags: 0

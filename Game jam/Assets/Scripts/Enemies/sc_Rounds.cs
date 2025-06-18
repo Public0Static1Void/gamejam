@@ -36,6 +36,7 @@ public class Rounds : MonoBehaviour
     public AudioClip clip_roundstart;
     [Header("References")]
     public TMP_Text txt_round;
+    public ParticleSystem pr_Particles;
 
     private int secs = 0;
     private bool counter = false;
@@ -132,7 +133,7 @@ public class Rounds : MonoBehaviour
             {
                 randSpawn = Random.Range(0, SpawnPoint.Count);
             }
-
+            Destroy(Instantiate(pr_Particles, SpawnPoint[randSpawn].position, Quaternion.identity), 5);
             GameObject enemy_inst = Instantiate(GetRandomEnemy(), SpawnPoint[randSpawn].position, transform.rotation);
             enemy_inst.name += " " + round.ToString() + " " + i.ToString();
             /// Suma vida a los enemigos tras cada ronda
