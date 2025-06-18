@@ -385,7 +385,8 @@ public class PlayerMovement : MonoBehaviour
 
             /// Asegura que el jugador mantiene su posición después de activar el agente
             Vector3 pos = transform.position;
-            player_agent.enabled = true;
+            if (GameManager.gm.IsNavMeshReady())
+                player_agent.enabled = true;
             transform.position = pos;
 
             current_speed = target_speed;

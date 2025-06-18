@@ -534,7 +534,7 @@ MonoBehaviour:
   blood_explosion: {fileID: 8300000, guid: 158e1c912f63e034fbe52ee99b9baa4d, type: 3}
   clip_last_hit: {fileID: 8300000, guid: b890c6eddaffc3744b7d0b83cd2c2f81, type: 3}
   stamp: {fileID: 2800000, guid: 9c9b5bf3b07ab4840b8e3ddbd8c279a8, type: 3}
-  probability: 30
+  probability: 15
   stamps:
   - {fileID: 2800000, guid: 14a3ab49214fbf64d90e481d36e5a59e, type: 3}
   - {fileID: 2800000, guid: de068d6656b276742bf276c17baa8b5a, type: 3}
