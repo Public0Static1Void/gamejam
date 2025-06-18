@@ -47,6 +47,8 @@ public class sc_shop : MonoBehaviour
     }
     void Update()
     {
+        if (perkStam == null) return;
+
         if (Vector3.Distance(perkStam.transform.position, player.position) < range_interaction)
         {
             player_on_rangee = true;
