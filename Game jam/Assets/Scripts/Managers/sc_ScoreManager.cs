@@ -265,7 +265,7 @@ public class ScoreManager : MonoBehaviour
 
     public void BuyDoor(InputAction.CallbackContext con)
     {
-        if (con.performed && can_buy_door)
+        if (con.performed && can_buy_door && current_door != null)
         {
             if (score >= door_cost)
             {
@@ -274,6 +274,9 @@ public class ScoreManager : MonoBehaviour
                 Rounds.instance.SpawnPoint.AddRange(current_door.GetComponent<sc_Door>().Spawner);
 
                 StartCoroutine(OpenDoor(current_door.gameObject));
+
+                can_buy_door = false;
+                current_door = null;
             }
         }
     }
