@@ -9,6 +9,10 @@ using UnityEngine.EventSystems;
 using System;
 using Unity.VisualScripting;
 using static System.Net.Mime.MediaTypeNames;
+using System.Numerics;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
+using System.Text.RegularExpressions;
 
 public class menus : MonoBehaviour
 {
@@ -28,6 +32,7 @@ public class menus : MonoBehaviour
     public AudioClip clip_selected;
 
     [Header("References")]
+    public Canvas main_canvas;
     public TMP_Text txt_damage;
     public TMP_Text txt_speed;
     public TMP_Text txt_stamina;
@@ -35,6 +40,9 @@ public class menus : MonoBehaviour
     public TMP_Text txt_hp;
 
     public TMP_Text txt_skill_points;
+    public TMP_Text txt_current_idiom;
+
+    public Sprite sprite_lock;
 
     [SerializeField] Slider sliderVolume;
     [SerializeField] Toggle toggleScreenMode;
@@ -45,7 +53,9 @@ public class menus : MonoBehaviour
 
     SaveManager sm;
 
-    public Transform abilities_holder;
+    public Transform abilities_holder_ultimate;
+    public Transform abilities_holder_basic;
+    public Transform abilities_holder_passive;
     public GameObject prefab_ability_model;
     public TMP_Text txt_description_ability;
 
@@ -60,6 +70,8 @@ public class menus : MonoBehaviour
     public Sprite sprite_bloodthirsty;
     public Sprite sprite_hologram;
     public Sprite sprite_monkey;
+    public Sprite sprite_killnspeed;
+    public Sprite sprite_recharge;
 
     [Header("Abilities ref")]
     public ScrollRect ab_scroll;
@@ -67,6 +79,7 @@ public class menus : MonoBehaviour
     public TMP_Text ab_description_text;
 
     private bool close_ability_upgrade = false;
+    public bool on_ability_menu = false;
 
     private LayoutElement layout_element;
 
@@ -102,10 +115,13 @@ public class menus : MonoBehaviour
             sprite_byebye,
             sprite_bloodthirsty,
             sprite_hologram,
-            sprite_monkey
+            sprite_monkey,
+            sprite_killnspeed,
+            sprite_recharge
         };
 
         LoadAbilities();
+        LoadStatsTexts();
     }
 
     public PlayerData LoadPlayerStats()
@@ -145,15 +161,19 @@ public class menus : MonoBehaviour
         txt_speed.text = "SPEED: " + pd.speed.ToString();
         txt_stamina.text = "STAMINA: " + pd.stamina.ToString();
         txt_hp.text = "HP: " + pd.hp.ToString();
-        txt_explosion_range.text = "EXPLOSION RANGE: " + pd.explosion_range.ToString();
-        txt_skill_points.text = "SKILL POINTS: " + pd.score.ToString();
+        txt_skill_points.text = "SKILL POINTS: " + pd.score.ToString("F2");
     }
 
     public void UpgradeStat(GameObject stat)
     {
         PlayerData pd = sm.LoadSaveData();
 
-        if (pd == null || pd.score < 1) return;
+        if (pd == null || pd.score < 1)
+        {
+            GameManager.gm.ShakeUIElement(stat.GetComponent<RectTransform>(), 0.5f, 30);
+            SoundManager.instance.InstantiateSound(clip_cantupgrade, transform.position);
+            return;
+        }
 
         string name = stat.name;
 
@@ -161,15 +181,15 @@ public class menus : MonoBehaviour
         {
             case "DAMAGE":
                 pd.damage++;
-                txt_damage.text = "DAMAGE: " + pd.damage.ToString();
+                txt_damage.text = "Damage: " + pd.damage.ToString();
                 break;
             case "SPEED":
                 pd.speed += 10;
-                txt_speed.text = "SPEED: " + pd.speed.ToString();
+                txt_speed.text = "Speed: " + pd.speed.ToString();
                 break;
             case "EXPLOSION RANGE":
                 pd.explosion_range += 0.5f;
-                txt_explosion_range.text = "EXPLOSION RANGE: " + pd.explosion_range.ToString();
+                txt_explosion_range.text = "Explosion range: " + pd.explosion_range.ToString();
                 break;
             case "HP":
                 pd.hp++;
@@ -177,17 +197,33 @@ public class menus : MonoBehaviour
                 break;
             case "STAMINA":
                 pd.stamina++;
-                txt_stamina.text = "STAMINA: " + pd.stamina.ToString();
+                txt_stamina.text = "Stamina: " + pd.stamina.ToString();
                 break;
         }
 
         pd.score--;
-        txt_skill_points.text = "SKILL POINTS: " + pd.score.ToString();
+        txt_skill_points.text = "Skill points: " + pd.score.ToString();
 
         Debug.Log("Stat upgraded");
         sm.SaveGame(pd);
     }
 
+    public Vector2 GetAnchoredPositionOnCanvas(Canvas canvas, Vector2 screenPosition)
+    {
+        RectTransform canvasRect = canvas.transform as RectTransform;
+        Vector2 localPoint;
+
+        Camera cam = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPosition,
+            cam,
+            out localPoint
+        );
+
+        return localPoint;
+    }
 
     // Habilidades
     public void LoadAbilities()
@@ -200,15 +236,30 @@ public class menus : MonoBehaviour
             for (int i = 0; i < ab_l.Length; i++)
             {
                 GameObject ob = Instantiate(prefab_ability_model);
-                ob.transform.SetParent(abilities_holder);
-                ob.transform.localScale = Vector3.one * 0.3f;
+                Transform parent = abilities_holder_ultimate;
+                switch (ab_l[i].rarity)
+                {
+                    case AbilitiesSystem.AbilityType.PASSIVE:
+                        parent = abilities_holder_passive;
+                        break;
+                    case AbilitiesSystem.AbilityType.BASIC:
+                        parent = abilities_holder_basic;
+                        break;
+                    case AbilitiesSystem.AbilityType.ULTIMATE:
+                        parent = abilities_holder_ultimate;
+                        break;
+                }
+                ob.transform.SetParent(parent);
+
+                ob.transform.localScale = Vector3.one * 3f;
 
                 UnityEngine.UI.Image im = ob.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>();
                 UnityEngine.UI.Button btn = ob.GetComponentInChildren<UnityEngine.UI.Button>();
                 TMP_Text txt = ob.GetComponentInChildren<TMP_Text>();
 
                 im.sprite = ab_sprites[i];
-                txt.text = ab_l[i].name;
+                txt.text = IdiomManager.instance.GetKeyText($"{AbilitiesSystem.instance.abilities_names[i]} name");
+
 
                 // Configura el evento de selección -----------------------------------
                 EventTrigger event_tr = ob.GetComponentInChildren<EventTrigger>();
@@ -238,12 +289,34 @@ public class menus : MonoBehaviour
 
                 event_tr.triggers.Add(entry);
 
+
                 // Configura el evento al hacer click
                 string description = ab_l[i].description;
                 btn.onClick.AddListener(() =>
                 {
-                    AbilityButton(ob, im, txt, btn, description);
+                    AbilityButton(ob, im, txt, btn, description, parent);
                 });
+
+                if (!ab_l[i].unlocked)
+                {
+                    GameObject ob_lock = new GameObject("Lock image");
+                    RectTransform rt_lock = ob_lock.AddComponent<RectTransform>();
+
+                    ob_lock.transform.SetParent(ob.transform, false);
+                    ob_lock.transform.SetAsLastSibling();
+
+                    UnityEngine.UI.Image im_lock = ob_lock.AddComponent<UnityEngine.UI.Image>();
+                    im_lock.sprite = sprite_lock;
+
+                    rt_lock.anchorMin = Vector2.zero;
+                    rt_lock.anchorMax = Vector2.one;
+
+                    rt_lock.sizeDelta = Vector2.zero;
+
+                }
+
+
+                
             }
         }
     }
@@ -253,14 +326,12 @@ public class menus : MonoBehaviour
         close_ability_upgrade = true;
     }
 
-    private void AbilityButton(GameObject ob, UnityEngine.UI.Image im, TMP_Text txt, UnityEngine.UI.Button btn, string description)
+    private void AbilityButton(GameObject ob, UnityEngine.UI.Image im, TMP_Text txt, UnityEngine.UI.Button btn, string description, Transform parent)
     {
         LayoutElement layout_el = btn.gameObject.GetComponent<LayoutElement>();
 
-        Transform parent = btn.transform;
         int child_num = GameManager.GetChildIndex(btn.transform);
-        btn.transform.SetParent(btn.transform.parent.parent, true);
-        btn.transform.SetAsLastSibling();
+        
 
         if (layout_element != null)
         {
@@ -275,11 +346,13 @@ public class menus : MonoBehaviour
 
         SoundManager.instance.InstantiateSound(clip_click, transform.position);
 
-        StartCoroutine(RelocateAbility(ob, im, btn, txt, layout_element, child_num, abilities_holder));
+        StartCoroutine(RelocateAbility(ob, im, btn, txt, layout_element, child_num, parent));
     }
 
     private IEnumerator RelocateAbility(GameObject ob, UnityEngine.UI.Image icon, UnityEngine.UI.Button btn, TMP_Text title, LayoutElement layout_el, int child_num, Transform parent)
     {
+        on_ability_menu = true;
+
         // Configura el nuevo evento del botón
         SaveManager sm = GameManager.gm.saveManager;
         Ability[] abs = sm.LoadAbilitiesData();
@@ -293,6 +366,8 @@ public class menus : MonoBehaviour
                 break;
             }
         }
+        string key_name = AbilitiesSystem.instance.abilities_names[(int)ab.type];
+
 
         float current_level = ab.ability_level; /// Guarda el nivel de la habilidad actual
 
@@ -301,12 +376,37 @@ public class menus : MonoBehaviour
 
         UnityEngine.UI.Image bg = ob.GetComponent<UnityEngine.UI.Image>();
 
+        Vector3 initial_size = bg.rectTransform.sizeDelta;
+        Vector3 initial_scale = bg.rectTransform.localScale;
 
-        // Quita el evento anterior y añade uno nuevo
+
+        HorizontalLayoutGroup grid = parent.GetComponent<HorizontalLayoutGroup>();
+        grid.enabled = false;
+
+        Transform new_parent = btn.transform.parent.parent.parent.parent.parent.parent;
+
+        // Cambia el parent y lo reposiciona
+        Vector3[] corners = new Vector3[4];
+        bg.rectTransform.GetWorldCorners(corners);
+        Vector3 child_center = (corners[0] + corners[2]) * 0.5f;
+
+        btn.transform.SetParent(new_parent, false); /// Cambia el parent
+
+        Vector3 worldPos = btn.transform.position;
+
+        btn.transform.SetAsLastSibling();
+
+        Vector2 screen_pos = RectTransformUtility.WorldToScreenPoint(null, child_center);
+        Vector2 bg_start_anchor = GetAnchoredPositionOnCanvas(main_canvas, child_center);
+        bg_start_anchor = new Vector2(bg_start_anchor.x, bg_start_anchor.y + 45);
+        bg.rectTransform.anchoredPosition = bg_start_anchor;
+
+        // Quita el evento anterior y añade el evento de compra o desbloqueo ------------------------------------------
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() =>
         {
-            if (pd.score > 1)
+            // Mejora la habilidad
+            if (pd.score >= 1)
             {
                 pd.score--;
                 sm.SaveGame(pd);
@@ -315,36 +415,56 @@ public class menus : MonoBehaviour
                 {
                     if (abilities[i].name == ab.name)
                     {
-                        abilities[i].ability_level += 0.1f;
-                        title.text = $"{ab.name}\n\nPress to upgrade!\nCurrent level: {abilities[i].ability_level.ToString("F2")}\nSkill points: {pd.score.ToString("F2")}";
+                        if (abilities[i].unlocked) /// Mejora la habilidad
+                        {
+                            abilities[i].ability_level += 0.1f;
+                            
+                        }
+                        else /// Desbloquea la habilidad
+                        {
+                            abilities[i].unlocked = true;
+                            Transform parent = title.transform.parent;
+
+                            parent.GetChild(parent.childCount - 2).gameObject.SetActive(false);
+                        }
+
+                        title.text = IdiomManager.instance.GetKeyText($"{key_name} name") + "\n\n";
+                        string buy_description = IdiomManager.instance.GetKeyText("Ability upgrade text");
+                        buy_description = buy_description.Replace("0", abilities[i].ability_level.ToString("F2"));
+                        buy_description = buy_description.Replace("1", pd.score.ToString("F0"));
+
+                        buy_description = buy_description.Replace("\\n", "\n");
+
+                        title.text += buy_description;
+
                         ab = abilities[i];
                         break;
                     }
                 }
 
                 sm.SaveAbilities(abilities);
+
                 SoundManager.instance.InstantiateSound(clip_upgraded, transform.position);
             }
             else // No tiene suficientes puntos de skill para mejorar
             {
-                GameManager.gm.ShakeUIElement(bg.rectTransform, 0.5f, 15);
+                GameManager.gm.ShakeUIElement(bg.rectTransform, 0.5f, 120);
                 SoundManager.instance.InstantiateSound(clip_cantupgrade, transform.position);
             }
         });
 
 
+        // Imagen del fondo
         Vector2 scaled_bg = new Vector2(bg.rectTransform.sizeDelta.x * 2.5f, bg.rectTransform.sizeDelta.y * 2);
 
-
-        // Imagen del fondo
         Vector2 bg_new_pos = new Vector2(0, 0);
-        bg.rectTransform.anchorMin = new Vector2(0.35f, 0.5f);
+        bg.rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         bg.rectTransform.anchorMax = bg.rectTransform.anchorMin;
         bg.rectTransform.pivot = bg.rectTransform.anchorMax;
 
         // Icono de la habilidad
         Vector2 icon_previous_pos = icon.rectTransform.anchoredPosition;
-        Vector2 icon_new_pos = new Vector2(-bg.rectTransform.rect.width + icon.rectTransform.rect.xMax / 2, bg.rectTransform.rect.height - icon.rectTransform.rect.yMax);
+        Vector2 icon_new_pos = new Vector2(-bg.rectTransform.rect.width + icon.rectTransform.rect.xMax / 2, bg.rectTransform.rect.height - icon.rectTransform.rect.yMax * 1.75f);
 
         // Título de la habilidad
         Vector2 txt_previous_pos = title.rectTransform.anchoredPosition;
@@ -359,14 +479,33 @@ public class menus : MonoBehaviour
         title.rectTransform.anchorMin = new Vector2(0.05f, 0.05f);
         title.rectTransform.anchorMax = new Vector2(0.45f, 0.5f);
 
-        // Texto de descripción
+        // Texto de descripción ------------------------------------------------------
         ab_description_text.transform.SetParent(ob.transform, false);
         ab_description_text.rectTransform.anchorMin = new Vector2(0.5f, 0.1f);
         ab_description_text.rectTransform.anchorMax = new Vector2(0.9f, 0.9f);
         ab_description_text.rectTransform.pivot = Vector2.one * 0.5f;
 
         string original_text = title.text;
-        title.text = $"{ab.name}\n\nPress to upgrade!\nCurrent level: {ab.ability_level.ToString("F2")}\nSkill points: {pd.score.ToString("F2")}";
+        /// Consigue el texto en el idioma actual y reemplaza los números por los correctos
+        Debug.Log(key_name + " name");
+        title.text = IdiomManager.instance.GetKeyText($"{key_name} name") + "\n\n";
+
+        string buy_description = "";
+        if (ab.unlocked)
+        {
+            buy_description = IdiomManager.instance.GetKeyText("Ability upgrade text");
+            buy_description = buy_description.Replace("0", ab.ability_level.ToString("F2"));
+            buy_description = buy_description.Replace("1", pd.score.ToString("F2"));
+        }
+        else
+        {
+            buy_description = buy_description = IdiomManager.instance.GetKeyText("Ability unlock text");
+            buy_description = buy_description.Replace("0", pd.score.ToString("F2"));
+        }
+        string formattedLine = buy_description.Replace("\\n", "\n");
+        title.text += formattedLine;
+
+        title.ForceMeshUpdate();
 
         close_ability_upgrade = false;
 
@@ -375,12 +514,13 @@ public class menus : MonoBehaviour
         {
             ab_description_text.gameObject.SetActive(true);
 
-            bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime * 4);
-            Debug.Log($"DeltaNow: {bg.rectTransform.sizeDelta}, Target: {scaled_bg}");
-            bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_new_pos, Time.deltaTime * 2);
+            bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, scaled_bg, Time.deltaTime * 8);
 
-            icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime * 2);
-            title.rectTransform.anchoredPosition = Vector2.Lerp(title.rectTransform.anchoredPosition, txt_new_pos, Time.deltaTime * 2);
+
+            bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_new_pos, Time.deltaTime * 4);
+
+            icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_new_pos, Time.deltaTime * 3);
+            title.rectTransform.anchoredPosition = Vector2.Lerp(title.rectTransform.anchoredPosition, txt_new_pos, Time.deltaTime * 3);
 
             if (close_ability_upgrade) // Si el jugador le da al botón de volver mientras está en el menú se cerrará
                 break;
@@ -388,30 +528,7 @@ public class menus : MonoBehaviour
             yield return null;
         }
 
-
-        close_ability_upgrade = false;
-        if (layout_el.ignoreLayout)
-            layout_el.ignoreLayout = false;
-
-        SoundManager.instance.InstantiateSound(clip_selected, transform.position); /// Hace un sonido para indicar la deselección
-
-        // Vuelve a ordenar el grid layout group
-        ab_description_text.gameObject.SetActive(false);
-        ob.SetActive(false);
-
-        bg.transform.SetParent(parent, false);
-        bg.transform.SetSiblingIndex(child_num);
-
-        yield return null; // Espera un frame para que los cambios de apliquen
-
-        GridLayoutGroup grid = parent.GetComponent<GridLayoutGroup>();
-        grid.enabled = false;
-        yield return new WaitForSeconds(0.1f); // Espera un frame para que los cambios de apliquen
-        grid.enabled = true;
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(parent as RectTransform);
-
-        ob.SetActive(true);
+        title.text = ab.name;
 
         // Pone todos los elementos en su disposición original
         bg.rectTransform.anchorMax = Vector2.one * 0.5f;
@@ -420,21 +537,60 @@ public class menus : MonoBehaviour
 
         icon.rectTransform.anchoredPosition = icon_previous_pos;
 
-        // Vuelve a poner el título como estaba
+        /// Vuelve a poner el título como estaba
         title.rectTransform.anchoredPosition = txt_previous_pos;
         title.text = original_text;
         title.alignment = TextAlignmentOptions.Center;
         title.rectTransform.anchorMin = txt_previous_anchors[0];
         title.rectTransform.anchorMax = txt_previous_anchors[1];
 
-        title.text = ab.name;
+        ab_description_text.gameObject.SetActive(false);
+
+        // Quita todos los eventos al botón para evitar problemas
+        btn.onClick.RemoveAllListeners();
+
+        while (Vector2.Distance(bg.rectTransform.sizeDelta, initial_size) > 0.1f)
+        {
+            bg.rectTransform.sizeDelta = Vector2.Lerp(bg.rectTransform.sizeDelta, initial_size, Time.deltaTime * 10);
+            bg.rectTransform.anchoredPosition = Vector2.Lerp(bg.rectTransform.anchoredPosition, bg_start_anchor, Time.deltaTime * 5);
+
+            icon.rectTransform.anchoredPosition = Vector2.Lerp(icon.rectTransform.anchoredPosition, icon_previous_pos, Time.deltaTime * 5);
+            title.rectTransform.anchoredPosition = Vector2.Lerp(title.rectTransform.anchoredPosition, txt_previous_pos, Time.deltaTime * 4.5f);
+
+            yield return null;
+        }
+
+        close_ability_upgrade = false;
+        if (layout_el.ignoreLayout)
+            layout_el.ignoreLayout = false;
+
+        SoundManager.instance.InstantiateSound(clip_selected, transform.position); /// Hace un sonido para indicar la deselección
+
+        bg.rectTransform.sizeDelta = initial_size;
+        bg.rectTransform.localScale = initial_scale;
+
+        bg.transform.SetParent(parent, true);
+        bg.transform.SetSiblingIndex(child_num);
+
+
+        yield return null; // Espera un frame para que los cambios de apliquen
+
+        grid.enabled = false;
+        yield return new WaitForSeconds(0.1f); // Espera un frame para que los cambios de apliquen
+        grid.enabled = true;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parent as RectTransform);
+
+
 
         // Vuelve a añadir el evento del botón
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(() =>
         {
-            AbilityButton(ob, icon, title, btn, ab.description);
+            AbilityButton(ob, icon, title, btn, ab.description, parent);
         });
+
+        on_ability_menu = false;
     }
 
     // Recoloca el scroll de las habilidades
@@ -548,7 +704,7 @@ public class menus : MonoBehaviour
 
     public void MoveAbilitiesScroll(InputAction.CallbackContext con)
     {
-        if (con.performed && abilities_holder.gameObject.activeSelf)
+        if (con.performed && abilities_holder_ultimate.gameObject.activeSelf)
         {
             Vector2 dir = con.ReadValue<Vector2>();
 
@@ -561,5 +717,14 @@ public class menus : MonoBehaviour
         {
             CloseAbilityDescription();
         }
+    }
+
+    public void SetIdiomText()
+    {
+        string text = IdiomManager.instance.GetKeyText("Selected language text");
+
+        text = text.Replace("{i}", IdiomManager.instance.GetKeyText("Idiom"));
+
+        txt_current_idiom.text = text;
     }
 }

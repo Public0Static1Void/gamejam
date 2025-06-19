@@ -15,15 +15,17 @@ public class Rounds : MonoBehaviour
     [HideInInspector]
     public List<EnemyFollow> enemies_follow;
 
+    public UnityEngine.UI.Image im_timer;
+
     public float enemyRound;
 
     private bool spawning = false;
     private int round = 0;
 
     float enemy_hp = 10;
-    float enemy_speed = 3.5f;
+    float enemy_speed = 1;
 
-    private float timer = 0;
+    private float timer = 0, rounds_timer = 0;
 
     private bool onRound = false;
 
@@ -34,6 +36,11 @@ public class Rounds : MonoBehaviour
     public AudioClip clip_roundstart;
     [Header("References")]
     public TMP_Text txt_round;
+    public ParticleSystem pr_Particles;
+
+    private int secs = 0;
+    private bool counter = false;
+    private float wait_time = 12.5f;
 
     void Start()
     {
@@ -41,6 +48,10 @@ public class Rounds : MonoBehaviour
         else Destroy(this);
 
         enemies_follow = new List<EnemyFollow>();
+
+        secs = Mathf.Clamp(15 - round, 5, 15);
+
+        if (TutorialManager.instance != null) Destroy(gameObject);
     }
 
     void Update()
@@ -50,16 +61,25 @@ public class Rounds : MonoBehaviour
             StartRound();
         }
 
-        timer += Time.deltaTime;
-
-        if (onRound && !spawning)
+        if (counter)
         {
-            if (timer > Mathf.Clamp(30 - round, 10, 30))
+            rounds_timer += Time.deltaTime;
+            im_timer.fillAmount = 1 - (rounds_timer / (secs + wait_time));
+        }
+
+        timer += Time.deltaTime;
+        if (!spawning)
+        {
+            if (onRound)
             {
-                StartRound();
-                timer = 0;
+                if (timer > secs)
+                {
+                    StartRound();
+                    timer = 0;
+                }
             }
         }
+        
         
         if (timer >= 60)
         {
@@ -71,8 +91,16 @@ public class Rounds : MonoBehaviour
     private void StartRound()
     {
         onRound = true;
-        enemyRound *= 1.5f;
+        enemyRound *= 1.25f;
         enemy_speed *= 1.05f;
+        AbilitiesSystem.instance.UnlockAbility();
+
+        counter = false;
+        im_timer.fillAmount = 1;
+        rounds_timer = 0;
+
+        secs = Mathf.Clamp(30 - round, 10, 30);
+
         StartCoroutine(SpawnLine());
     }
 
@@ -80,16 +108,18 @@ public class Rounds : MonoBehaviour
     {
         spawning = true;
 
-        AbilitiesSystem.instance.GetRandomAbilities();
+        //AbilitiesSystem.instance.GetRandomAbilities(); Ahora se consiguen habilidades llenando la barra de experiencia
 
-        float wait_time = 12.5f - round * 0.25f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
+        wait_time = 12.5f - round * 0.25f; /// Función de espera entre rondas (cuánto más tiempo jugado más rápido pasarán)
         if (wait_time < 3) wait_time = 3;
 
         yield return new WaitForSeconds(wait_time);
 
+        counter = true;
+
         // Muestra en texto por que ronda vas y suena un sonido para indicar la nueva ronda
         txt_round.text = (round + 1).ToString();
-        GameManager.gm.ShowText(string.Format("Round {0}", round + 1));
+        GameManager.gm.ShowText(string.Format("Round {0}", round + 1), 3);
 
 
         // Hace sonar el sonido de inicio de ronda
@@ -103,28 +133,17 @@ public class Rounds : MonoBehaviour
             {
                 randSpawn = Random.Range(0, SpawnPoint.Count);
             }
-
-            int rand_enemy = Random.Range(0, enemy_list.Count);
-            if (round > 5) /// Hasta la ronda 5 no podrá aparecer el boss
-            {
-                enemy = enemy_list[rand_enemy];
-            }
-            else
-            {
-                enemy = enemy_list[0];
-            }
-            GameObject enemy_inst = Instantiate(enemy, SpawnPoint[randSpawn].position, transform.rotation);
+            Destroy(Instantiate(pr_Particles, SpawnPoint[randSpawn].position, Quaternion.identity), 5);
+            GameObject enemy_inst = Instantiate(GetRandomEnemy(), SpawnPoint[randSpawn].position, transform.rotation);
             enemy_inst.name += " " + round.ToString() + " " + i.ToString();
-
+            /// Suma vida a los enemigos tras cada ronda
             EnemyLife enemy_life = enemy_inst.transform.GetChild(0).GetComponent<EnemyLife>();
             if (round > 0 && enemy_life != null)
             {
                 enemy_hp = enemy_life.max_hp * 1.25f;
             }
 
-            Debug.Log("Enemy hp: " + enemy_hp);
-
-            enemy_inst.transform.GetChild(0).GetComponent<NavMeshAgent>().speed = enemy_speed;
+            enemy_inst.transform.GetChild(0).GetComponent<NavMeshAgent>().speed *= enemy_speed;
 
             enemy_life.max_hp = (int)enemy_hp;
 
@@ -136,5 +155,42 @@ public class Rounds : MonoBehaviour
         round++;
 
         spawning = false;
+    }
+
+    private GameObject GetRandomEnemy()
+    {
+        GameObject result;
+        int[] frange = new int[enemy_list.Count];
+        int total_probs = 0;
+        for (int i = 0; i < enemy_list.Count; i++)
+        {
+            EnemyLife ef = enemy_list[i].transform.GetComponentInChildren<EnemyLife>();
+            frange[i] = total_probs + ef.probability;
+            total_probs += ef.probability;
+        }
+        int rand_enemy = Random.Range(0, total_probs);
+
+        for (int i = 0, min = 0; i < frange.Length && i < enemy_list.Count; i++)
+        {
+            if (rand_enemy > min && rand_enemy < frange[i])
+            {
+                rand_enemy = i;
+                break;
+            }
+            if (min + frange[i] < frange[frange.Length - 1])
+                min += frange[i];
+        }
+        Debug.Log("Enemy selected: " + rand_enemy);
+
+        if (round >= 3 && rand_enemy < enemy_list.Count) /// Hasta la ronda 3 no podrán aparecer enemigos especiales
+        {
+            result = enemy_list[rand_enemy];
+        }
+        else
+        {
+            result = enemy_list[0];
+        }
+
+        return result;
     }
 }
